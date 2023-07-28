@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="HandheldFriendly" content="true" />
+    <meta name="MobileOptimized" content="320" />
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, width=device-width, user-scalable=no" />
+    <script src="https://unpkg.com/htmx.org@1.9.2" integrity="sha384-L6OqL9pRWyyFU3+/bjdSri+iIphTN/bvYyM37tICVyOJkWZLpP2vGn6VUEXgzg6h" crossorigin="anonymous"></script>
+    <title>AgentSmith</title>
+    <link rel="stylesheet" href="/static/styles/style.css">
+    <link rel="stylesheet" href="/static/styles/mobile.css" media="screen and (max-width: 600px)">
+</head>
+<body>
+        <div class="container">
+            <div class="sidebar">
+                <div id="tokens" hx-get="/tokenupdate" hx-trigger="load" hx-target="this" hx-swap="innerHTML">
+                </div>
+                <br>
+                <div>
+                    <button class="btn" hx-post="/clear" hx-target="#main-content" hx-swap="this">Clear Chat</button>
+                </div>
+                <div>
+                    <a href="/"><button class="btn">Chat Screen</button></a>
+                </div>
+                <div>
+                    <button class="btn" hx-post="/reset" hx-target="#main-content" hx-swap="innerHTML" hx-confirm="Are you sure?">Reset Chat</button>
+                </div>
+                <div>
+                    <button class="btn" hx-get="/prompteditpage" hx-target="#main-content" hx-swap="outerHTML">Edit System Prompt</button>
+                </div>
+                <div>
+                    <button class="btn" hx-get="/functioneditpage" hx-target="#main-content" hx-swap="outerHTML">Functions</button>
+                </div>
+                <div>
+                    <button class="btn" hx-get="/loadsettings" hx-target="#main-content" hx-swap="outerHTML">Settings</button>
+                </div>
+
+                <div>
+                    <button class="btn" hx-get="/loadchat" hx-target="#main-content" hx-swap="outerHTML">Load Chat</button>
+                </div>
+                <div><form hx-post="/save" hx-target="#chattext" hx-swap="outerHTML">
+                    <button class="btn">Save Chat</button>
+                </form></div>
+                <br>
+                <div id="autofunctiontoggle">
+                    <div hx-post="/autofunctionstatus" hx-target="#autofunctiontoggle" hx-swap="innerHTML" hx-trigger="load"></div>
+                </div>
+                <div id="autorequestfunctiontoggle">
+                    <div hx-post="/autorequestfunctionstatus" hx-target="#autorequestfunctiontoggle" hx-swap="innerHTML" hx-trigger="load"></div>
+                </div>
+            </div>
+            <div class="main-content" id="main-content">
+                <div class="top-row" id="top-row">
+                    <table>
+                        <tr id="chattext" hx-get="/loadmessages" hx-target="#top-row" hx-swap="innerHTML" hx-trigger="load">
+                        </tr>
+                    </table>
+                </div>
+                <div class="bottom-row">
+                    <form id="chatForm" hx-post="/clearchat" hx-target="#chatinput" hx-swap="outerHTML">
+                        <div>
+                            <textarea id="chatinput" type="text" name="text" autocomplete="off" style="float: left;" tabindex="1"></textarea>
+                        </div>
+                        <div>    
+                            <button class="btn" hx-post="/clearchat" hx-target="#chatinput" hx-trigger="keydown[keyCode==13&&shiftKey!=true] from:#chatForm" hx-swap="outerHTML">Submit</button>
+                        </div>
+                        <div>
+                            <button class="btn" hx-post="/clear" hx-target="#main-content" hx-swap="this">Clear Chat</button>
+                        </div>
+                    </form> 
+                </div>
+            </div>
+        </div>
+</body>
+</html>

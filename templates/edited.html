@@ -1,0 +1,15 @@
+<td id="reply-{{.MessageID}}">
+    <div id="reply" class="message" messageid={{.MessageID}} style="float: left;">{{ range .Edittext }}
+    {{ . }}<br>
+    {{ end }}</div>
+    <div class="editbutton">
+        <form hx-get="/edit" hx-target="#reply-{{.MessageID}}" hx-swap="outerHTML">
+            <input type="hidden" name="messageid" value={{.MessageID}}>
+            <button class="btn">Edit</button>
+        </form>
+        <form hx-post="/delete" hx-target="closest tr" hx-swap="outerHTML">
+            <input type="hidden" name="messageid" value={{.MessageID}}>
+            <button class="btn">Delete</button>
+        </form>
+    </div>
+</td>

@@ -1,0 +1,1 @@
+{"name":"planoutput","description":"Allows the assistant to output a plan","parameters":{"properties":{"Aim":{"description":"The aim","type":"string"},"Query":{"description":"The query","type":"string"},"Steps":{"items":{"description":"A step of the plan","type":"string"},"type":"array"}},"required":["Query","Aim","Steps"],"type":"object"}}

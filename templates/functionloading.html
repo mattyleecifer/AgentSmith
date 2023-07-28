@@ -1,0 +1,12 @@
+<tr id="chattext" style="background-color: #393939">
+  <td><form hx-target="#chattext" hx-post="/runfunction"  hx-swap="outerHTML" hx-target="chattext" hx-trigger="load">
+    {{ .Function }}
+  </form>
+  </td>
+  <td>
+    <div class="message">Loading...</div>
+  </td>
+  <td>
+      <div hx-get="/scroll" hx-trigger="load" hx-target="this" hx-swap="none, show:bottom"></div>
+  </td>
+</tr>

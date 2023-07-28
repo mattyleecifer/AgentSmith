@@ -1,0 +1,15 @@
+<div class="main-content" id="main-content">
+    <div><h3>Prompt Editor</h3></div>
+    <div id="prompteditor">
+        <form hx-post="/promptset" hx-target="#main-content" hx-swap="none">
+            <p>Prompt name:<br><input name="promptname" value="{{ .Name }}"></p>
+            <p>Prompt description:<br><textarea name="promptdescription" rows="3" style="height: 100%;">{{ .Description }}</textarea>></p>
+            <textarea name="edittext" rows="10" style="height: 100%;">{{ .Parameters }}</textarea>
+            <button class="btn">Set prompt</button>
+            <button class="btn" hx-post="/promptsave" hx-target="#main-content" hx-swap="outerHTML">Save prompt</button>
+        </form>
+        <div><h4>Saved Prompts</h4></div>
+        <p><div>{{ .SavedPrompts }}</div></p>
+        <a href="/"><button class="btn">Back</button></a>
+    </div>
+</div>

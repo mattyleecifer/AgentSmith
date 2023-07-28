@@ -1,0 +1,17 @@
+<div class="main-content" id="main-content">
+    <div id="settings">
+        <div><h3>Settings</h3></div>
+        <form hx-post="/setsettings" hx-target="#main-content" hx-swap="outerHTML">
+            <p>Chat Model:<br><input name="chatmodel" value="{{ .Model }}"></p>
+            <p>Function Model:<br><input name="functionmodel" value="{{ .Functionmodel }}"></p>
+            <p>Max Tokens:<br><input name="maxtokens" value="{{ .Maxtokens }}"></p>
+            <p>Call cost:<br><input name="callcost" value="{{ .Callcost }}"></p>
+            <p>AutoClearFunction:<br><select name="autoclearfunction">
+                <option value="true" selected>True</option>
+                <option value="false">False</option>
+                </select></p>
+            <button class="btn">Save Settings</button>
+        </form>
+        <a href="/"><button class="btn">Back</button></a>
+    </div>
+</div>

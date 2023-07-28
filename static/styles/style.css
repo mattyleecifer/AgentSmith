@@ -1,0 +1,94 @@
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    font-size: 18px;
+    }
+
+.btn {
+    width: 7vw;
+    padding: 10px 5px;
+    display: block;
+    margin: auto;
+    font-size: 14px;
+}
+
+textarea {
+    height: 15vh;
+    width: calc(100% - 10vw);
+    border: none;
+    resize: none;
+    font-size: 18px;
+    }
+
+input {
+    font-size: 18px;
+}
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    border: none;
+    color: white;
+    background-color: #1E1E1E;
+    word-wrap: break-word;
+    }
+
+.sidebar {
+    flex: 0.8;
+    height: 100vh;
+    border-right: 2px solid #000;
+    float: left;
+    overflow-y: auto;
+    }
+
+.main-content {
+    flex: 4.2;
+    justify-content: flex-start;
+    float: right;
+    }
+
+.top-row {
+    border-bottom: 2px solid #000;
+    overflow-y: auto;
+    height: 85vh;  
+    width: 100%;
+    }
+
+.bottom-row {
+    width: 100%;
+    height: 15vh;
+    }
+
+#centertext {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    }
+
+.agent {
+    width: 8vw;
+    float: left;
+    text-align: center;
+    border-right: 1px solid #000;
+    }
+
+.message {
+    width: 75vw;
+    float: left;
+    }
+
+.agent, .message {
+    box-sizing: border-box;
+    padding: 10px;
+}
+
+.editbutton {
+    width: 7vw;
+    float: right;
+}
+
+tr {  
+    display: flex;
+    flex-direction: row;
+}

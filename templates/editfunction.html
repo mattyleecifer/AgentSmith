@@ -1,0 +1,15 @@
+<div class="main-content" id="main-content">
+    <div><h3>Function Editor</h3></div>
+    <div id="functioneditor">
+        <div class="message">
+            <form hx-post="/functionset" hx-target="#main-content" hx-swap="outerHTML">
+                <p>Function name:<br><input name="functionname" value="{{ .Name }}"></p>
+                <p>Function description:<br><textarea name="functiondescription" rows="3" style="height: 100%;">{{ .Description }}</textarea></p>
+                <textarea name="edittext" rows="10" style="height: 100%;">{{ .Parameters }}</textarea>
+                <button class="btn">Set function</button>
+                <button class="btn" hx-post="/functionsave" hx-target="#main-content" hx-swap="outerHTML">Save Function</button>
+            </form>
+            <button class="btn" hx-get='/functioneditpage' hx-target='#main-content' hx-swap='outerHTML'>Back</button>
+        </div>
+    </div>
+</div>
