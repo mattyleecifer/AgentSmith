@@ -41,6 +41,15 @@ func hsetsettings(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusTemporaryRedirect)
 }
 
+func hgetsidebar(w http.ResponseWriter, r *http.Request) {
+	render(w, hsidebar, nil)
+}
+
+func hsidebaroff(w http.ResponseWriter, r *http.Request) {
+	button := `<div class="sidebar" id="sidebar" style="flex: none;"><button id="floating-button" hx-get="/getsidebar" hx-target="#sidebar" hx-swap="outerHTML">Show Menu</button></div>`
+	render(w, button, nil)
+}
+
 func (agent *Agent) htokenupdate(w http.ResponseWriter, r *http.Request) {
 	// fmt.Println("htokenupdate")
 	estcost := (float64(agent.tokencount) / 1000) * callcost

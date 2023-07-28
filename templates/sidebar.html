@@ -1,0 +1,40 @@
+<div class="sidebar" id="sidebar" style="flex: 0.8;">
+    <div>
+        <button class="btn" hx-get="/sidebaroff" hx-target="#sidebar" hx-swap="outerHTML">Hide Menu</button>
+    </div>
+    <br>
+    <div id="tokens" hx-get="/tokenupdate" hx-trigger="load" hx-target="this" hx-swap="innerHTML">
+    </div>
+    <br>
+    <div>
+        <button class="btn" hx-post="/clear" hx-target="#main-content" hx-swap="this">Clear Chat</button>
+    </div>
+    <div>
+        <a href="/"><button class="btn">Chat Screen</button></a>
+    </div>
+    <div>
+        <button class="btn" hx-post="/reset" hx-target="#main-content" hx-swap="innerHTML" hx-confirm="Are you sure?">Reset Chat</button>
+    </div>
+    <div>
+        <button class="btn" hx-get="/prompteditpage" hx-target="#main-content" hx-swap="outerHTML">Edit System Prompt</button>
+    </div>
+    <div>
+        <button class="btn" hx-get="/functioneditpage" hx-target="#main-content" hx-swap="outerHTML">Functions</button>
+    </div>
+    <div>
+        <button class="btn" hx-get="/loadsettings" hx-target="#main-content" hx-swap="outerHTML">Settings</button>
+    </div>
+    <div>
+        <button class="btn" hx-get="/loadchat" hx-target="#main-content" hx-swap="outerHTML">Load Chat</button>
+    </div>
+    <div><form hx-post="/save" hx-target="#chattext" hx-swap="outerHTML">
+        <button class="btn">Save Chat</button>
+    </form></div>
+    <br>
+    <div id="autofunctiontoggle">
+        <div hx-post="/autofunctionstatus" hx-target="#autofunctiontoggle" hx-swap="innerHTML" hx-trigger="load"></div>
+    </div>
+    <div id="autorequestfunctiontoggle">
+        <div hx-post="/autorequestfunctionstatus" hx-target="#autorequestfunctiontoggle" hx-swap="innerHTML" hx-trigger="load"></div>
+    </div>
+</div>

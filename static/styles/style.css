@@ -13,6 +13,13 @@ html, body {
     font-size: 14px;
 }
 
+#floating-button {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 9999;
+  }
+  
 textarea {
     height: 15vh;
     width: calc(100% - 10vw);
