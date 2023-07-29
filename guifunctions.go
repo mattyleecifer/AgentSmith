@@ -46,7 +46,7 @@ func hgetsidebar(w http.ResponseWriter, r *http.Request) {
 }
 
 func hsidebaroff(w http.ResponseWriter, r *http.Request) {
-	button := `<div class="sidebar" id="sidebar" style="flex: none;"><button id="floating-button" hx-get="/getsidebar" hx-target="#sidebar" hx-swap="outerHTML">Show Menu</button></div>`
+	button := `<div class="sidebar" id="sidebar" style="width: 0%;"><button id="floating-button" hx-get="/getsidebar" hx-target="#sidebar" hx-swap="outerHTML">Show Menu</button></div>`
 	render(w, button, nil)
 }
 
@@ -115,7 +115,7 @@ func (agent *Agent) hloadmessages(w http.ResponseWriter, r *http.Request) {
 	// fmt.Println("hloadmessages")
 	messages := agent.req.Messages
 	if len(messages) == 1 {
-		messagelist := "<table><tr id='chattext'><td><div id='centertext' hx-get='/tokenupdate' hx-trigger='load' hx-target='#tokens' hx-swap='innerHTML'>Start asking questions!</div></td></tr></table>"
+		messagelist := "<table><tr id='chattext'><td><div hx-get='/tokenupdate' hx-trigger='load' hx-target='#tokens' hx-swap='innerHTML'>Start asking questions!</div></td></tr></table>"
 		render(w, messagelist, nil)
 	} else {
 		messagelist := "<table>"
@@ -125,18 +125,18 @@ func (agent *Agent) hloadmessages(w http.ResponseWriter, r *http.Request) {
 			}
 			chatid := fmt.Sprint(i)
 
-			messagelist += `<tr style="display: inline-block;"><td>
+			messagelist += `<table><tr><td>
 						<div class="agent">` + messages[i].Role + `</div>
-						</td>
-						<td id="reply-` + chatid + `">
-						<div class="message" messageid="` + chatid + `" style="float: left;">`
+						</td><div>
+						<td id="reply-` + chatid + `" class="message">
+						<div messageid="` + chatid + `">`
 
 			lines := strings.Split(messages[i].Content, "\n")
 			for _, line := range lines {
 				messagelist += line + "<br>"
 			}
 
-			messagelist += `</div>
+			messagelist += `</div></td><td>
 						<div class="editbutton" style="float: right;">
 						<form hx-get="/edit" hx-target="#reply-` + chatid + `" hx-swap="outerHTML">
 						<input type="hidden" name="messageid" value="` + chatid + `">
@@ -147,7 +147,7 @@ func (agent *Agent) hloadmessages(w http.ResponseWriter, r *http.Request) {
 						<button class="btn">Delete</button>
 						</form>
 						</div>
-						</td></tr>`
+						</td></tr><table>`
 
 		}
 		messagelist += `<tr id="chattext" hx-get="/scroll" hx-trigger="load" hx-target="this" hx-swap="none, show:bottom"></tr></table>`

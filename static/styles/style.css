@@ -42,7 +42,7 @@ input {
     }
 
 .sidebar {
-    flex: 0.8;
+    display: block;
     height: 100vh;
     border-right: 2px solid #000;
     float: left;
@@ -56,6 +56,7 @@ input {
     }
 
 .top-row {
+    display: block;
     border-bottom: 2px solid #000;
     overflow-y: auto;
     height: 85vh;  
@@ -81,8 +82,11 @@ input {
     }
 
 .message {
-    width: 75vw;
-    float: left;
+    width: 100%;
+    float: center;
+    justify-content: left;
+    align-items: left;
+    text-align: left;
     }
 
 .agent, .message {
@@ -95,7 +99,7 @@ input {
     float: right;
 }
 
-tr {  
-    display: flex;
-    flex-direction: row;
+table {
+    width: 100%;
+    text-align: left;
 }

@@ -1,5 +1,5 @@
-<td id="reply-{{.MessageID}}">
-    <div class="message">
+<td id="reply-{{.MessageID}}"  class="message">
+    <div>
         <form hx-post="/edit" hx-target="#reply-{{.MessageID}}" hx-swap="outerHTML">
             <textarea name="edittext">{{ .Edittext }}</textarea>
             <input type="hidden" name="messageid" value={{.MessageID}}>
