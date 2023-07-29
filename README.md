@@ -78,8 +78,8 @@ You can create an agent using flags.
 Flags:
 - `-key` api key" (this must be first)
 - `-home` set the home directory for agent
-- `save` save the chat + response to `homedir/Saves/filename.json`
-- `load` load chat from `homedir/Saves` eg `-load example.json` will load `homedir/Saves/example.json`
+- `-save` save the chat + response to `homedir/Saves/filename.json`
+- `-load` load chat from `homedir/Saves` eg `-load example.json` will load `homedir/Saves/example.json`
 - `-prompt` set model prompt - otherwise there is a default assistant prompt
 - `-model` model name - default is gpt-3.5-turbo
 - `-maxtokens` default max tokens is 2048
@@ -87,9 +87,9 @@ Flags:
 - `-message` add message from user to chat
 - `-messageassistant` add message from assistant to chat
 - `-messagefunction` add message from function to chat
-- `autofunction` automatically runs functions rather than returning a function response
-- `autoclearfunctionoff` autoclearfunction removes the second and third last messages from messagelist after a function call (eg the functioncall and response) as they take up a lot of memory/tokencount - turn off autoclearfunction to keep in memory
-- `autorequestfunction` automatically detects all functions in `homedir/Functions` and makes the agent aware of these functions. Agent can then request to add the function and it will be automatically added
+- `-autofunction` automatically runs functions rather than returning a function response
+- `-autoclearfunctionoff` autoclearfunction removes the second and third last messages from messagelist after a function call (eg the functioncall and response) as they take up a lot of memory/tokencount - turn off autoclearfunction to keep in memory
+- `-autorequestfunction` automatically detects all functions in `homedir/Functions` and makes the agent aware of these functions. Agent can then request to add the function and it will be automatically added
 
 This can be used to build a full agent. The Python module basically follows the same idea - you set the flags/messages and then make a call.
 
