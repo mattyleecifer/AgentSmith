@@ -58,7 +58,7 @@ func (agent *Agent) htokenupdate(w http.ResponseWriter, r *http.Request) {
 		Estcost    string
 	}{
 		Tokencount: strconv.Itoa(agent.tokencount),
-		Estcost:    strconv.FormatFloat(estcost, 'f', -1, 64),
+		Estcost:    strconv.FormatFloat(estcost, 'f', 6, 64),
 	}
 	render(w, htokencount, data)
 }

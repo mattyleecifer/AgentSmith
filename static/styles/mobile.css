@@ -22,11 +22,7 @@ color: rgb(232, 230, 227);
 background-color: #454a4d;
 }
 .sidebar {
-    display: block;
-    height: 100vh;
-    border-right: 2px solid #000;
-    float: left;
-    overflow-y: auto;
+    display: none;
     }
 
 .main-content {
