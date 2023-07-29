@@ -11,6 +11,8 @@ html, body {
     display: block;
     margin: auto;
     font-size: 14px;
+    color: rgb(232, 230, 227);
+    background-color: #454a4d;
 }
 
 #floating-button {
@@ -26,18 +28,22 @@ textarea {
     border: none;
     resize: none;
     font-size: 18px;
+    color: rgb(232, 230, 227);
+    background-color: #454a4d;
     }
 
 input {
     font-size: 18px;
+    color: rgb(232, 230, 227);
+    background-color: #454a4d;
 }
 
 .container {
     display: flex;
     flex-wrap: wrap;
     border: none;
-    color: white;
-    background-color: #1E1E1E;
+    color: rgb(232, 230, 227);
+    background-color: #202324;
     word-wrap: break-word;
     }
 
