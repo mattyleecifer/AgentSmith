@@ -30,7 +30,7 @@
                             <button class="btn" hx-post="/clearchat" hx-target="#chatinput" hx-trigger="keydown[keyCode==13&&shiftKey!=true] from:#chatForm" hx-swap="outerHTML">Submit</button>
                         </div>
                         <div>
-                            <button class="btn" hx-post="/clear" hx-target="#main-content" hx-swap="this">Clear Chat</button>
+                            <button class="btn" hx-post="/clear" hx-target="#top-row" hx-swap="innerHTML">Clear Chat</button>
                         </div>
                     </form> 
                 </div>

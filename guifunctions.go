@@ -277,8 +277,9 @@ func (agent *Agent) hsave(w http.ResponseWriter, r *http.Request) {
 func (agent *Agent) hclear(w http.ResponseWriter, r *http.Request) {
 	// fmt.Println("hclear")
 	agent.setprompt()
-	w.Header().Set("HX-Redirect", "/")
-	w.WriteHeader(http.StatusTemporaryRedirect)
+	agent.hloadmessages(w, r)
+	// w.Header().Set("HX-Redirect", "/")
+	// w.WriteHeader(http.StatusTemporaryRedirect)
 }
 
 func hdeletechathistory(w http.ResponseWriter, r *http.Request) {
