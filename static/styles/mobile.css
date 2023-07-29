@@ -1,6 +1,6 @@
 @media only screen and (max-width: 600px) {
     html, body{
-        background-color: #1E1E1E;
+        background-color: #454a4d;
         font: 1em;
     } 
     body {
@@ -12,19 +12,23 @@
     }
 .btn {
 width: 100%;
+color: rgb(232, 230, 227);
+background-color: #454a4d;
 }
 textarea {
 height: 100%;
 width: 100%;
+color: rgb(232, 230, 227);
+background-color: #454a4d;
 }
 .sidebar {
-display: none;
-flex: none;
-height: auto;
-border-right: none;
-float: none;
-overflow-y: visible;
-}
+    display: block;
+    height: 100vh;
+    border-right: 2px solid #000;
+    float: left;
+    overflow-y: auto;
+    }
+
 .main-content {
 flex: none;
 justify-content: flex-start;
@@ -59,4 +63,15 @@ border-bottom: 1px solid #000;
 width: 100%;
 float: none;
 }
+table {
+    width: 100%;
+    text-align: left;
+}
+#floating-button {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 9999;
+  }
+
 }
