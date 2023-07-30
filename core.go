@@ -274,7 +274,11 @@ func (agent *Agent) getflags() {
 			guiFlag = true
 		case "-ip":
 			// allow ip
-			allowedIps = append(allowedIps, os.Args[index+1])
+			if os.Args[index+1] == "all" {
+				allowAllIps = true
+			} else {
+				allowedIps = append(allowedIps, os.Args[index+1])
+			}
 		case "-port":
 			// change port
 			port = ":" + os.Args[index+1]
