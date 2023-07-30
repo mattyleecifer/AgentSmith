@@ -42,8 +42,8 @@ func (agent *Agent) gui() {
 	agent.handlersprompteditor()
 
 	http.Handle("/static/", http.FileServer(http.FS(hcss)))
-	fmt.Println("Running server on http://127.0.0.1:49327 (ctrl-click link to open)")
-	log.Fatal(http.ListenAndServe(":49327", nil))
+	fmt.Println("Running GUI on http://127.0.0.1"+port, "(ctrl-click link to open)")
+	log.Fatal(http.ListenAndServe(port, nil))
 }
 
 func index(w http.ResponseWriter, r *http.Request) {

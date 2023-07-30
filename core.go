@@ -62,6 +62,7 @@ var today = time.Now().Format("January 2, 2006")
 
 var allowedIps []string
 var allowAllIps bool = false
+var port string = ":49327"
 
 var defaultprompt = promptDefinition{
 	Name:        "Default",
@@ -274,6 +275,9 @@ func (agent *Agent) getflags() {
 		case "-ip":
 			// allow ip
 			allowedIps = append(allowedIps, os.Args[index+1])
+		case "-port":
+			// change port
+			port = ":" + os.Args[index+1]
 		case "-allowallips":
 			// allow all ips
 			fmt.Println("Warning: Allowing all incoming connections.")

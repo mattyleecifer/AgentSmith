@@ -69,7 +69,7 @@ To start the webserver, you just have to run: `agentsmith --server`
 
 (Or `agentsmith.exe --server` on Windows, etc.)
 
-This will start a server at http://127.0.0.1:49327 - the server is secured so only localhost can connect to it. To allow external connections, launch the app with `-ip <ipaddress>` or `-allowallips`. 
+This will start a server at http://127.0.0.1:49327 - the server is secured so only localhost can connect to it. To allow external connections, launch the app with `-ip <ipaddress>` or `-allowallips`. Use `-port` to specify port.
 
 The default folder is `~/AgentSmith` but this can be set with the `-home` flag
 
