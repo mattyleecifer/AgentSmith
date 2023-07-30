@@ -1,5 +1,5 @@
-<td id="reply-{{.MessageID}}"  class="message">
-    <div id="reply" messageid={{.MessageID}} style="float: left;">{{ range .Edittext }}
+<td id="reply-{{.MessageID}}" class="message">
+    {{ range .Edittext }}
     {{ . }}<br>
-    {{ end }}</div>
+    {{ end }}
 </td>

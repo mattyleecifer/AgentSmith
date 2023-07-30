@@ -5,24 +5,26 @@ html, body {
     font-size: 18px;
     }
 
-.btn {
-    width: 7vw;
+
+
+button {
     padding: 10px 5px;
     display: block;
     margin: auto;
     font-size: 14px;
     color: rgb(232, 230, 227);
+    background-color: #454a4d;
+    border-color: #000;
+    outline-color: #000;
     background-color: #454a4d;
 }
 
 .menubtn {
     width: 100%;
-    padding: 10px 5px;
-    display: block;
-    margin: auto;
-    font-size: 14px;
-    color: rgb(232, 230, 227);
-    background-color: #454a4d;
+}
+
+.btn {
+    width: 7vw;
 }
 
 #floating-button {
@@ -97,7 +99,8 @@ input {
     width: 8vw;
     float: left;
     text-align: center;
-    border-right: 1px solid #000;
+    overflow: hidden;
+    /* text-overflow: ellipsis; */
     }
 
 .message {
@@ -106,13 +109,12 @@ input {
     justify-content: left;
     align-items: left;
     text-align: left;
+    border-bottom: 1px solid #000;
     }
 
 .agent, .message {
     box-sizing: border-box;
     padding: 10px;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 .editbutton {

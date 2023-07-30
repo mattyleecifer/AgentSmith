@@ -1,19 +1,13 @@
-<table>
-  <tr style="background-color: #393939;"  hx-get="/tokenupdate" hx-trigger="load" hx-target="#tokens" hx-swap="innerHTML">
-  <td>
-    <div class="agent">assistant</div>
-  </td>
-  <td id="reply-{{.MessageID}}" class="message">
-    <div messageid={{.MessageID}}>
-    <pre style="white-space: pre-wrap; font-family: inherit;">{{ .Message }}</pre>
 
-    </div>
-    <div>
+<tr style="background-color: #393939;">
+    <td class="agent">assistant</td>
+    <td id="reply-{{.MessageID}}" class="message">
+      <pre style="white-space: pre-wrap; font-family: inherit;">{{ .Message }}</pre>
       <form hx-get="/runfunctionload" hx-target="#chattext" hx-swap="outerHTML">
-        {{ .Run }}
+          {{ .Run }}
       </form>
-    </div></td><td>
-    <div class="editbutton">
+    </td>
+    <td class="editbutton">
         <form hx-get="/edit" hx-target="#reply-{{.MessageID}}" hx-swap="outerHTML">
             <input type="hidden" name="messageid" value={{.MessageID}}>
             <button class="btn">Edit</button>
@@ -22,9 +16,8 @@
             <input type="hidden" name="messageid" value={{.MessageID}}>
             <button class="btn">Delete</button>
         </form>
-    </div>
-  </td>
+        <div hx-get="/tokenupdate" hx-trigger="load" hx-target="#tokens" hx-swap="innerHTML"></div>
+    </td>
 </tr>
-</table>
-<table id="chattext" hx-get="/scroll" hx-trigger="load" hx-target="this" hx-swap="none, show:bottom">
-</table>
+<tr id="chattext" hx-get="/scroll" hx-trigger="load" hx-target="this" hx-swap="none, show:bottom">
+</tr>

@@ -130,9 +130,8 @@ func (agent *Agent) hloadmessages(w http.ResponseWriter, r *http.Request) {
 			}
 			chatid := fmt.Sprint(i)
 
-			messagelist += `<table><tr><td>
-						<div class="agent">` + messages[i].Role + `</div>
-						</td><div>
+			messagelist += `<table><tr><td class="agent">
+						` + messages[i].Role + `</td>
 						<td id="reply-` + chatid + `" class="message">
 						<div messageid="` + chatid + `">`
 
@@ -141,8 +140,7 @@ func (agent *Agent) hloadmessages(w http.ResponseWriter, r *http.Request) {
 				messagelist += line + "<br>"
 			}
 
-			messagelist += `</div></td><td>
-						<div class="editbutton">
+			messagelist += `</td><td class="editbutton">
 						<form hx-get="/edit" hx-target="#reply-` + chatid + `" hx-swap="outerHTML">
 						<input type="hidden" name="messageid" value="` + chatid + `">
 						<button class="btn">Edit</button>
@@ -151,8 +149,8 @@ func (agent *Agent) hloadmessages(w http.ResponseWriter, r *http.Request) {
 						<input type="hidden" name="messageid" value="` + chatid + `">
 						<button class="btn">Delete</button>
 						</form>
-						</div>
-						</td></tr><table>`
+						</td>
+						</tr>`
 
 		}
 		messagelist += `<tr id="chattext" hx-get="/scroll" hx-trigger="load" hx-target="this" hx-swap="none, show:bottom"></tr></table>`
