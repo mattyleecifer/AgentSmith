@@ -51,7 +51,7 @@ func hgetsidebar(w http.ResponseWriter, r *http.Request) {
 }
 
 func hsidebaroff(w http.ResponseWriter, r *http.Request) {
-	button := `<div class="sidebar" id="sidebar" style="flex: none;"><button id="floating-button" hx-get="/getsidebar" hx-target="#sidebar" hx-swap="outerHTML">Show Menu</button></div>`
+	button := `<div class="sidebar" id="sidebar" style="flex: none;"><button class="btn" id="floating-button" hx-get="/getsidebar" hx-target="#sidebar" hx-swap="outerHTML">Show Menu</button></div>`
 	render(w, button, nil)
 }
 
