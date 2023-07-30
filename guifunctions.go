@@ -137,7 +137,7 @@ func (agent *Agent) hloadmessages(w http.ResponseWriter, r *http.Request) {
 			}
 
 			messagelist += `</div></td><td>
-						<div class="editbutton" style="float: right;">
+						<div class="editbutton">
 						<form hx-get="/edit" hx-target="#reply-` + chatid + `" hx-swap="outerHTML">
 						<input type="hidden" name="messageid" value="` + chatid + `">
 						<button class="btn">Edit</button>

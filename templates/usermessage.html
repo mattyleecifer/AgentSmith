@@ -7,7 +7,7 @@
     <div messageid={{.MessageID}}>
         <pre style="white-space: pre-wrap; font-family: inherit;">{{ .Usertext }}</pre>
         </div></td><td>
-    <div class="editbutton" style="float: right;">
+    <div class="editbutton">
         <form hx-get="/edit" hx-target="#reply-{{.MessageID}}" hx-swap="outerHTML">
             <input type="hidden" name="messageid" value={{.MessageID}}>
             <button class="btn">Edit</button>
