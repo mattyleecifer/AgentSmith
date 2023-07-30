@@ -54,7 +54,7 @@ input {
     border: none;
     color: rgb(232, 230, 227);
     background-color: #202324;
-    word-wrap: break-word;
+    /* word-wrap: break-word; */
     }
 
 .sidebar {

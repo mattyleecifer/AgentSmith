@@ -34,11 +34,13 @@ func (agent *Agent) hfunctioneditpage(w http.ResponseWriter, r *http.Request) {
 
 	var currentfunctions string
 	if agent.req.Functions != nil {
+		currentfunctions += `<table style="display: flex;">`
 		for i := 0; i < len(agent.req.Functions); i++ {
 			name := agent.req.Functions[i].Name
 			description := agent.req.Functions[i].Description
-			currentfunctions += "<div><form hx-get='/functioneditcurrent' hx-target='#main-content' hx-swap='outerHTML'>" + name + "<br>" + description + "<br><input type='hidden' name='functionname' value='" + name + "'> <button class='btn'>Edit</button></form><form hx-get='/functionremove' hx-target='#main-content' hx-swap='outerHTML'><input type='hidden' name='functionname' value='" + name + "'><button class='btn'>Remove</button></form></div>"
+			currentfunctions += "<tr><td>" + name + ":<br>" + description + "</td><td><form hx-get='/functioneditcurrent' hx-target='#main-content' hx-swap='outerHTML'><input type='hidden' name='functionname' value='" + name + "'><button class='btn'>Edit</button></form></td><td><form hx-get='/functionremove' hx-target='#main-content' hx-swap='outerHTML'><input type='hidden' name='functionname' value='" + name + "'><button class='btn'>Remove</button></form></td></tr>"
 		}
+		currentfunctions += `</table>`
 	}
 	allsavedfunctions, err := getsavefunctionlist()
 	if err != nil {
@@ -51,10 +53,12 @@ func (agent *Agent) hfunctioneditpage(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			fmt.Println(err)
 		}
+		savedfunctions += `<table style="display: flex;">`
 		for i := 0; i < len(allsavedfunctions); i++ {
 			name := strings.ReplaceAll(allsavedfunctions[i], ".json", "")
-			savedfunctions += "<li><div><form hx-post='/functionload' hx-target='#main-content' hx-swap='outerHTML'>" + name + "<input type='hidden' name='functionname' value='" + name + "'><button class='btn'>Load</button></form><form><input type='hidden' name='functionname' value='" + name + "'><button class='btn' hx-post='/functiondelete' hx-target='#main-content' hx-swap='outerHTML' hx-confirm='Are you sure?'>Delete</button></form></div></li>"
+			savedfunctions += "<tr><td>" + name + "</td><td><form hx-post='/functionload' hx-target='#main-content' hx-swap='outerHTML'><input type='hidden' name='functionname' value='" + name + "'><button class='btn'>Load</button></form></td><td><form><input type='hidden' name='functionname' value='" + name + "'><button class='btn' hx-post='/functiondelete' hx-target='#main-content' hx-swap='outerHTML' hx-confirm='Are you sure?'>Delete</button></form></td></tr>"
 		}
+		savedfunctions += `</table>`
 	}
 	tcurrentfunctions := template.HTML(currentfunctions)
 	tsavedfunctions := template.HTML(savedfunctions)

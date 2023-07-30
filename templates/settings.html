@@ -10,9 +10,11 @@
                 <option value="true" selected>True</option>
                 <option value="false">False</option>
                 </select></p>
-            <button class="btn">Save Settings</button>
+            <table style="display: flex;"><tr><td>
+            <button class="btn">Save Settings</button></td>
+            <td><a href="/"><button class="btn">Back</button></a></td>
+            </tr></table>
         </form>
-        <a href="/"><button class="btn">Back</button></a>
     </div>
     <div hx-get="/sidebaroff" hx-target="#sidebar" hx-swap="outerHTML" hx-trigger="load"></div>
 </div>

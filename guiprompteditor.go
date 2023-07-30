@@ -172,10 +172,12 @@ func rendersavedprompts() template.HTML {
 		if err != nil {
 			fmt.Println(err)
 		}
+		savedprompts += `<table style="display: flex;">`
 		for i := 0; i < len(allsavedprompts); i++ {
 			name := strings.ReplaceAll(allsavedprompts[i], ".json", "")
-			savedprompts += "<form hx-post='/promptload' hx-target='#main-content' hx-swap='outerHTML'>" + name + "<br><input type='hidden' name='promptname' value='" + name + "'><button class='btn'>Load</button></form><form><input type='hidden' name='promptname' value='" + name + "'><button class='btn' hx-post='/promptdelete' hx-target='#main-content' hx-swap='outerHTML' hx-confirm='Are you sure?'>Delete</button></form>"
+			savedprompts += "<tr><td>" + name + "</td><td><form hx-post='/promptload' hx-target='#main-content' hx-swap='outerHTML'><input type='hidden' name='promptname' value='" + name + "'><button class='btn'>Load</button></form></td><td><form><input type='hidden' name='promptname' value='" + name + "'><button class='btn' hx-post='/promptdelete' hx-target='#main-content' hx-swap='outerHTML' hx-confirm='Are you sure?'>Delete</button></form></td></tr>"
 		}
+		savedprompts += `</table>`
 	}
 
 	tsavedprompts := template.HTML(savedprompts)

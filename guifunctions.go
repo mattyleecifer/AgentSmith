@@ -183,14 +183,16 @@ func hgetchathistory(w http.ResponseWriter, r *http.Request) {
 		render(w, html, nil)
 		return
 	} else {
-		html := ""
+		html := `<table style="display: flex;">`
 		for i := 0; i < len(filelist); i++ {
 			chatid := strings.ReplaceAll(filelist[i], ".", "")
+			html += `<tr><td>`
 			html += "<div class='savedchat' id='savedchat" + chatid + "'><div>"
 			html += filelist[i]
-			html += "</div><div><form hx-post='/load' hx-target='this' hx-swap='innerHTML'><input type='hidden' name='data' value='" + filelist[i] + "'><button class='btn'>Load</button></form><form hx-post='/deletechathistory' hx-target='#savedchat" + chatid + "' hx-swap='outerHTML' hx-confirm='Are you sure?'><input type='hidden' name='chatid' value='" + filelist[i] + "'><button class='btn'>Delete</button></form></div></div>"
+			html += "</div><td><form hx-post='/load' hx-target='this' hx-swap='innerHTML'><input type='hidden' name='data' value='" + filelist[i] + "'><button class='btn'>Load</button></form></td><td><form hx-post='/deletechathistory' hx-target='#savedchat" + chatid + "' hx-swap='outerHTML' hx-confirm='Are you sure?'><input type='hidden' name='chatid' value='" + filelist[i] + "'><button class='btn'>Delete</button></form></td>"
+			html += `</tr>`
 		}
-		html += "<div id='addchat'></div>"
+		html += "</table><div id='addchat'></div>"
 		render(w, html, nil)
 	}
 }
