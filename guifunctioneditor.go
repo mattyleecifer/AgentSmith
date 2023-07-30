@@ -34,11 +34,11 @@ func (agent *Agent) hfunctioneditpage(w http.ResponseWriter, r *http.Request) {
 
 	var currentfunctions string
 	if agent.req.Functions != nil {
-		currentfunctions += `<table style="display: flex;">`
+		currentfunctions += `<table style="display: flex;" id="centertext">`
 		for i := 0; i < len(agent.req.Functions); i++ {
 			name := agent.req.Functions[i].Name
 			description := agent.req.Functions[i].Description
-			currentfunctions += "<tr><td>" + name + ":<br>" + description + "</td><td><form hx-get='/functioneditcurrent' hx-target='#main-content' hx-swap='outerHTML'><input type='hidden' name='functionname' value='" + name + "'><button class='btn'>Edit</button></form></td><td><form hx-get='/functionremove' hx-target='#main-content' hx-swap='outerHTML'><input type='hidden' name='functionname' value='" + name + "'><button class='btn'>Remove</button></form></td></tr>"
+			currentfunctions += "<tr style='text-align: left;'><td>" + name + ":<br>" + description + "<br></td><td><form hx-get='/functioneditcurrent' hx-target='#main-content' hx-swap='outerHTML'><input type='hidden' name='functionname' value='" + name + "'><button class='btn'>Edit</button></form><br></td><td><form hx-get='/functionremove' hx-target='#main-content' hx-swap='outerHTML'><input type='hidden' name='functionname' value='" + name + "'><button class='btn'>Remove</button></form><br></td></tr>"
 		}
 		currentfunctions += `</table>`
 	}
@@ -53,10 +53,10 @@ func (agent *Agent) hfunctioneditpage(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			fmt.Println(err)
 		}
-		savedfunctions += `<table style="display: flex;">`
+		savedfunctions += `<table style="display: flex;" id="centertext">`
 		for i := 0; i < len(allsavedfunctions); i++ {
 			name := strings.ReplaceAll(allsavedfunctions[i], ".json", "")
-			savedfunctions += "<tr><td>" + name + "</td><td><form hx-post='/functionload' hx-target='#main-content' hx-swap='outerHTML'><input type='hidden' name='functionname' value='" + name + "'><button class='btn'>Load</button></form></td><td><form><input type='hidden' name='functionname' value='" + name + "'><button class='btn' hx-post='/functiondelete' hx-target='#main-content' hx-swap='outerHTML' hx-confirm='Are you sure?'>Delete</button></form></td></tr>"
+			savedfunctions += "<tr><td style='text-align: left;'>" + name + "</td><td><form hx-post='/functionload' hx-target='#main-content' hx-swap='outerHTML'><input type='hidden' name='functionname' value='" + name + "'><button class='btn'>Load</button></form></td><td><form><input type='hidden' name='functionname' value='" + name + "'><button class='btn' hx-post='/functiondelete' hx-target='#main-content' hx-swap='outerHTML' hx-confirm='Are you sure?'>Delete</button></form></td></tr>"
 		}
 		savedfunctions += `</table>`
 	}

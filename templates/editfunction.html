@@ -1,5 +1,9 @@
 <div class="main-content" id="main-content">
-    <div><h3>Function Editor</h3></div>
+    <table style="display: flex;" id="centertext">
+        <tr>
+    <td><h3>Function Editor</h3></td><td>
+        <button class="btn" hx-get='/functioneditpage' hx-target='#main-content' hx-swap='outerHTML'>Back</button>
+        </td></tr></table>
     <div id="functioneditor">
         <div class="message">
             <form hx-post="/functionset" hx-target="#main-content" hx-swap="outerHTML">

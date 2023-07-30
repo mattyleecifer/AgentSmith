@@ -68,8 +68,9 @@ input {
 
 .main-content {
     flex: 4.2;
-    justify-content: flex-start;
-    float: right;
+    /* justify-content: flex-start; */
+    /* float: right; */
+    width: 100%;
     }
 
 .top-row {
@@ -110,6 +111,8 @@ input {
 .agent, .message {
     box-sizing: border-box;
     padding: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .editbutton {

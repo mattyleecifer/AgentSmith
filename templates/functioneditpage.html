@@ -1,15 +1,17 @@
 <div class="main-content" id="main-content">
-    <div><h3>Functions</h3></div>
-    <table style="display: flex;"><tr><td>
+    <table style="display: flex;" id="centertext">
+        <tr>
+    <td><h3>Functions</h3></td><td><br></td>
+    <td>
         <button hx-get="/functioneditadd" hx-target="#main-content" hx-swap="outerHTML"class="btn">Add</button>
         </td>
         <td><a href="/"><button class="btn">Back</button></a></td>
     </tr></table>
-    <div><p>Current functions:</p>
+    <div id="centertext"><p>Current functions:</p>
     {{ .CurrentFunctions }}</div>
     <br>
     <br>
-    <div><p>Saved functions:</p>
+    <div id="centertext"><p>Saved functions:</p>
     {{ .SavedFunctions }}</div>
 
     <div hx-get="/sidebaroff" hx-target="#sidebar" hx-swap="outerHTML" hx-trigger="load"></div>

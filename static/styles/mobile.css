@@ -52,6 +52,7 @@ text-align: left;
 border-right: none;
 border-bottom: 1px solid #000;
 overflow: hidden;
+text-overflow: ellipsis;
 }
 .message {
 width: 80%;

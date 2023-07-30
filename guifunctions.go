@@ -188,11 +188,11 @@ func hgetchathistory(w http.ResponseWriter, r *http.Request) {
 		render(w, html, nil)
 		return
 	} else {
-		html := `<table style="display: flex;">`
+		html := `<table style="display: flex;" id="centertext">`
 		for i := 0; i < len(filelist); i++ {
 			chatid := strings.ReplaceAll(filelist[i], ".", "")
-			html += `<tr><td>`
-			html += "<div class='savedchat' id='savedchat" + chatid + "'><div>"
+			html += "<tr id='savedchat" + chatid + "' style='text-align: left;'><td>"
+			html += "<div class='savedchat'><div>"
 			html += filelist[i]
 			html += "</div><td><form hx-post='/load' hx-target='this' hx-swap='innerHTML'><input type='hidden' name='data' value='" + filelist[i] + "'><button class='btn'>Load</button></form></td><td><form hx-post='/deletechathistory' hx-target='#savedchat" + chatid + "' hx-swap='outerHTML' hx-confirm='Are you sure?'><input type='hidden' name='chatid' value='" + filelist[i] + "'><button class='btn'>Delete</button></form></td>"
 			html += `</tr>`
