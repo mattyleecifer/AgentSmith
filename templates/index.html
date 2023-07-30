@@ -12,25 +12,27 @@
 <body>
         <div class="container">
             <div class="main-content" id="main-content">
-                <div class="top-row" id="top-row">
-                    <table>
-                        <tr id="chattext" hx-get="/loadmessages" hx-target="#top-row" hx-swap="innerHTML" hx-trigger="load">
-                        </tr>
-                    </table>
-                </div>
-                <div class="bottom-row">
-                    <form id="chatForm" hx-post="/clearchat" hx-target="#chatinput" hx-swap="outerHTML">
-                        <div>
-                            <textarea id="chatinput" type="text" name="text" autocomplete="off" style="float: left;" tabindex="1"></textarea>
-                        </div>
-                        <div>    
-                            <button class="btn" hx-post="/clearchat" hx-target="#chatinput" hx-trigger="keydown[keyCode==13&&shiftKey!=true] from:#chatForm" hx-swap="outerHTML">Submit</button>
-                        </div>
-                        <div>
-                            <button class="btn" hx-post="/clear" hx-target="#top-row" hx-swap="innerHTML">Clear Chat</button>
-                        </div>
-                    </form> 
-                </div>
+                <table>
+                    <tr class="top-row" id="top-row">
+                        <table>
+                            <tr id="chattext" hx-get="/loadmessages" hx-target="#top-row" hx-swap="innerHTML" hx-trigger="load">
+                            </tr>
+                        </table>
+                    </tr>
+                    <tr class="bottom-row">
+                        <form id="chatForm" hx-post="/clearchat" hx-target="#chatinput" hx-swap="outerHTML">
+                            <div>
+                                <textarea id="chatinput" type="text" name="text" autocomplete="off" style="float: left;" tabindex="1"></textarea>
+                            </div>
+                            <div>    
+                                <button class="btn" hx-post="/clearchat" hx-target="#chatinput" hx-trigger="keydown[keyCode==13&&shiftKey!=true] from:#chatForm" hx-swap="outerHTML">Submit</button>
+                            </div>
+                            <div>
+                                <button class="btn" hx-post="/clear" hx-target="#top-row" hx-swap="innerHTML">Clear Chat</button>
+                            </div>
+                        </form> 
+                    </tr>
+                </table>
             </div>
             <div class="sidebar" id="sidebar" style="flex: none;"><button id="floating-button" hx-get="/getsidebar" hx-target="#sidebar" hx-swap="outerHTML">Show Menu</button></div>
         </div>
