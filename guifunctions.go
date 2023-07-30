@@ -343,17 +343,9 @@ func hfunctionloading(w http.ResponseWriter, r *http.Request) {
 
 func (agent *Agent) hautorequestfunctionoff(w http.ResponseWriter, r *http.Request) {
 	// remove autorequestfunction
-	var functionlist []openai.FunctionDefinition
-
-	for _, item := range agent.req.Functions {
-		if item.Name != "requestfunction" {
-			functionlist = append(functionlist, item)
-		}
-	}
-
-	agent.req.Functions = functionlist
-
 	autorequestfunction = false
+	agent.removefunction("requestfunction")
+
 	button := `<button class="menubtn" style="background-color: darkred;" hx-post="/autorequestfunctionon" hx-target="#autorequestfunctiontoggle" hx-swap="innerHTML">Autorequestfunction</button>`
 	render(w, button, nil)
 }
@@ -367,7 +359,7 @@ func (agent *Agent) hautorequestfunctionon(w http.ResponseWriter, r *http.Reques
 
 func hautorequestfunctionstatus(w http.ResponseWriter, r *http.Request) {
 	if autorequestfunction {
-		button := `<button class="menubtn" style="background-color: darkgreen;" hx-post="/autofunctionoff" hx-target="#autorequestfunctiontoggle" hx-swap="innerHTML">Autorequestfunction</button>`
+		button := `<button class="menubtn" style="background-color: darkgreen;" hx-post="/autorequestfunctionoff" hx-target="#autorequestfunctiontoggle" hx-swap="innerHTML">Autorequestfunction</button>`
 		render(w, button, nil)
 	} else {
 		button := `<button class="menubtn" style="background-color: darkred;" hx-post="/autorequestfunctionon" hx-target="#autorequestfunctiontoggle" hx-swap="innerHTML">Autorequestfunction</button>`

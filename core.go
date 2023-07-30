@@ -450,7 +450,7 @@ func (agent *Agent) setfunction(newfunction openai.FunctionDefinition) error {
 
 func (agent *Agent) removefunction(funcname string) {
 	// removes from agent
-	fmt.Println(funcname)
+	// fmt.Println(funcname)
 	var newlist []openai.FunctionDefinition
 	for _, item := range agent.req.Functions {
 		if item.Name != funcname {
