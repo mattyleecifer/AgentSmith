@@ -201,14 +201,14 @@ func newAgent(key ...string) Agent {
 	agent.req.Model = model
 	agent.req.MaxTokens = maxtokens
 	agent.getflags()
-	if len(key) == 0 {
-		if agent.api_key == "" {
+	if agent.api_key == "" {
+		if len(key) == 0 {
 			agent.getkey()
 			c := openai.NewClient(agent.api_key)
 			agent.client = c
 		}
 	} else {
-		c := openai.NewClient(key[0])
+		c := openai.NewClient(agent.api_key)
 		agent.client = c
 	}
 	return agent
@@ -305,6 +305,7 @@ func (agent *Agent) getresponse() (Response, error) {
 	resp, err := agent.client.CreateChatCompletion(ctx, agent.req)
 	if err != nil {
 		fmt.Printf("ChatCompletion error: %v\n", err)
+		response.Message.Content = err.Error()
 		return response, err
 	}
 
