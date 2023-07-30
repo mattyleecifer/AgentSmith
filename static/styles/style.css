@@ -15,6 +15,16 @@ html, body {
     background-color: #454a4d;
 }
 
+.menubtn {
+    width: 100%;
+    padding: 10px 5px;
+    display: block;
+    margin: auto;
+    font-size: 14px;
+    color: rgb(232, 230, 227);
+    background-color: #454a4d;
+}
+
 #floating-button {
     position: fixed;
     top: 10px;
@@ -48,7 +58,7 @@ input {
     }
 
 .sidebar {
-    display: block;
+    flex: 0.7;
     height: 100vh;
     border-right: 2px solid #000;
     float: left;

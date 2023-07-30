@@ -1,6 +1,6 @@
 @media only screen and (max-width: 600px) {
     html, body{
-        background-color: #454a4d;
+        background-color: #202324;
         font: 1em;
     } 
     body {
@@ -21,8 +21,9 @@ width: 100%;
 color: rgb(232, 230, 227);
 background-color: #454a4d;
 }
+
 .sidebar {
-    display: none;
+    position: absolute;
     }
 
 .main-content {
@@ -43,6 +44,7 @@ float: none;
     position: fixed;
     bottom: 0;
     }
+
 .agent {
 width: 20%;
 float: none;

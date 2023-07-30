@@ -5,4 +5,5 @@
     <div><p>Saved functions:</p>
     <ul>{{ .SavedFunctions }}</ul></div>
     <button hx-get="/functioneditadd" hx-target="#main-content" hx-swap="outerHTML"class="btn">Add new function</button><a href="/"><button class="btn">Back</button></a>
+    <div hx-get="/sidebaroff" hx-target="#sidebar" hx-swap="outerHTML" hx-trigger="load"></div>
 </div>

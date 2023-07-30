@@ -11,9 +11,6 @@
 </head>
 <body>
         <div class="container">
-            <div class="sidebar" id="sidebar">
-                <div hx-get="/getsidebar" hx-target="#sidebar" hx-swap="outerHTML" hx-trigger="load"></div>
-            </div>
             <div class="main-content" id="main-content">
                 <div class="top-row" id="top-row">
                     <table>
@@ -35,6 +32,7 @@
                     </form> 
                 </div>
             </div>
+            <div class="sidebar" id="sidebar" style="flex: none;"><button id="floating-button" hx-get="/getsidebar" hx-target="#sidebar" hx-swap="outerHTML">Show Menu</button></div>
         </div>
 </body>
 </html>

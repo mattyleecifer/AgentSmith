@@ -46,7 +46,7 @@ func hgetsidebar(w http.ResponseWriter, r *http.Request) {
 }
 
 func hsidebaroff(w http.ResponseWriter, r *http.Request) {
-	button := `<div class="sidebar" id="sidebar" style="width: 0%;"><button id="floating-button" hx-get="/getsidebar" hx-target="#sidebar" hx-swap="outerHTML">Show Menu</button></div>`
+	button := `<div class="sidebar" id="sidebar" style="flex: none;"><button id="floating-button" hx-get="/getsidebar" hx-target="#sidebar" hx-swap="outerHTML">Show Menu</button></div>`
 	render(w, button, nil)
 }
 
@@ -347,45 +347,45 @@ func (agent *Agent) hautorequestfunctionoff(w http.ResponseWriter, r *http.Reque
 	agent.req.Functions = functionlist
 
 	autorequestfunction = false
-	button := `<button class="btn" style="background-color: darkred;" hx-post="/autorequestfunctionon" hx-target="#autorequestfunctiontoggle" hx-swap="innerHTML">Autorequestfunction</button>`
+	button := `<button class="menubtn" style="background-color: darkred;" hx-post="/autorequestfunctionon" hx-target="#autorequestfunctiontoggle" hx-swap="innerHTML">Autorequestfunction</button>`
 	render(w, button, nil)
 }
 
 func (agent *Agent) hautorequestfunctionon(w http.ResponseWriter, r *http.Request) {
 	autorequestfunction = true
 	agent.setAutoRequestFunction()
-	button := `<button class="btn" style="background-color: darkgreen;" hx-post="/autorequestfunctionoff" hx-target="#autorequestfunctiontoggle" hx-swap="innerHTML">Autorequestfunction</button>`
+	button := `<button class="menubtn" style="background-color: darkgreen;" hx-post="/autorequestfunctionoff" hx-target="#autorequestfunctiontoggle" hx-swap="innerHTML">Autorequestfunction</button>`
 	render(w, button, nil)
 }
 
 func hautorequestfunctionstatus(w http.ResponseWriter, r *http.Request) {
 	if autorequestfunction {
-		button := `<button class="btn" style="background-color: darkgreen;" hx-post="/autofunctionoff" hx-target="#autorequestfunctiontoggle" hx-swap="innerHTML">Autorequestfunction</button>`
+		button := `<button class="menubtn" style="background-color: darkgreen;" hx-post="/autofunctionoff" hx-target="#autorequestfunctiontoggle" hx-swap="innerHTML">Autorequestfunction</button>`
 		render(w, button, nil)
 	} else {
-		button := `<button class="btn" style="background-color: darkred;" hx-post="/autorequestfunctionon" hx-target="#autorequestfunctiontoggle" hx-swap="innerHTML">Autorequestfunction</button>`
+		button := `<button class="menubtn" style="background-color: darkred;" hx-post="/autorequestfunctionon" hx-target="#autorequestfunctiontoggle" hx-swap="innerHTML">Autorequestfunction</button>`
 		render(w, button, nil)
 	}
 }
 
 func hautofunctionoff(w http.ResponseWriter, r *http.Request) {
 	autofunction = false
-	button := `<button class="btn" style="background-color: darkred;" hx-post="/autofunctionon" hx-target="#autofunctiontoggle" hx-swap="innerHTML">Autofunction</button>`
+	button := `<button class="menubtn" style="background-color: darkred;" hx-post="/autofunctionon" hx-target="#autofunctiontoggle" hx-swap="innerHTML">Autofunction</button>`
 	render(w, button, nil)
 }
 
 func hautofunctionon(w http.ResponseWriter, r *http.Request) {
 	autofunction = true
-	button := `<button class="btn" style="background-color: darkgreen;" hx-post="/autofunctionoff" hx-target="#autofunctiontoggle" hx-swap="innerHTML">Autofunction</button>`
+	button := `<button class="menubtn" style="background-color: darkgreen;" hx-post="/autofunctionoff" hx-target="#autofunctiontoggle" hx-swap="innerHTML">Autofunction</button>`
 	render(w, button, nil)
 }
 
 func hautofunctionstatus(w http.ResponseWriter, r *http.Request) {
 	if autofunction {
-		button := `<button class="btn" style="background-color: darkgreen;" hx-post="/autofunctionoff" hx-target="#autofunctiontoggle" hx-swap="innerHTML">Autofunction</button>`
+		button := `<button class="menubtn" style="background-color: darkgreen;" hx-post="/autofunctionoff" hx-target="#autofunctiontoggle" hx-swap="innerHTML">Autofunction</button>`
 		render(w, button, nil)
 	} else {
-		button := `<button class="btn" style="background-color: darkred;" hx-post="/autofunctionon" hx-target="#autofunctiontoggle" hx-swap="innerHTML">Autofunction</button>`
+		button := `<button class="menubtn" style="background-color: darkred;" hx-post="/autofunctionon" hx-target="#autofunctiontoggle" hx-swap="innerHTML">Autofunction</button>`
 		render(w, button, nil)
 	}
 
