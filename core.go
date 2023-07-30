@@ -45,7 +45,7 @@ type promptDefinition struct {
 
 var homeDir string // Home directory for storing agent files/folders /Prompts /Functions /Saves
 
-var serverFlag bool = false
+var guiFlag bool = false
 var consoleFlag bool = false
 var savechatName string
 
@@ -269,9 +269,9 @@ func (agent *Agent) getflags() {
 			// autorequestfunction detects all available functions in the homedir/Functions folder and lets the agent automatically request to use them if required
 			autorequestfunction = true
 			agent.setAutoRequestFunction()
-		case "--server":
+		case "--gui":
 			// Run GUI
-			serverFlag = true
+			guiFlag = true
 		case "-ip":
 			// allow ip
 			allowedIps = append(allowedIps, os.Args[index+1])

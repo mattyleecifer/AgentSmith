@@ -7,8 +7,8 @@ import (
 func main() {
 	agent := newAgent()
 
-	if serverFlag {
-		fmt.Println("Running as server...")
+	if guiFlag {
+		fmt.Println("Running GUI...")
 		go agent.console()
 		agent.gui()
 	} else if consoleFlag {
