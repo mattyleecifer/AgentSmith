@@ -2,6 +2,7 @@
     <div id="settings">
         <div><h3>Settings</h3></div>
         <form hx-post="/setsettings" hx-target="#main-content" hx-swap="outerHTML">
+            <p>Key:<br><input name="apikey" value=""></p>
             <p>Chat Model:<br><input name="chatmodel" value="{{ .Model }}"></p>
             <p>Function Model:<br><input name="functionmodel" value="{{ .Functionmodel }}"></p>
             <p>Max Tokens:<br><input name="maxtokens" value="{{ .Maxtokens }}"></p>

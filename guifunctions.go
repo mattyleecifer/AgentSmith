@@ -31,7 +31,12 @@ func hloadsettings(w http.ResponseWriter, r *http.Request) {
 	render(w, hsettings, data)
 }
 
-func hsetsettings(w http.ResponseWriter, r *http.Request) {
+func (agent *Agent) hsetsettings(w http.ResponseWriter, r *http.Request) {
+	apikey := r.FormValue("apikey")
+	if apikey != "" {
+		c := openai.NewClient(apikey)
+		agent.client = c
+	}
 	model = r.FormValue("chatmodel")
 	functionmodel = r.FormValue("functionmodel")
 	maxtokens, _ = strconv.Atoi(r.FormValue("maxtokens"))
