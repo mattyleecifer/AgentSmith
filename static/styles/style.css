@@ -58,6 +58,7 @@ input {
     }
 
 .sidebar {
+    background-color: #202324;
     flex: 0.7;
     height: 100vh;
     border-right: 2px solid #000;
