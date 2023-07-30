@@ -356,12 +356,7 @@ func gettextinput() string {
 }
 
 func (agent *Agent) reset() {
-	agent.req = openai.ChatCompletionRequest{}
-	agent.prompt = defaultprompt
-	agent.setprompt()
-	agent.req.MaxTokens = maxtokens
-	agent.req.Model = model
-	agent.tokencount = 0
+	*agent = newAgent()
 	autofunction = false
 	autoclearfunction = true
 	autorequestfunction = false
