@@ -255,7 +255,7 @@ func (agent *Agent) getflags() {
 			agent.setmessage(openai.ChatMessageRoleUser, os.Args[index+1], "")
 		case "-messageassistant":
 			// Allows multiple messages with different users to be loaded in order
-			agent.setmessage(openai.ChatMessageRoleUser, os.Args[index+1], "")
+			agent.setmessage(openai.ChatMessageRoleAssistant, os.Args[index+1], "")
 		case "-messagefunction":
 			// Sets as functioncall user
 			agent.setmessage(openai.ChatMessageRoleFunction, os.Args[index+1], "")
