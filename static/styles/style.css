@@ -122,6 +122,11 @@ input {
     float: right;
 }
 
+.page {
+    display: flex; 
+    padding-top:5vh;
+}
+
 table {
     width: 100%;
     text-align: left;
