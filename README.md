@@ -65,9 +65,9 @@ This allows anyone to easily create complex AI apps with multiple agents all wit
 
 To run as just a command-line chat, run `agentsmith --console`
 
-To start the webserver, you just have to run: `agentsmith --server`
+To start the GUI, you just have to run: `agentsmith --gui`
 
-(Or `agentsmith.exe --server` on Windows, etc.)
+(Or `agentsmith.exe --gui` on Windows, etc.)
 
 This will start a server at http://127.0.0.1:49327 - the server is secured so only localhost can connect to it. To allow external connections, launch the app with `-ip <ipaddress>` or `-allowallips`. Use `-port` to specify port.
 
