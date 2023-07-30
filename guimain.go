@@ -68,7 +68,8 @@ func render(w http.ResponseWriter, html string, data any) {
 
 func RequireAuth(handler http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		allowedIps := []string{GetLocalIP(), "127.0.0.1"} // List of allowed IPs
+		allowedIps = append(allowedIps, GetLocalIP())
+		allowedIps = append(allowedIps, "127.0.0.1")
 		// fmt.Println("\nAllowed ips: ", allowedIps)
 		// Get the IP address of the client
 		ip, _, err := net.SplitHostPort(r.RemoteAddr)
@@ -77,12 +78,17 @@ func RequireAuth(handler http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 		// fmt.Println("\nConnecting IP: ", ip)
-		// Check if the client's IP is in the list of allowed IPs
-		for _, allowedIp := range allowedIps {
-			if ip == allowedIp {
-				// If the client's IP is in the list of allowed IPs, allow access to the proxy server
-				handler.ServeHTTP(w, r)
-				return
+		// Check if the client's IP is in the list of allowed IP
+		if allowAllIps {
+			handler.ServeHTTP(w, r)
+			return
+		} else {
+			for _, allowedIp := range allowedIps {
+				if ip == allowedIp {
+					// If the client's IP is in the list of allowed IPs, allow access to the proxy server
+					handler.ServeHTTP(w, r)
+					return
+				}
 			}
 		}
 

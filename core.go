@@ -60,6 +60,9 @@ var maxtokens int = 2048
 
 var today = time.Now().Format("January 2, 2006")
 
+var allowedIps []string
+var allowAllIps bool = false
+
 var defaultprompt = promptDefinition{
 	Name:        "Default",
 	Description: "Default Prompt",
@@ -268,6 +271,13 @@ func (agent *Agent) getflags() {
 		case "--server":
 			// Run GUI
 			serverFlag = true
+		case "-ip":
+			// allow ip
+			allowedIps = append(allowedIps, os.Args[index+1])
+		case "-allowallips":
+			// allow all ips
+			fmt.Println("Warning: Allowing all incoming connections.")
+			allowAllIps = true
 		case "--console":
 			// Run as console
 			consoleFlag = true
