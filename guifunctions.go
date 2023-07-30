@@ -120,10 +120,10 @@ func (agent *Agent) hloadmessages(w http.ResponseWriter, r *http.Request) {
 	// fmt.Println("hloadmessages")
 	messages := agent.req.Messages
 	if len(messages) == 1 {
-		messagelist := "<table style='display: flex;'><table id='chattext' style='display: flex; height:100%; justify-content: center; align-items: center;'><tr><td id='centertext'><div hx-get='/tokenupdate' hx-trigger='load' hx-target='#tokens' hx-swap='innerHTML'>Start asking questions!</div></td></tr></table></table>"
+		messagelist := "<table id='chattext' style='display: flex; height:30vh; justify-content: center; align-items: center;'><tr><td id='centertext'><div hx-get='/tokenupdate' hx-trigger='load' hx-target='#tokens' hx-swap='innerHTML'>Start asking questions!</div></td></tr></table>"
 		render(w, messagelist, nil)
 	} else {
-		messagelist := "<table style='display: flex;>"
+		messagelist := "<table style='display: flex;'>"
 		for i := 0; i < len(messages); i++ {
 			if messages[i].Content == "" {
 				continue
@@ -153,7 +153,7 @@ func (agent *Agent) hloadmessages(w http.ResponseWriter, r *http.Request) {
 						</tr>`
 
 		}
-		messagelist += `<tr id="chattext" hx-get="/scroll" hx-trigger="load" hx-target="this" hx-swap="none, show:bottom"></tr></table>`
+		messagelist += `<tr id="chattext" hx-get="/scroll" hx-trigger="load" hx-target="this" hx-swap="none, show:bottom"></tr>`
 		render(w, messagelist, nil)
 	}
 }
