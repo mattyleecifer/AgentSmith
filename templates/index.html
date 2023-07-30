@@ -10,31 +10,31 @@
     <link rel="stylesheet" href="/static/styles/mobile.css" media="screen and (max-width: 800px)">
 </head>
 <body>
-        <div class="container">
-            <div class="main-content" id="main-content">
-                <table>
-                    <tr class="top-row" id="top-row">
-                        <table style="display: flex;">
-                            <tr id="chattext" hx-get="/loadmessages" hx-target="#top-row" hx-swap="innerHTML" hx-trigger="load">
-                            </tr>
-                        </table>
-                    </tr>
-                    <tr class="bottom-row">
-                        <form id="chatForm" hx-post="/clearchat" hx-target="#chatinput" hx-swap="outerHTML">
-                            <div>
-                                <textarea id="chatinput" type="text" name="text" autocomplete="off" style="float: left;" tabindex="1"></textarea>
-                            </div>
-                            <div>    
-                                <button class="btn" hx-post="/clearchat" hx-target="#chatinput" hx-trigger="keydown[keyCode==13&&shiftKey!=true] from:#chatForm" hx-swap="outerHTML">Submit</button>
-                            </div>
-                            <div>
-                                <button class="btn" hx-post="/clear" hx-target="#top-row" hx-swap="innerHTML">Clear Chat</button>
-                            </div>
-                        </form> 
-                    </tr>
-                </table>
-            </div>
-            <div class="sidebar" id="sidebar" style="flex: none;"><button class="btn" id="floating-button" hx-get="/getsidebar" hx-target="#sidebar" hx-swap="outerHTML">Show Menu</button></div>
+    <div class="container">
+        <div class="main-content" id="main-content">
+            <table>
+                <tr class="top-row" id="top-row">
+                    <table style="display: flex;">
+                        <tr id="chattext" hx-get="/loadmessages" hx-target="#top-row" hx-swap="innerHTML" hx-trigger="load">
+                        </tr>
+                    </table>
+                </tr>
+                <tr class="bottom-row">
+                    <form id="chatForm" hx-post="/clearchat" hx-target="#chatinput" hx-swap="outerHTML">
+                        <div>
+                            <textarea id="chatinput" type="text" name="text" autocomplete="off" style="float: left;" tabindex="1"></textarea>
+                        </div>
+                        <div>    
+                            <button class="btn" hx-post="/clearchat" hx-target="#chatinput" hx-trigger="keydown[keyCode==13&&shiftKey!=true] from:#chatForm" hx-swap="outerHTML">Submit</button>
+                        </div>
+                        <div>
+                            <button class="btn" hx-post="/clear" hx-target="#top-row" hx-swap="innerHTML">Clear Chat</button>
+                        </div>
+                    </form> 
+                </tr>
+            </table>
         </div>
+        <div class="sidebar" id="sidebar" style="flex: none;"><button class="btn" id="floating-button" hx-get="/getsidebar" hx-target="#sidebar" hx-swap="outerHTML">Show Menu</button></div>
+    </div>
 </body>
 </html>
