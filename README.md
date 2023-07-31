@@ -6,8 +6,9 @@ AgentSmith is a command-line tool, chat assistant (command-line and GUI), Python
 
 Users can freely edit/save/load prompts, chats, and functions to experiment with responses. Agents have the ability to automatically request functions and can interact with literally any other program*. 
 
-
 *You may have to build an interface but there's tools/examples to cover that
+
+#### [Demo](http://3.26.158.237:49327/)
 
 ### Features
 
