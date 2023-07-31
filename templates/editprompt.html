@@ -5,7 +5,8 @@
         <td><a href="/"><button class="btn">Back</button></a></td>
     </tr>
     <tr>
-        <td style="text-align: left;"><form hx-post="/promptset" hx-target="#main-content" hx-swap="none">
+        <td style="text-align: left;">
+            <form hx-post="/promptset" hx-target="#main-content" hx-swap="none">
             <p>Prompt name:<br><input name="promptname" value="{{ .Name }}"></p>
             <p>Prompt description:<br><textarea name="promptdescription" rows="3">{{ .Description }}</textarea></p>
             <textarea name="edittext" rows="10">{{ .Parameters }}</textarea>
@@ -16,11 +17,11 @@
                 <td><a href="/"><button class="btn">Back</button></a></td>
                 </tr>
             </table>
-        </form>
+            </form>
         </td>
     </tr>
     <tr><td><h4>Saved Prompts</h4></td></tr>
     <tr><td>{{ .SavedPrompts }}</td></tr>
 </table>
-    <div hx-get="/sidebaroff" hx-target="#sidebar" hx-swap="outerHTML" hx-trigger="load"></div>
+<div hx-get="/sidebaroff" hx-target="#sidebar" hx-swap="outerHTML" hx-trigger="load"></div>
 </div>

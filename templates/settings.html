@@ -3,24 +3,22 @@
         <tr>
             <td><h3>Settings</h3></td>
             <td><a href="/"><button class="btn">Back</button></a></td>
-        </tr></table>
-        <br>
-    <table style="display: flex;" id="centertext">
+        </tr>
         <tr>
-            <td style="text-align: left;">
-        <form hx-post="/setsettings" hx-target="#main-content" hx-swap="outerHTML">
-            <p>Key: <input name="apikey" value=""></p>
-            <p>Chat Model: <input name="chatmodel" value="{{ .Model }}"></p>
-            <p>Function Model: <input name="functionmodel" value="{{ .Functionmodel }}"></p>
-            <p>Max Tokens: <input name="maxtokens" value="{{ .Maxtokens }}"></p>
-            <p>Call cost: <input name="callcost" value="{{ .Callcost }}"></p>
-            <p>AutoClearFunction: <select name="autoclearfunction">
-                <option value="true" selected>True</option>
-                <option value="false">False</option>
-                </select></p>
-            <p><button class="btn">Save</button></p>
-        </form>
-        </td>
+            <td style="text-align: left;"><br>
+            <form hx-post="/setsettings" hx-target="#main-content" hx-swap="outerHTML">
+                <p>Key: <input name="apikey" value=""></p>
+                <p>Chat Model: <input name="chatmodel" value="{{ .Model }}"></p>
+                <p>Function Model: <input name="functionmodel" value="{{ .Functionmodel }}"></p>
+                <p>Max Tokens: <input name="maxtokens" value="{{ .Maxtokens }}"></p>
+                <p>Call cost: <input name="callcost" value="{{ .Callcost }}"></p>
+                <p>AutoClearFunction: <select name="autoclearfunction">
+                    <option value="true" selected>True</option>
+                    <option value="false">False</option>
+                    </select></p>
+                <p><button class="btn">Save</button></p>
+            </form>
+            </td>
         </tr>
     </table>
     <div hx-get="/sidebaroff" hx-target="#sidebar" hx-swap="outerHTML" hx-trigger="load"></div>

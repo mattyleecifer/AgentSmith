@@ -124,7 +124,6 @@ input {
 
 .page {
     overflow-y: auto;
-    width: 100%;
     display: flex; 
     padding-top: 5vh;
 }
