@@ -28,6 +28,8 @@ button {
 }
 
 #floating-button {
+    background-color: rgba(69, 74, 77, 0.8);
+    border: none;
     position: fixed;
     top: 10px;
     left: 10px;
@@ -131,3 +133,7 @@ table {
     width: 100%;
     text-align: left;
 }
+
+@media (prefers-color-scheme: dark) {
+    /* disable darkmode invert since it's already dark */
+    }
