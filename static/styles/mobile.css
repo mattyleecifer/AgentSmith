@@ -37,17 +37,17 @@
         /* float: none; */
         /* } */
 
-    .top-row {
+    /* .top-row { */
         /* border-bottom: 2px solid #000; */
         /* overflow-y: auto; */
-        height: 80%;  
-        }
+        /* height: 80%;   */
+        /* } */
 
-    .bottom-row {
-        height: 20%;
-        position: fixed;
-        bottom: 0;
-        }
+    /* .bottom-row { */
+        /* height: 20%; */
+        /* position: fixed; */
+        /* bottom: 0; */
+        /* } */
 
     .editbutton {
         width: 100%;

@@ -123,7 +123,7 @@ func (agent *Agent) hloadmessages(w http.ResponseWriter, r *http.Request) {
 		messagelist := "<table id='chattext' style='display: flex; height:30vh; justify-content: center; align-items: center;'><tr><td id='centertext'><div hx-get='/tokenupdate' hx-trigger='load' hx-target='#tokens' hx-swap='innerHTML'>Start asking questions!</div></td></tr></table>"
 		render(w, messagelist, nil)
 	} else {
-		messagelist := "<table class='page'>"
+		messagelist := "<table style='display: flex;'>"
 		for i := 0; i < len(messages); i++ {
 			if messages[i].Content == "" {
 				continue
@@ -153,7 +153,7 @@ func (agent *Agent) hloadmessages(w http.ResponseWriter, r *http.Request) {
 						</tr>`
 
 		}
-		messagelist += `<tr id="chattext" hx-get="/scroll" hx-trigger="load" hx-target="this" hx-swap="none, show:bottom"></tr>`
+		messagelist += `<tr id="chattext" hx-get="/scroll" hx-trigger="load" hx-target="this" hx-swap="none, show:bottom"></tr></table>`
 		render(w, messagelist, nil)
 	}
 }

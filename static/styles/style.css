@@ -3,6 +3,7 @@ html, body {
     width: 100%;
     margin: 0;
     font-size: 18px;
+    overflow: hidden;
     }
 
 
@@ -64,7 +65,7 @@ input {
 .sidebar {
     background-color: #202324;
     flex: 0.7;
-    height: 100vh;
+    height: 100%;
     border-right: 2px solid #000;
     float: left;
     overflow-y: auto;
@@ -126,7 +127,7 @@ input {
 
 .page {
     display: flex; 
-    padding-top:5vh;
+    padding-top: 5vh;
 }
 
 table {
