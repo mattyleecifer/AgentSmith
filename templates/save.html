@@ -1,11 +1,7 @@
-<tr style="background-color: #393939; display: inline-block;">
-    <td>
-      <div class="agent">System</div>
-    </td>
-    <td id="reply-{{.MessageID}}">
-      <div class="message" messageid={{.MessageID}} style="float: left;">
+<tr style="background-color: #393939;">
+    <td class="agent">System</td>
+    <td class="message" id="centertext">
       Chat Saved!
-      </div>
     </td>
-  </tr>
-  <tr id="chattext" hx-get="/scroll" hx-trigger="load" hx-target="this" hx-swap="none, show:bottom"></tr>
+</tr>
+<tr id="chattext" hx-get="/scroll" hx-trigger="load" hx-target="this" hx-swap="none, show:bottom"></tr>
