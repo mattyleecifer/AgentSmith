@@ -1,18 +1,18 @@
 <div class="main-content" id="main-content">
-    <table class='page' id="centertext">
-        <tr>
+    <table style="display: flex;" id="centertext">
+        <tr style="display: flex;" id="centertext">
             <td><h3>Functions</h3></td>
-            <td><br></td>
-            <td><button hx-get="/functioneditadd" hx-target="#main-content" hx-swap="outerHTML"class="btn">Add</button>
-            </td>
-            <td><a href="/"><button class="btn">Back</button></a></td>
         </tr>
+        <tr style="display: flex;" id="centertext">
+            <td><button hx-get="/functioneditadd" hx-target="#main-content" hx-swap="outerHTML"class="btn">New</button></td><td><a href="/"><button class="btn">Back</button></a></td>
+        </tr>
+        <tr></tr>
         <tr>
-            <td>Current functions:<br>
+            <td><p>Current functions:</p>
             {{ .CurrentFunctions }}</td>
         </tr>
         <tr>
-            <td><br><br>Saved functions:<br>
+            <td><p>Saved functions:</p>
             {{ .SavedFunctions }}</td>
         </tr>
     </table>

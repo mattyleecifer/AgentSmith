@@ -1,14 +1,16 @@
 <div class="main-content" id="main-content"> 
-<table class='page' id="centertext">
-    <tr>
+<table id="centertext">
+    <tr class="page" id="centertext">
         <td><h3>Prompt Editor</h3></td>
+    </tr>
+    <tr>
         <td><a href="/"><button class="btn">Back</button></a></td>
     </tr>
     <tr>
-        <td style="text-align: left;">
+        <td>
             <form hx-post="/promptset" hx-target="#main-content" hx-swap="none">
-            <p>Prompt name:<br><input name="promptname" value="{{ .Name }}"></p>
-            <p>Prompt description:<br><textarea name="promptdescription" rows="3">{{ .Description }}</textarea></p>
+            <div><p>Prompt name:</p><input name="promptname" value="{{ .Name }}"></div>
+            <div><p>Prompt description:</p><textarea name="promptdescription" rows="3">{{ .Description }}</textarea></div>
             <textarea name="edittext" rows="10">{{ .Parameters }}</textarea>
             <table style="display: flex;" id="centertext">
                 <tr>

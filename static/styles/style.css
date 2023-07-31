@@ -3,7 +3,7 @@ html, body {
     width: 100%;
     margin: 0;
     font-size: 18px;
-    overflow: hidden;
+    overflow: auto;
     color: rgb(232, 230, 227);
     background-color: #202324;
     }
@@ -70,8 +70,8 @@ input {
 
 .main-content {
     flex: 4.2;
-    /* justify-content: flex-start; */
-    /* float: right; */
+    justify-content: flex-start;
+    float: right;
     width: 100%;
     }
 
@@ -93,6 +93,8 @@ input {
     justify-content: center;
     align-items: center;
     text-align: center;
+    overflow-y: auto;
+    width: 100%;
     }
 
 .agent {
@@ -123,12 +125,12 @@ input {
 }
 
 .page {
-    overflow-y: auto;
-    display: flex; 
+    display: flex;
     padding-top: 5vh;
 }
 
 table {
+    overflow-y: auto;
     width: 100%;
     text-align: left;
 }

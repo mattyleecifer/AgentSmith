@@ -1,23 +1,26 @@
 <div class="main-content" id="main-content">
-    <table class='page' id="centertext">
-        <tr>
+    <table id="centertext">
+        <tr class='page' id="centertext">
             <td><h3>Function Editor</h3></td>
+        </tr>
+        <tr>
             <td><button class="btn" hx-get='/functioneditpage' hx-target='#main-content' hx-swap='outerHTML'>Back</button></td>
         </tr>
-        <tr id="functioneditor">
+        <tr>
             <td>
-                <div class="message">
-                <form hx-post="/functionset" hx-target="#main-content" hx-swap="outerHTML">
-                    <p>Function name:<br><input name="functionname" value="{{ .Name }}"></p>
-                    <p>Function description:<br><textarea name="functiondescription" rows="3" style="height: 100%;">{{ .Description }}</textarea></p>
-                    <textarea name="edittext" rows="10" style="height: 100%;">{{ .Parameters }}</textarea>
-                    <table style="display: flex;"><tr><td>
-                    <button class="btn">Set</button></td><td>
-                    <button class="btn" hx-post="/functionsave" hx-target="#main-content" hx-swap="outerHTML">Save</button></td><td>
-                    <button class="btn" hx-get='/functioneditpage' hx-target='#main-content' hx-swap='outerHTML'>Back</button>
-                    </td></tr></table>
-                </form>
-                </div>
+            <form hx-post="/functionset" hx-target="#main-content" hx-swap="outerHTML">
+                <p>Function name:</p><input name="functionname" value="{{ .Name }}"><br>
+                <p>Function description:</p><textarea name="functiondescription" rows="3" style="height: 100%;">{{ .Description }}</textarea><br>
+                <p>Function arguments:</p><textarea name="edittext" rows="10" style="height: 100%;">{{ .Parameters }}</textarea>
+                <br>
+                <table style="display: flex;" id="centertext">
+                    <tr>
+                        <td><button class="btn">Set</button></td>
+                        <td><button class="btn" hx-post="/functionsave" hx-target="#main-content" hx-swap="outerHTML">Save</button></td>
+                        <td><button class="btn" hx-get='/functioneditpage' hx-target='#main-content' hx-swap='outerHTML'>Back</button></td>
+                    </tr>
+                </table>
+            </form>
             </td>
         </tr>
     </table>
