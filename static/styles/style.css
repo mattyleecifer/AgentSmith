@@ -4,9 +4,9 @@ html, body {
     margin: 0;
     font-size: 18px;
     overflow: hidden;
+    color: rgb(232, 230, 227);
+    background-color: #202324;
     }
-
-
 
 button {
     padding: 10px 5px;
@@ -57,13 +57,10 @@ input {
     display: flex;
     flex-wrap: wrap;
     border: none;
-    color: rgb(232, 230, 227);
-    background-color: #202324;
     /* word-wrap: break-word; */
     }
 
 .sidebar {
-    background-color: #202324;
     flex: 0.7;
     height: 100%;
     border-right: 2px solid #000;
@@ -126,6 +123,8 @@ input {
 }
 
 .page {
+    overflow-y: auto;
+    width: 100%;
     display: flex; 
     padding-top: 5vh;
 }

@@ -20,8 +20,8 @@
                     </table>
                 </table>
                 <table class="bottom-row">
-                    <form id="chatForm" hx-post="/clearchat" hx-target="#chatinput" hx-swap="outerHTML">
-                        <div>
+                    <form hx-post="/clearchat" hx-target="#chatinput" hx-swap="outerHTML">
+                        <div id="chatForm">
                             <textarea id="chatinput" type="text" name="text" autocomplete="off" style="float: left;" tabindex="1"></textarea>
                         </div>
                         <div>    
