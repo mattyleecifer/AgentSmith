@@ -46,12 +46,12 @@ func (agent *Agent) hsetsettings(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusTemporaryRedirect)
 }
 
-func hgetsidebar(w http.ResponseWriter, r *http.Request) {
+func hsidebaron(w http.ResponseWriter, r *http.Request) {
 	render(w, hsidebar, nil)
 }
 
 func hsidebaroff(w http.ResponseWriter, r *http.Request) {
-	button := `<div class="sidebar" id="sidebar" style="flex: none;"><button class="btn" id="floating-button" hx-get="/getsidebar" hx-target="#sidebar" hx-swap="outerHTML">Show Menu</button></div>`
+	button := `<div class="sidebar" id="sidebar" style="flex: none;"><button class="btn" id="floating-button" hx-get="/sidebaron" hx-target="#sidebar" hx-swap="outerHTML">Show Menu</button></div>`
 	render(w, button, nil)
 }
 

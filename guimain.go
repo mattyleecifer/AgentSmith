@@ -29,7 +29,7 @@ func (agent *Agent) gui() {
 	http.HandleFunc("/loadsettings", RequireAuth(hloadsettings))
 	http.HandleFunc("/setsettings", RequireAuth(agent.hsetsettings))
 	http.HandleFunc("/loadchat", RequireAuth(hloadchatpage))
-	http.HandleFunc("/getsidebar", RequireAuth(hgetsidebar))
+	http.HandleFunc("/sidebaron", RequireAuth(hsidebaron))
 	http.HandleFunc("/sidebaroff", RequireAuth(hsidebaroff))
 	http.HandleFunc("/autorequestfunctionon", RequireAuth(agent.hautorequestfunctionon))
 	http.HandleFunc("/autofunctionon", RequireAuth(hautofunctionon))
