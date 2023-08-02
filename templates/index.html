@@ -11,8 +11,10 @@
 </head>
 <body>
     <div class="container">
-        <div class="mobile"><div class="sidebar" id="sidebar" style="flex: none;"><button class="btn" id="floating-button" hx-get="/sidebaron" hx-target="#sidebar" hx-swap="outerHTML">Show Menu</button></div></div>
-        <div class="nonmobile" hx-get="/sidebaron" hx-target="this" hx-swap="outerHTML" hx-trigger="intersect"></div>
+        <div class="sidebar" id="sidebar" style="flex: none;">
+            <div class="mobile"><button class="btn" id="floating-button" hx-get="/sidebaron" hx-target="#sidebar" hx-swap="outerHTML">Show Menu</button></div>
+            <div class="nonmobile" hx-get="/sidebaron" hx-target="#sidebar" hx-swap="outerHTML" hx-trigger="intersect"></div>
+        </div>
         <div class="main-content" id="main-content" style="overflow: auto;">
             <table class="top-row" id="top-row">
                 <table style='display: flex;'>
