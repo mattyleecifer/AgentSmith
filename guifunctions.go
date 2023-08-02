@@ -18,33 +18,37 @@ func hloadchatpage(w http.ResponseWriter, r *http.Request) {
 }
 
 func hloadsettings(w http.ResponseWriter, r *http.Request) {
-	data := struct {
-		Model         string
-		Functionmodel string
-		Maxtokens     string
-		Callcost      string
-	}{
-		Model:         model,
-		Functionmodel: functionmodel,
-		Maxtokens:     strconv.Itoa(maxtokens),
-		Callcost:      strconv.FormatFloat(callcost, 'f', -1, 64),
-	}
-	render(w, hsettings, data)
+
 }
 
-func (agent *Agent) hsetsettings(w http.ResponseWriter, r *http.Request) {
-	apikey := r.FormValue("apikey")
-	if apikey != "" {
-		c := openai.NewClient(apikey)
-		agent.client = c
+func (agent *Agent) hsettings(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodGet {
+		data := struct {
+			Model         string
+			Functionmodel string
+			Maxtokens     string
+			Callcost      string
+		}{
+			Model:         model,
+			Functionmodel: functionmodel,
+			Maxtokens:     strconv.Itoa(maxtokens),
+			Callcost:      strconv.FormatFloat(callcost, 'f', -1, 64),
+		}
+		render(w, hsettingspage, data)
 	}
-	model = r.FormValue("chatmodel")
-	functionmodel = r.FormValue("functionmodel")
-	maxtokens, _ = strconv.Atoi(r.FormValue("maxtokens"))
-	callcost, _ = strconv.ParseFloat(r.FormValue("callcost"), 64)
-	autoclearfunction, _ = strconv.ParseBool(r.FormValue("autoclearfunction"))
-	w.Header().Set("HX-Redirect", "/")
-	w.WriteHeader(http.StatusTemporaryRedirect)
+	if r.Method == http.MethodPut {
+		apikey := r.FormValue("apikey")
+		if apikey != "" {
+			c := openai.NewClient(apikey)
+			agent.client = c
+		}
+		model = r.FormValue("chatmodel")
+		functionmodel = r.FormValue("functionmodel")
+		maxtokens, _ = strconv.Atoi(r.FormValue("maxtokens"))
+		callcost, _ = strconv.ParseFloat(r.FormValue("callcost"), 64)
+		autoclearfunction, _ = strconv.ParseBool(r.FormValue("autoclearfunction"))
+		hloadchatscreen(w, r)
+	}
 }
 
 func hsidebar(w http.ResponseWriter, r *http.Request) {

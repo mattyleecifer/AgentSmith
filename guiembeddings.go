@@ -41,7 +41,7 @@ var hfunctionloadingtemplate string
 var heditprompt string
 
 //go:embed templates/settings.html
-var hsettings string
+var hsettingspage string
 
 //go:embed templates/loadchat.html
 var hloadchat string
