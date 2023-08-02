@@ -1,0 +1,39 @@
+<table id="chatscreen">
+    <table id="top-row" class="top-row">
+        {{ range .Messages }}
+        <tr>
+            <td class="agent">{{ .Role }}</td>
+            <td id="reply-{{ .Index }}" class="message">
+                {{ .Content }}
+            </td>
+            <td class="editbutton">
+                <form hx-get="/edit" hx-target="#reply-{{ .Index }}" hx-swap="outerHTML">
+                    <input type="hidden" name="messageid" value="{{ .Index }}">
+                    <button class="btn">Edit</button>
+                </form>
+                <form hx-post="/delete" hx-target="#top-row" hx-swap="innerHTML">
+                    <input type="hidden" name="messageid" value="{{ .Index }}">
+                    <button class="btn">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {{ else }}
+        <tr><td id='centertext'><div hx-get='/tokenupdate' hx-trigger='load' hx-target='#tokens' hx-swap='innerHTML'>Start asking questions!</div></td></tr>
+        {{ end }}
+        <tr id="chattext" hx-get="/scroll" hx-trigger="load" hx-target="this" hx-swap="none, show:bottom"></tr>
+    </table>
+    <table class="bottom-row">
+        <tr><td><form id="chatForm" hx-post="/clearchat" hx-target="#chatinput" hx-swap="outerHTML">
+            <div id="inputbox">
+                <textarea id="chatinput" type="text" name="text" autocomplete="off" style="float: left;" tabindex="1"></textarea>
+            </div>
+            <div>    
+                <button class="btn" hx-post="/clearchat" hx-target="#chatinput" hx-trigger="keydown[keyCode==13&&shiftKey!=true] from:#inputbox" hx-swap="outerHTML">Submit</button>
+            </div>
+            <div>
+                <button class="btn" hx-post="/clear" hx-target="#main-content" hx-swap="innerHTML">Clear Chat</button>
+            </div>
+        </form><div class="mobile" hx-trigger="intersect" hx-get="/sidebar/off" hx-target="#sidebar" hx-swap="outerHTML"></div>
+    </td></tr>
+    </table>
+</table>

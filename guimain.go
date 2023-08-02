@@ -12,7 +12,7 @@ func (agent *Agent) gui() {
 	http.HandleFunc("/", RequireAuth(index))
 	http.HandleFunc("/chat", RequireAuth(agent.hchat))
 	http.HandleFunc("/submit", RequireAuth(agent.hsubmit))
-	http.HandleFunc("/loadchatscreen", RequireAuth(hloadchatscreen))
+	http.HandleFunc("/loadchatscreen", RequireAuth(agent.hloadchatscreen))
 	http.HandleFunc("/clearchat", RequireAuth(agent.hclearchat))
 	http.HandleFunc("/reset", RequireAuth(agent.hreset))
 	http.HandleFunc("/clear", RequireAuth(agent.hclear))

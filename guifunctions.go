@@ -43,7 +43,7 @@ func (agent *Agent) hsettings(w http.ResponseWriter, r *http.Request) {
 		maxtokens, _ = strconv.Atoi(r.FormValue("maxtokens"))
 		callcost, _ = strconv.ParseFloat(r.FormValue("callcost"), 64)
 		autoclearfunction, _ = strconv.ParseBool(r.FormValue("autoclearfunction"))
-		hloadchatscreen(w, r)
+		agent.hloadchatscreen(w, r)
 	}
 }
 
@@ -119,8 +119,35 @@ func hscroll(w http.ResponseWriter, r *http.Request) {
 	render(w, "", nil)
 }
 
-func hloadchatscreen(w http.ResponseWriter, r *http.Request) {
-	render(w, hchatscreen, nil)
+func (agent *Agent) hloadchatscreen(w http.ResponseWriter, r *http.Request) {
+	type message struct {
+		Role    string
+		Content string
+		Index   int
+	}
+	var data struct {
+		Messages []message
+	}
+
+	messages := agent.req.Messages
+	if len(messages) == 1 {
+		render(w, hchatpage, data)
+	} else {
+		for i, item := range messages {
+			var content string
+			lines := strings.Split(item.Content, "\n")
+			for _, line := range lines {
+				content += line + "<br>"
+			}
+			msg := message{
+				Role:    item.Role,
+				Content: item.Content,
+				Index:   i,
+			}
+			data.Messages = append(data.Messages, msg)
+		}
+		render(w, hchatpage, data)
+	}
 }
 
 func (agent *Agent) hloadmessages(w http.ResponseWriter, r *http.Request) {
@@ -218,7 +245,7 @@ func (agent *Agent) hload(w http.ResponseWriter, r *http.Request) {
 	// fmt.Println("hload")
 	data := r.FormValue("data")
 	agent.load(data)
-	hloadchatscreen(w, r)
+	agent.hloadchatscreen(w, r)
 }
 
 func (agent *Agent) hdeletelines(w http.ResponseWriter, r *http.Request) {
@@ -317,7 +344,7 @@ func (agent *Agent) hdelete(w http.ResponseWriter, r *http.Request) {
 func (agent *Agent) hclear(w http.ResponseWriter, r *http.Request) {
 	// fmt.Println("hclear")
 	agent.setprompt()
-	hloadchatscreen(w, r)
+	agent.hloadchatscreen(w, r)
 }
 
 func (agent *Agent) hrunfunction(w http.ResponseWriter, r *http.Request) {

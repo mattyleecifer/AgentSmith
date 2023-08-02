@@ -49,8 +49,8 @@ var hsavedchatspage string
 //go:embed templates/sidebar.html
 var hsidebarpage string
 
-//go:embed templates/chatscreen.html
-var hchatscreen string
+//go:embed templates/chat.html
+var hchatpage string
 
 //go:embed static
 var hcss embed.FS
