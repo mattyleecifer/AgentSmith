@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/sashabaranov/go-openai"
 )
@@ -263,20 +264,21 @@ func (agent *Agent) hedit(w http.ResponseWriter, r *http.Request) {
 }
 
 func (agent *Agent) hsave(w http.ResponseWriter, r *http.Request) {
-	// fmt.Println("hsave")
-	// filename, err := agent.save()
-	// if err != nil {
-	// 	fmt.Println(err)
-	// }
-	// data := struct {
-	// 	Chatid   string
-	// 	Targetid string
-	// }{
-	// 	Chatid:   filename,
-	// 	Targetid: strings.ReplaceAll(filename, ".", ""),
-	// }
-	agent.save()
-	render(w, hsave, nil)
+	if r.Method == http.MethodGet {
+		currentTime := time.Now()
+		filename := currentTime.Format("20060102150405")
+		data := struct {
+			Filename string
+		}{
+			Filename: filename,
+		}
+		render(w, hsave, data)
+	}
+	if r.Method == http.MethodPost {
+		filename := r.FormValue("filename")
+		agent.save(filename)
+		render(w, "Chat Saved!", nil)
+	}
 }
 
 func (agent *Agent) hclear(w http.ResponseWriter, r *http.Request) {
