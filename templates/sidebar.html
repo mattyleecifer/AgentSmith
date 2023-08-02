@@ -8,10 +8,10 @@
     </div>
     <br>
     <div>
-        <button class="menubtn" hx-post="/clear" hx-target="#top-row" hx-swap="innerHTML">Clear Chat</button>
+        <button class="menubtn" hx-post="/clear" hx-target="#main-content" hx-swap="innerHTML">Clear Chat</button>
     </div>
     <div>
-        <a href="/"><button class="menubtn">Chat Screen</button></a>
+        <button class="menubtn" hx-get="/loadchatscreen" hx-target="#main-content" hx-swap="innerHTML">Chat Screen</button>
     </div>
     <div>
         <button class="menubtn" hx-post="/reset" hx-target="#main-content" hx-swap="innerHTML" hx-confirm="Are you sure?">Reset Chat</button>
@@ -28,7 +28,7 @@
     <div>
         <button class="menubtn" hx-get="/loadchat" hx-target="#main-content" hx-swap="outerHTML">Load Chat</button>
     </div>
-    <div><form hx-get="/save" hx-target="#chattext" hx-swap="outerHTML">
+    <div><form hx-get="/save/" hx-target="#chattext" hx-swap="outerHTML">
         <button class="menubtn">Save Chat</button>
     </form></div>
     <br>

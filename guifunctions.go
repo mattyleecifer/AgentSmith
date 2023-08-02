@@ -117,6 +117,10 @@ func hscroll(w http.ResponseWriter, r *http.Request) {
 	render(w, "", nil)
 }
 
+func hloadchatscreen(w http.ResponseWriter, r *http.Request) {
+	render(w, hchatscreen, nil)
+}
+
 func (agent *Agent) hloadmessages(w http.ResponseWriter, r *http.Request) {
 	// fmt.Println("hloadmessages")
 	messages := agent.req.Messages
@@ -189,11 +193,11 @@ func hgetchathistory(w http.ResponseWriter, r *http.Request) {
 	} else {
 		html := `<table style="display: flex;" id="centertext">`
 		for i := 0; i < len(filelist); i++ {
-			chatid := strings.ReplaceAll(filelist[i], ".", "")
+			chatid := strings.ReplaceAll(filelist[i], ".json", "")
 			html += "<tr id='savedchat" + chatid + "' style='text-align: left;'><td>"
 			html += "<div class='savedchat'><div>"
 			html += filelist[i]
-			html += "</div><td><form hx-post='/load' hx-target='this' hx-swap='innerHTML'><input type='hidden' name='data' value='" + filelist[i] + "'><button class='btn'>Load</button></form></td><td><form hx-post='/deletechathistory' hx-target='#savedchat" + chatid + "' hx-swap='outerHTML' hx-confirm='Are you sure?'><input type='hidden' name='chatid' value='" + filelist[i] + "'><button class='btn'>Delete</button></form></td>"
+			html += "</div><td><form hx-post='/load' hx-target='#main-content' hx-swap='innerHTML'><button class='btn' name='data' value='" + filelist[i] + "'>Load</button></form></td><td><form hx-delete='/save/" + chatid + "/' hx-target='#savedchat" + chatid + "' hx-swap='outerHTML' hx-confirm='Are you sure?'><button class='btn'>Delete</button></form></td>"
 			html += `</tr>`
 		}
 		html += "</table><div id='addchat'></div>"
@@ -212,8 +216,7 @@ func (agent *Agent) hload(w http.ResponseWriter, r *http.Request) {
 	// fmt.Println("hload")
 	data := r.FormValue("data")
 	agent.load(data)
-	w.Header().Set("HX-Redirect", "/")
-	w.WriteHeader(http.StatusTemporaryRedirect)
+	hloadchatscreen(w, r)
 }
 
 func (agent *Agent) hdelete(w http.ResponseWriter, r *http.Request) {
@@ -274,29 +277,28 @@ func (agent *Agent) hsave(w http.ResponseWriter, r *http.Request) {
 		}
 		render(w, hsave, data)
 	}
+
 	if r.Method == http.MethodPost {
 		filename := r.FormValue("filename")
 		agent.save(filename)
 		render(w, "Chat Saved!", nil)
+	}
+
+	if r.Method == http.MethodDelete {
+		chatid := strings.TrimPrefix(r.URL.Path, "/save/")
+		chatid = strings.TrimSuffix(chatid, "/")
+		err := deletesave(chatid + ".json")
+		if err != nil {
+			fmt.Println(err)
+		}
+		render(w, "<tr><td>Chat Deleted</td></tr>", nil)
 	}
 }
 
 func (agent *Agent) hclear(w http.ResponseWriter, r *http.Request) {
 	// fmt.Println("hclear")
 	agent.setprompt()
-	// agent.hloadmessages(w, r)
-	w.Header().Set("HX-Redirect", "/")
-	w.WriteHeader(http.StatusTemporaryRedirect)
-}
-
-func hdeletechathistory(w http.ResponseWriter, r *http.Request) {
-	// fmt.Println("hdeletechathistory")
-	chatid := r.FormValue("chatid")
-	err := deletesave(chatid)
-	if err != nil {
-		fmt.Println(err)
-	}
-	render(w, "", nil)
+	hloadchatscreen(w, r)
 }
 
 func (agent *Agent) hrunfunction(w http.ResponseWriter, r *http.Request) {
@@ -410,10 +412,14 @@ func getsavefilelist() ([]string, error) {
 }
 
 func deletesave(filename string) error {
-	// Create a directory for your app
-	filepath := filepath.Join(homeDir, "Saves", filename)
+	var savepath string
+	if strings.HasSuffix(filename, ".json") {
+		savepath = filepath.Join(homeDir, "Saves", filename)
+	} else {
+		savepath = filepath.Join(homeDir, "Saves", filename+".json")
+	}
 
-	err := os.Remove(filepath)
+	err := os.Remove(savepath)
 	if err != nil {
 		fmt.Println("Error deleting file:", err)
 		return err
