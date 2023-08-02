@@ -43,8 +43,8 @@ var heditprompt string
 //go:embed templates/settings.html
 var hsettingspage string
 
-//go:embed templates/loadchat.html
-var hloadchat string
+//go:embed templates/savedchats.html
+var hsavedchatspage string
 
 //go:embed templates/sidebar.html
 var hsidebarpage string

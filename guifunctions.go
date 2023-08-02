@@ -13,8 +13,8 @@ import (
 	"github.com/sashabaranov/go-openai"
 )
 
-func hloadsavedchats(w http.ResponseWriter, r *http.Request) {
-	render(w, hloadchat, nil)
+func hsavedchats(w http.ResponseWriter, r *http.Request) {
+	render(w, hsavedchatspage, nil)
 }
 
 func (agent *Agent) hsettings(w http.ResponseWriter, r *http.Request) {
