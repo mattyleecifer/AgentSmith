@@ -28,8 +28,8 @@ var hedited string
 //go:embed templates/save.html
 var hsave string
 
-//go:embed templates/functioneditpage.html
-var hfunctioneditpage string
+//go:embed templates/functions.html
+var hfunctionspage string
 
 //go:embed templates/editfunction.html
 var heditfunction string

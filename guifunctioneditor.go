@@ -16,7 +16,7 @@ import (
 )
 
 func (agent *Agent) handlersfunctioneditor() {
-	http.HandleFunc("/functioneditpage", RequireAuth(agent.hfunctioneditpage))
+	http.HandleFunc("/functions", RequireAuth(agent.hfunctions))
 	http.HandleFunc("/functiondelete", RequireAuth(agent.hfunctiondelete))
 	http.HandleFunc("/functionremove", RequireAuth(agent.hfunctionremove))
 	http.HandleFunc("/functioneditcurrent", RequireAuth(agent.hfunctioneditcurrent))
@@ -26,7 +26,7 @@ func (agent *Agent) handlersfunctioneditor() {
 	http.HandleFunc("/functionsave", RequireAuth(agent.hfunctionsave))
 }
 
-func (agent *Agent) hfunctioneditpage(w http.ResponseWriter, r *http.Request) {
+func (agent *Agent) hfunctions(w http.ResponseWriter, r *http.Request) {
 	var data struct {
 		CurrentFunctions template.HTML
 		SavedFunctions   template.HTML
@@ -65,20 +65,20 @@ func (agent *Agent) hfunctioneditpage(w http.ResponseWriter, r *http.Request) {
 	data.CurrentFunctions = tcurrentfunctions
 	data.SavedFunctions = tsavedfunctions
 
-	render(w, hfunctioneditpage, data)
+	render(w, hfunctionspage, data)
 }
 
 func (agent *Agent) hfunctionremove(w http.ResponseWriter, r *http.Request) {
 	functionname := r.FormValue("functionname")
 	agent.removefunction(functionname)
-	agent.hfunctioneditpage(w, r)
+	agent.hfunctions(w, r)
 }
 
 func (agent *Agent) hfunctiondelete(w http.ResponseWriter, r *http.Request) {
 	functionname := r.FormValue("functionname")
 	functionname += ".json"
 	deletefunction(functionname)
-	agent.hfunctioneditpage(w, r)
+	agent.hfunctions(w, r)
 }
 
 func (agent *Agent) hfunctionload(w http.ResponseWriter, r *http.Request) {
@@ -89,7 +89,7 @@ func (agent *Agent) hfunctionload(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 	}
 	agent.setfunction(newfunction)
-	agent.hfunctioneditpage(w, r)
+	agent.hfunctions(w, r)
 }
 
 func (agent *Agent) hfunctionset(w http.ResponseWriter, r *http.Request) {
@@ -107,7 +107,7 @@ func (agent *Agent) hfunctionset(w http.ResponseWriter, r *http.Request) {
 	}
 
 	agent.setfunction(newfunction)
-	agent.hfunctioneditpage(w, r)
+	agent.hfunctions(w, r)
 }
 
 func (agent *Agent) hfunctionedit(w http.ResponseWriter, r *http.Request, f openai.FunctionDefinition) {
@@ -183,7 +183,7 @@ func (agent *Agent) hfunctionsave(w http.ResponseWriter, r *http.Request) {
 
 	savefunction(&newfunction)
 
-	agent.hfunctioneditpage(w, r)
+	agent.hfunctions(w, r)
 }
 
 func savefunction(f *openai.FunctionDefinition) (string, error) {
