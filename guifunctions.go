@@ -13,12 +13,8 @@ import (
 	"github.com/sashabaranov/go-openai"
 )
 
-func hloadchatpage(w http.ResponseWriter, r *http.Request) {
+func hloadsavedchats(w http.ResponseWriter, r *http.Request) {
 	render(w, hloadchat, nil)
-}
-
-func hloadsettings(w http.ResponseWriter, r *http.Request) {
-
 }
 
 func (agent *Agent) hsettings(w http.ResponseWriter, r *http.Request) {
@@ -203,7 +199,7 @@ func hgetchathistory(w http.ResponseWriter, r *http.Request) {
 			html += "<tr id='savedchat" + chatid + "' style='text-align: left;'><td>"
 			html += "<div class='savedchat'><div>"
 			html += filelist[i]
-			html += "</div><td><form hx-post='/load' hx-target='#main-content' hx-swap='innerHTML'><button class='btn' name='data' value='" + filelist[i] + "'>Load</button></form></td><td><form hx-delete='/save/" + chatid + "/' hx-target='#savedchat" + chatid + "' hx-swap='outerHTML' hx-confirm='Are you sure?'><button class='btn'>Delete</button></form></td>"
+			html += "</div><td><form hx-post='/load' hx-target='#main-content' hx-swap='innerHTML'><button class='btn' name='data' value='" + filelist[i] + "'>Load</button></form></td><td><form hx-delete='/delete/chat/" + chatid + "' hx-target='#savedchat" + chatid + "' hx-swap='outerHTML' hx-confirm='Are you sure?'><button class='btn'>Delete</button></form></td>"
 			html += `</tr>`
 		}
 		html += "</table><div id='addchat'></div>"
@@ -225,7 +221,7 @@ func (agent *Agent) hload(w http.ResponseWriter, r *http.Request) {
 	hloadchatscreen(w, r)
 }
 
-func (agent *Agent) hdelete(w http.ResponseWriter, r *http.Request) {
+func (agent *Agent) hdeletelines(w http.ResponseWriter, r *http.Request) {
 	// fmt.Println("hdelete")
 	messageid := r.FormValue("messageid")
 	err := agent.deletelines(messageid)
@@ -273,26 +269,43 @@ func (agent *Agent) hedit(w http.ResponseWriter, r *http.Request) {
 }
 
 func (agent *Agent) hsave(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodGet {
-		currentTime := time.Now()
-		filename := currentTime.Format("20060102150405")
-		data := struct {
-			Filename string
-		}{
-			Filename: filename,
+	rawquery := strings.TrimPrefix(r.URL.Path, "/save/")
+	query := strings.Split(rawquery, "/")
+	switch query[0] {
+	case "chat":
+		if r.Method == http.MethodGet {
+			currentTime := time.Now()
+			filename := currentTime.Format("20060102150405")
+			data := struct {
+				Filename string
+			}{
+				Filename: filename,
+			}
+			render(w, hsave, data)
 		}
-		render(w, hsave, data)
-	}
 
-	if r.Method == http.MethodPost {
-		filename := r.FormValue("filename")
-		agent.save(filename)
-		render(w, "Chat Saved!", nil)
+		if r.Method == http.MethodPost {
+			filename := r.FormValue("filename")
+			agent.save(filename)
+			render(w, "Chat Saved!", nil)
+		}
+		if r.Method == http.MethodDelete {
+			chatid := query[1]
+			err := deletesave(chatid + ".json")
+			if err != nil {
+				fmt.Println(err)
+			}
+			render(w, "<tr><td>Chat Deleted</td></tr>", nil)
+		}
 	}
+}
 
-	if r.Method == http.MethodDelete {
-		chatid := strings.TrimPrefix(r.URL.Path, "/save/")
-		chatid = strings.TrimSuffix(chatid, "/")
+func (agent *Agent) hdelete(w http.ResponseWriter, r *http.Request) {
+	rawquery := strings.TrimPrefix(r.URL.Path, "/delete/")
+	query := strings.Split(rawquery, "/")
+	switch query[0] {
+	case "chat":
+		chatid := query[1]
 		err := deletesave(chatid + ".json")
 		if err != nil {
 			fmt.Println(err)
