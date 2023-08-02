@@ -104,7 +104,7 @@ input {
     }
 
 .agent {
-    width: 8vw;
+    /* width: 8vw; */
     float: left;
     text-align: center;
     overflow: hidden;

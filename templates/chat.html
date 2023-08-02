@@ -18,7 +18,7 @@
             </td>
         </tr>
         {{ else }}
-        <tr><td id='centertext'><div hx-get='/tokenupdate' hx-trigger='load' hx-target='#tokens' hx-swap='innerHTML'>Start asking questions!</div></td></tr>
+        <tr><td><div hx-get='/tokenupdate' hx-trigger='load' hx-target='#tokens' hx-swap='innerHTML' id='centertext'>Start asking questions!</div></td></tr>
         {{ end }}
         <tr id="chattext" hx-get="/scroll" hx-trigger="load" hx-target="this" hx-swap="none, show:bottom"></tr>
     </table>
