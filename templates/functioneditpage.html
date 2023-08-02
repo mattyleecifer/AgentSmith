@@ -16,5 +16,5 @@
             {{ .SavedFunctions }}</td>
         </tr>
     </table>
-    <div hx-get="/sidebaroff" hx-target="#sidebar" hx-swap="outerHTML" hx-trigger="load"></div>
+    <div class="mobile" hx-trigger="intersect" hx-get="/sidebaroff" hx-target="#sidebar" hx-swap="outerHTML"></div>
 </div>

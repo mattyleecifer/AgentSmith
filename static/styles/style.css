@@ -132,8 +132,16 @@ input {
 
 table {
     overflow-y: auto;
-    width: 100%;
+    width: max-content;
     text-align: left;
+}
+
+.mobile {
+    display: none;
+}
+
+.nonmobile {
+    display: flex;
 }
 
 @media (prefers-color-scheme: dark) {

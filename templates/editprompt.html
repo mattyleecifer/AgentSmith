@@ -20,10 +20,10 @@
                 </tr>
             </table>
             </form>
+            <div class="mobile" hx-trigger="intersect" hx-get="/sidebaroff" hx-target="#sidebar" hx-swap="outerHTML"></div>
         </td>
     </tr>
     <tr><td><h4>Saved Prompts</h4></td></tr>
     <tr><td>{{ .SavedPrompts }}</td></tr>
 </table>
-<div hx-get="/sidebaroff" hx-target="#sidebar" hx-swap="outerHTML" hx-trigger="load"></div>
 </div>

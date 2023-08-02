@@ -123,37 +123,37 @@ func (agent *Agent) hloadmessages(w http.ResponseWriter, r *http.Request) {
 		messagelist := "<table style='display: flex;'><table id='chattext' style='display: flex; height:30vh; justify-content: center; align-items: center;'><tr><td id='centertext'><div hx-get='/tokenupdate' hx-trigger='load' hx-target='#tokens' hx-swap='innerHTML'>Start asking questions!</div></td></tr></table></table>" // 2 tables on purpose
 		render(w, messagelist, nil)
 	} else {
-		messagelist := "<table style='display: flex;'>"
+		messagelist := ""
 		for i := 0; i < len(messages); i++ {
 			if messages[i].Content == "" {
 				continue
 			}
 			chatid := fmt.Sprint(i)
 
-			messagelist += `<tr><td class="agent">
-						` + messages[i].Role + `</td>
-						<td id="reply-` + chatid + `" class="message">
-						<div messageid="` + chatid + `">`
+			messagelist += `
+			<tr><td class="agent">` + messages[i].Role + `</td>
+				<td id="reply-` + chatid + `" class="message">`
 
 			lines := strings.Split(messages[i].Content, "\n")
 			for _, line := range lines {
 				messagelist += line + "<br>"
 			}
 
-			messagelist += `</td><td class="editbutton">
-						<form hx-get="/edit" hx-target="#reply-` + chatid + `" hx-swap="outerHTML">
-						<input type="hidden" name="messageid" value="` + chatid + `">
-						<button class="btn">Edit</button>
-						</form>
-						<form hx-post="/delete" hx-target="#top-row" hx-swap="innerHTML">
-						<input type="hidden" name="messageid" value="` + chatid + `">
-						<button class="btn">Delete</button>
-						</form>
-						</td>
-						</tr>`
+			messagelist += `</td>
+				<td class="editbutton">
+				<form hx-get="/edit" hx-target="#reply-` + chatid + `" hx-swap="outerHTML">
+					<input type="hidden" name="messageid" value="` + chatid + `">
+					<button class="btn">Edit</button>
+				</form>
+				<form hx-post="/delete" hx-target="#top-row" hx-swap="innerHTML">
+					<input type="hidden" name="messageid" value="` + chatid + `">
+					<button class="btn">Delete</button>
+				</form>
+				</td>
+			</tr>`
 
 		}
-		messagelist += `<tr id="chattext" hx-get="/scroll" hx-trigger="load" hx-target="this" hx-swap="none, show:bottom"></tr></table>`
+		messagelist += `<tr id="chattext" hx-get="/scroll" hx-trigger="load" hx-target="this" hx-swap="none, show:bottom"></tr>`
 		render(w, messagelist, nil)
 	}
 }
