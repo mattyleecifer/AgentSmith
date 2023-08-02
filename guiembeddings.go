@@ -47,7 +47,7 @@ var hsettings string
 var hloadchat string
 
 //go:embed templates/sidebar.html
-var hsidebar string
+var hsidebarpage string
 
 //go:embed templates/chatscreen.html
 var hchatscreen string

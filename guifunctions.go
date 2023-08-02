@@ -47,13 +47,15 @@ func (agent *Agent) hsetsettings(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusTemporaryRedirect)
 }
 
-func hsidebaron(w http.ResponseWriter, r *http.Request) {
-	render(w, hsidebar, nil)
-}
-
-func hsidebaroff(w http.ResponseWriter, r *http.Request) {
-	button := `<div class="sidebar" id="sidebar" style="flex: none;"><button class="btn" id="floating-button" hx-get="/sidebaron" hx-target="#sidebar" hx-swap="outerHTML">Show Menu</button></div>`
-	render(w, button, nil)
+func hsidebar(w http.ResponseWriter, r *http.Request) {
+	mode := strings.TrimPrefix(r.URL.Path, "/sidebar/")
+	switch mode {
+	case "on":
+		render(w, hsidebarpage, nil)
+	case "off":
+		button := `<div class="sidebar" id="sidebar" style="flex: none;"><button class="btn" id="floating-button" hx-get="/sidebar/on" hx-target="#sidebar" hx-swap="outerHTML">Show Menu</button></div>`
+		render(w, button, nil)
+	}
 }
 
 func (agent *Agent) htokenupdate(w http.ResponseWriter, r *http.Request) {

@@ -1,7 +1,7 @@
 <div class="sidebar" id="sidebar" style="order: -1; width: 100%;">
     <div id="lookatthesidebar" hx-get="/scroll" hx-trigger="load" hx-target="this" hx-swap="none, show:top"></div>
     <div>
-        <button class="menubtn" hx-get="/sidebaroff" hx-target="#sidebar" hx-swap="outerHTML">Hide Menu</button>
+        <button class="menubtn" hx-get="/sidebar/off" hx-target="#sidebar" hx-swap="outerHTML">Hide Menu</button>
     </div>
     <br>
     <div id="tokens" hx-get="/tokenupdate" hx-trigger="load" hx-target="this" hx-swap="innerHTML">
