@@ -4,7 +4,7 @@
         <tr>
             <td class="agent">{{ .Role }}</td>
             <td id="reply-{{ .Index }}" class="message">
-                {{ .Content }}
+                <pre style="white-space: pre-wrap; font-family: inherit;">{{ .Content }}</pre>
             </td>
             <td class="editbutton">
                 <form hx-get="/edit" hx-target="#reply-{{ .Index }}" hx-swap="outerHTML">
