@@ -53,7 +53,7 @@ func hsidebar(w http.ResponseWriter, r *http.Request) {
 	case "on":
 		render(w, hsidebarpage, nil)
 	case "off":
-		button := `<div class="sidebar" id="sidebar" style="flex: none;"><button class="btn" id="floating-button" hx-get="/sidebar/on" hx-target="#sidebar" hx-swap="outerHTML">Show Menu</button></div>`
+		button := `<div class="sidebar" id="sidebar" style="flex: none;       background-color: transparent;"><button class="btn" id="floating-button" hx-get="/sidebar/on" hx-target="#sidebar" hx-swap="outerHTML">Show Menu</button></div>`
 		render(w, button, nil)
 	}
 }

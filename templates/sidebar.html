@@ -28,9 +28,9 @@
     <div>
         <button class="menubtn" hx-get="/savedchats/" hx-target="#main-content" hx-swap="outerHTML">Load Chat</button>
     </div>
-    <div><form hx-get="/save/chat/" hx-target="#chattext" hx-swap="outerHTML">
-        <button class="menubtn">Save Chat</button>
-    </form></div>
+    <div>
+        <button hx-get="/save/chat/" hx-target="#chattext" hx-swap="outerHTML" class="menubtn">Save Chat</button>
+    </div>
     <br>
     <div id="autofunctiontoggle">
         <div hx-post="/autofunctionstatus" hx-target="#autofunctiontoggle" hx-swap="innerHTML" hx-trigger="load"></div>

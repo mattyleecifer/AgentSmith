@@ -49,6 +49,11 @@
         /* position: fixed; */
         /* bottom: 0; */
         /* } */
+    .chatsubmitclear {
+        float: none;
+        width: 100%;
+        margin-left: none;
+    }
 
     .editbutton {
         width: 100%;
