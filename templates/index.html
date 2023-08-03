@@ -1,23 +1,21 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta name="HandheldFriendly" content="true" />
-    <meta name="MobileOptimized" content="320" />
-    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, width=device-width, user-scalable=no" />
-    <script src="https://unpkg.com/htmx.org@1.9.2" integrity="sha384-L6OqL9pRWyyFU3+/bjdSri+iIphTN/bvYyM37tICVyOJkWZLpP2vGn6VUEXgzg6h" crossorigin="anonymous"></script>
-    <title>AgentSmith</title>
-    <link rel="stylesheet" href="/static/styles/style.css">
-    <link rel="stylesheet" href="/static/styles/mobile.css" media="screen and (max-width: 800px)">
-</head>
-<body>
-    <div class="container">
+    <head>
+        <meta name="HandheldFriendly" content="true" />
+        <meta name="MobileOptimized" content="320" />
+        <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, width=device-width, user-scalable=no" />
+        <script src="https://unpkg.com/htmx.org@1.9.2" integrity="sha384-L6OqL9pRWyyFU3+/bjdSri+iIphTN/bvYyM37tICVyOJkWZLpP2vGn6VUEXgzg6h" crossorigin="anonymous"></script>
+        <title>AgentSmith</title>
+        <link rel="stylesheet" href="/static/styles/style.css">
+        <link rel="stylesheet" href="/static/styles/mobile.css" media="screen and (max-width: 800px)">
+    </head>
+    <body>
         <div class="sidebar" id="sidebar" style="flex: none;">
             <div class="mobile"><button class="btn" id="floating-button" hx-get="/sidebar/on" hx-target="#sidebar" hx-swap="outerHTML">Show Menu</button></div>
             <div class="nonmobile" hx-get="/sidebar/on" hx-target="#sidebar" hx-swap="outerHTML" hx-trigger="intersect"></div>
         </div>
-        <div class="main-content" id="main-content" style="overflow: auto;">
-            <div hx-get="/loadchatscreen" hx-trigger="load" hx-swap="this"></div>
+        <div class="main-content" id="main-content">
+            <div hx-get="/loadchatscreen" hx-trigger="load" hx-swap="outerHTML" hx-target="this"></div>
         </div>
-    </div>
-</body>
+    </body>
 </html>
