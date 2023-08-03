@@ -90,7 +90,7 @@ func (agent *Agent) hchat(w http.ResponseWriter, r *http.Request) {
 		} else {
 			data.Message = response.Message.Content
 			data.MessageID = len(agent.req.Messages) - 1
-			data.Run = template.HTML("<input type='hidden' name='functionname' value='" + response.FunctionCall.Name + "'><button class='btn'>Run</button>")
+			data.Run = template.HTML("<button class='btn' name='functionname' value='" + response.FunctionCall.Name + "'>Run</button>")
 		}
 	} else {
 		data.Message = response.Message.Content
@@ -176,12 +176,10 @@ func (agent *Agent) hloadmessages(w http.ResponseWriter, r *http.Request) {
 			messagelist += `</td>
 				<td class="editbutton">
 				<form hx-get="/edit" hx-target="#reply-` + chatid + `" hx-swap="outerHTML">
-					<input type="hidden" name="messageid" value="` + chatid + `">
-					<button class="btn">Edit</button>
+				<button class="btn" name="messageid" value="` + chatid + `">Edit</button>
 				</form>
 				<form hx-post="/delete" hx-target="#top-row" hx-swap="innerHTML">
-					<input type="hidden" name="messageid" value="` + chatid + `">
-					<button class="btn">Delete</button>
+				<button class="btn" name="messageid" value="` + chatid + `">Delete</button>
 				</form>
 				</td>
 			</tr>`
