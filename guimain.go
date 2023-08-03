@@ -10,7 +10,8 @@ import (
 
 func (agent *Agent) gui() {
 	http.HandleFunc("/", RequireAuth(index))
-	http.HandleFunc("/chat", RequireAuth(agent.hchat))
+	http.HandleFunc("/chat/", RequireAuth(agent.hchat))
+	http.HandleFunc("/getresponse", RequireAuth(agent.hgetresponse))
 	http.HandleFunc("/submit", RequireAuth(agent.hsubmit))
 	http.HandleFunc("/loadchatscreen", RequireAuth(agent.hloadchatscreen))
 	http.HandleFunc("/clearchat", RequireAuth(agent.hclearchat))
@@ -24,7 +25,6 @@ func (agent *Agent) gui() {
 	http.HandleFunc("/delete", RequireAuth(agent.hdeletelines))
 	http.HandleFunc("/tokenupdate", RequireAuth(agent.htokenupdate))
 	http.HandleFunc("/getchathistory", RequireAuth(hgetchathistory))
-	http.HandleFunc("/loadmessages", RequireAuth(agent.hloadmessages))
 	http.HandleFunc("/runfunction", RequireAuth(agent.hrunfunction))
 	http.HandleFunc("/runfunctionload", RequireAuth(hfunctionloading))
 	http.HandleFunc("/settings/", RequireAuth(agent.hsettings))

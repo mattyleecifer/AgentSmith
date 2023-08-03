@@ -71,8 +71,7 @@ func (agent *Agent) htokenupdate(w http.ResponseWriter, r *http.Request) {
 	render(w, htokencount, data)
 }
 
-func (agent *Agent) hchat(w http.ResponseWriter, r *http.Request) {
-	// fmt.Println("hchat")
+func (agent *Agent) hgetresponse(w http.ResponseWriter, r *http.Request) {
 	response, err := agent.getresponse()
 	if err != nil {
 		fmt.Println(err)
@@ -119,6 +118,10 @@ func hscroll(w http.ResponseWriter, r *http.Request) {
 	render(w, "", nil)
 }
 
+func (agent *Agent) hchat(w http.ResponseWriter, r *http.Request) {
+
+}
+
 func (agent *Agent) hloadchatscreen(w http.ResponseWriter, r *http.Request) {
 	type message struct {
 		Role    string
@@ -147,46 +150,6 @@ func (agent *Agent) hloadchatscreen(w http.ResponseWriter, r *http.Request) {
 			data.Messages = append(data.Messages, msg)
 		}
 		render(w, hchatpage, data)
-	}
-}
-
-func (agent *Agent) hloadmessages(w http.ResponseWriter, r *http.Request) {
-	// fmt.Println("hloadmessages")
-	messages := agent.req.Messages
-	if len(messages) == 1 {
-		messagelist := "<table style='display: flex;'><table id='chattext' style='display: flex; height:30vh; justify-content: center; align-items: center;'><tr><td id='centertext'><div hx-get='/tokenupdate' hx-trigger='load' hx-target='#tokens' hx-swap='innerHTML'>Start asking questions!</div></td></tr></table></table>" // 2 tables on purpose
-		render(w, messagelist, nil)
-	} else {
-		messagelist := ""
-		for i := 0; i < len(messages); i++ {
-			if messages[i].Content == "" {
-				continue
-			}
-			chatid := fmt.Sprint(i)
-
-			messagelist += `
-			<tr><td class="agent">` + messages[i].Role + `</td>
-				<td id="reply-` + chatid + `" class="message">`
-
-			lines := strings.Split(messages[i].Content, "\n")
-			for _, line := range lines {
-				messagelist += line + "<br>"
-			}
-
-			messagelist += `</td>
-				<td class="editbutton">
-				<form hx-get="/edit" hx-target="#reply-` + chatid + `" hx-swap="outerHTML">
-				<button class="btn" name="messageid" value="` + chatid + `">Edit</button>
-				</form>
-				<form hx-post="/delete" hx-target="#top-row" hx-swap="innerHTML">
-				<button class="btn" name="messageid" value="` + chatid + `">Delete</button>
-				</form>
-				</td>
-			</tr>`
-
-		}
-		messagelist += `<tr id="chattext" hx-get="/scroll" hx-trigger="load" hx-target="this" hx-swap="none, show:bottom"></tr>`
-		render(w, messagelist, nil)
 	}
 }
 
@@ -253,7 +216,7 @@ func (agent *Agent) hdeletelines(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	agent.hloadmessages(w, r)
+	agent.hloadchatscreen(w, r)
 }
 
 func (agent *Agent) hedit(w http.ResponseWriter, r *http.Request) {
