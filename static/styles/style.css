@@ -1,9 +1,5 @@
 html, body {
-    /* height: 100%; */
-    /* width: 100%; */
-    /* margin: 0; */
     font-size: 18px;
-    /* overflow: auto; */
     color: rgb(232, 230, 227);
     background-color: #202324;
     }
@@ -44,15 +40,6 @@ textarea {
     color: rgb(232, 230, 227);
     background-color: #454a4d;
 }
-/* textarea {
-    height: 15vh;
-    width: calc(100% - 10vw);
-    border: none;
-    resize: none;
-    font-size: 18px;
-    color: rgb(232, 230, 227);
-    background-color: #454a4d;
-    } */
 
 input {
     font-size: 18px;
@@ -61,7 +48,7 @@ input {
 }
 
 .container {
-    display: flex;
+    display: block;
     /* position: relative; */
 }
 
@@ -69,11 +56,6 @@ input {
     width: 15vw;
     float: left;
     background-color: #202324;
-    /* position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0; */
-    /* z-index: 3; */
     /* border-right: 2px solid #000; */
 }
 
@@ -85,9 +67,6 @@ input {
 .top-row {
     overflow-y: scroll;
     height: 85%;
-    /* top: 0; */
-    /* right: 0; */
-    /* position: fixed; */
     z-index: 1;
 }
 
@@ -102,21 +81,7 @@ input {
 
 }
 
-#chatscreen {
-    width: 100%;
-}
-
-/* .bottom-row {
-    width: 85%;
-    margin-left: 15%;
-    height: 15vh;
-    bottom: 0;
-    right: 0;
-    position: fixed;
-    z-index: 2;
-    } */
-
-#centertext {
+.centertext {
     justify-content: center;
     align-items: center;
     text-align: center;
@@ -125,8 +90,9 @@ input {
     }
 
 .agent {
+    /* margin-right: auto; */
     width: 8vw;
-    /* float: left; */
+    float: left;
     text-align: center;
     align-items: center;
     justify-content: center;
@@ -135,15 +101,18 @@ input {
     }
 
 .message {
-    /* width: 100%; */
-    /* float: center; */
-    /* justify-content: left;
-    align-items: left; */
-    /* text-align: left; */
     border-bottom: 1px solid #000;
     }
 
-.agent, .message {
+.editbutton {
+    width: 7vw;
+    float: right;
+    margin-left: auto;
+}
+
+.agent, .message, .editbutton {
+    /* display: inline-table; */
+    /* display: table-cell; */
     /* box-sizing: border-box; */
     /* padding: 10px; */
 }
@@ -156,22 +125,10 @@ input {
     height: auto;
 }
 
-.editbutton {
-    width: 7vw;
-    /* float: right; */
-    margin-left: auto;
-}
-
 .page {
     display: flex;
     padding-top: 5vh;
 }
-/* 
-table {
-    overflow-y: auto;
-    width: max-content;
-    text-align: left;
-} */
 
 .mobile {
     display: none;

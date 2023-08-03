@@ -1,23 +1,22 @@
-<tr>
-  <td class="agent">user</td>
-  <td id="reply-{{.MessageID}}" class="message">
-        <pre style="white-space: pre-wrap; font-family: inherit;">{{ .Usertext }}</pre>
-  </td>
-  <td class="editbutton">
+<span>
+  <div class="agent">user</div>
+  <div id="reply-{{.MessageID}}" class="message">
+        <pre style="white-space: pre-wrap; font-family: inherit;">{{.Usertext}}</pre>
+  </div>
+  <div class="editbutton">
       <form hx-get="/edit" hx-target="#reply-{{.MessageID}}" hx-swap="outerHTML">
         <button class="btn" name="messageid" value={{.MessageID}}>Edit</button>
       </form>
       <form hx-post="/delete" hx-get="/loadchatscreen" hx-target="#main-content" hx-swap="innerHTML">
         <button class="btn" name="messageid" value="{{.MessageID}}">Delete</button>
       </form>
-  </td>
-</tr>
-<tr id="chattext" hx-target="this" hx-post="/getresponse" hx-trigger="load" hx-swap="outerHTML" style="background-color: #393939">
-  <td class="agent">
-    <div hx-get="/scroll" hx-trigger="load" hx-target="this" hx-swap="none, show:bottom"></div>
-  </td>
-  <td class="message" id="centertext">
+  </div>
+</span>
+<span id="chattext" hx-target="this" hx-post="/getresponse" hx-trigger="load" hx-swap="outerHTML" style="background-color: #393939">
+  <div class="agent"></div>
+  <div class="message" style="justify-content: center; align-items: center; text-align: center;">
     Loading...
-  </td>
-  <td class="editbutton"></td>
-</tr>
+  </div>
+  <div class="editbutton"></div>
+</span>
+<div hx-get="/scroll" hx-trigger="load" hx-target="#this" hx-swap="none, show:bottom"></div>
