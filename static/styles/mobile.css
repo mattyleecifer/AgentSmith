@@ -1,76 +1,29 @@
 @media only screen and (max-width: 800px) {
-    /* html, body{
-        background-color: #202324;
-        font: 1em;
-    } 
-
-    body {
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-    } */
-
-    /* .btn {
-        width: 100%;
-        color: rgb(232, 230, 227);
-        background-color: #454a4d;
-        } */
-
-    /* textarea {
-        height: 100%;
-        width: 100%;
-        color: rgb(232, 230, 227);
-        background-color: #454a4d;
-        } */
-
     .sidebar {
         position: absolute;
         width: 100%;
         }
-
-    /* .main-content { */
-        /* flex: none; */
-        /* justify-content: flex-start; */
-        /* width: 100%; */
-        /* height: 100%; */
-        /* float: none; */
-        /* } */
-
-    /* .top-row { */
-        /* border-bottom: 2px solid #000; */
-        /* overflow-y: auto; */
-        /* height: 80%;   */
-        /* } */
-
-    /* .bottom-row { */
-        /* height: 20%; */
-        /* position: fixed; */
-        /* bottom: 0; */
-        /* } */
-
-    .chatsubmitclear {
-        /* float: none; */
-        display: flex;
-        flex-direction: column;
-        /* float: right;  */
-        width: 100%;
-        /* margin-left: none; */
+    
+    .top-row {
+        height: 80%;  
     }
 
-    /* .editbutton {
+    .bottom-row {
+        height: 20%;
+        }
+    
+    .chatForm {
+        display: block;
+    }
+
+    .chatsubmitclear {
         width: 100%;
-        float: none;
-        } */
+    }
 
     #floating-button {
-        background-color: rgba(69, 74, 77, 0.8);
-        border: none;
-        position: fixed;
+        width: 100%;
         top: 0px;
         left: 0px;
-        z-index: 9999;
     }
 
     .mobile {
@@ -80,5 +33,4 @@
     .nonmobile {
         display: none;
     }
-
 }

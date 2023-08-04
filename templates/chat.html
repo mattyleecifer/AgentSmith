@@ -16,14 +16,14 @@
         </div>
     </div>
     {{ else }}
-    <div id="chattext"><span class="centertext">Start asking questions!</span></div>
+    <div id="chattext" style="display: block;"><p style="text-align: center;">Start asking questions!</p></div>
     {{ end }}
     <div id="chattext" hx-get="/scroll" hx-trigger="load" hx-target="this" hx-swap="none, show:bottom"></div>    
 </div>
 
 <div class="bottom-row">
     <form id="chatForm" hx-post="/clearchat" hx-target="#chatinput" hx-swap="outerHTML">
-    <div style="display: flex;">
+    <div class="chatForm">
         <div id="chatbox" class="chatbox">
             <textarea id="chatinput" type="text" name="text" autocomplete="off" tabindex="1"></textarea>
         </div>

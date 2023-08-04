@@ -51,7 +51,6 @@ input {
     display: inline-block;
     height: 100vh;
     width: 100vw;
-    /* position: relative; */
 }
 
 .sidebar {
@@ -65,26 +64,21 @@ input {
 
 .main-content {
     display: block;
-    /* width: 85%; */
     height: 100%;
-    /* float: right; */
 }
 
 .top-row {
     overflow-y: scroll;
     height: 85%;
-    /* width: 100%; */
 }
 
 .bottom-row {
     height: 15%;
-    /* width: 100%; */
     bottom: 0;
-    /* right: 0; */
     position: sticky;
-    /* background-color: #202324; */
 }
 
+/* soon to be deprecated */
 .centertext {
     justify-content: center;
     align-items: center;
@@ -94,7 +88,6 @@ input {
     }
 
 .agent {
-    /* margin-right: auto; */
     width: 8vw;
     float: left;
     text-align: center;
@@ -114,11 +107,8 @@ input {
     margin-left: auto;
 }
 
-.agent, .message, .editbutton {
-    /* display: inline-table; */
-    /* display: table-cell; */
-    /* box-sizing: border-box; */
-    /* padding: 10px; */
+.chatForm {
+    display: flex;
 }
 
 .chatbox {
@@ -130,13 +120,9 @@ input {
     display: flex;
     flex-direction: column;
     float: right; 
-    /* margin-left: auto; */
-    /* height: auto; */
-}
-.chatbox, .chatsubmitclear {
-    /* height: 100%; */
 }
 
+/* probably about to be removed */
 .page {
     display: flex;
     padding-top: 5vh;
