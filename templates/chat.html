@@ -1,4 +1,7 @@
 <div class="top-row">
+    <div class="mobile">
+        <div hx-trigger="intersect" hx-get="/sidebar/off" hx-target="#sidebar" hx-swap="outerHTML"></div>
+    </div>
     <div hx-get='/tokenupdate' hx-trigger='load' hx-target='#tokens' hx-swap='innerHTML'></div>
     {{ range .Messages }}
     <div style="display: flex;">
@@ -20,7 +23,6 @@
     {{ end }}
     <div id="chattext" hx-get="/scroll" hx-trigger="load" hx-target="this" hx-swap="none, show:bottom"></div>    
 </div>
-
 <div class="bottom-row">
     <form id="chatForm" hx-post="/clearchat" hx-target="#chatinput" hx-swap="outerHTML">
     <div class="chatForm">
@@ -32,7 +34,6 @@
             <button style="margin-top: auto;" hx-post="/clear" hx-target="#main-content" hx-swap="innerHTML">Clear Chat</button>
         </div>
     </div>
-    <div class="mobile" hx-trigger="changed" hx-get="/sidebar/off" hx-target="#sidebar" hx-swap="outerHTML"></div>
     </form>
 </div>
 
