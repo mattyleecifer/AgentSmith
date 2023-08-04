@@ -53,7 +53,8 @@ input {
 }
 
 .sidebar {
-    width: 15vw;
+    width: 15%;
+    /* height: 100%; */
     float: left;
     background-color: #202324;
     /* border-right: 2px solid #000; */
@@ -67,7 +68,6 @@ input {
 .top-row {
     overflow-y: scroll;
     height: 85%;
-    z-index: 1;
 }
 
 .bottom-row {
@@ -76,9 +76,7 @@ input {
     bottom: 0;
     right: 0;
     position: fixed;
-    z-index: 2;
     background-color: #202324;
-
 }
 
 .centertext {

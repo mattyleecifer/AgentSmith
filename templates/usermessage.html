@@ -1,4 +1,4 @@
-<span>
+<div style="display: flex;">
   <div class="agent">user</div>
   <div id="reply-{{.MessageID}}" class="message">
         <pre style="white-space: pre-wrap; font-family: inherit;">{{.Usertext}}</pre>
@@ -11,12 +11,12 @@
         <button class="btn" name="messageid" value="{{.MessageID}}">Delete</button>
       </form>
   </div>
-</span>
-<span id="chattext" hx-target="this" hx-post="/getresponse" hx-trigger="load" hx-swap="outerHTML" style="background-color: #393939">
+</div>
+<div id="chattext" hx-target="this" hx-post="/getresponse" hx-trigger="load" hx-swap="outerHTML" style="background-color: #393939">
   <div class="agent"></div>
   <div class="message" style="justify-content: center; align-items: center; text-align: center;">
     Loading...
   </div>
   <div class="editbutton"></div>
-</span>
+</div>
 <div hx-get="/scroll" hx-trigger="load" hx-target="#this" hx-swap="none, show:bottom"></div>

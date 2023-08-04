@@ -1,5 +1,5 @@
 @media only screen and (max-width: 800px) {
-    html, body{
+    /* html, body{
         background-color: #202324;
         font: 1em;
     } 
@@ -10,20 +10,20 @@
         right: 0;
         bottom: 0;
         left: 0;
-    }
+    } */
 
-    .btn {
+    /* .btn {
         width: 100%;
         color: rgb(232, 230, 227);
         background-color: #454a4d;
-        }
+        } */
 
-    textarea {
+    /* textarea {
         height: 100%;
         width: 100%;
         color: rgb(232, 230, 227);
         background-color: #454a4d;
-        }
+        } */
 
     .sidebar {
         position: absolute;
@@ -49,16 +49,20 @@
         /* position: fixed; */
         /* bottom: 0; */
         /* } */
+
     .chatsubmitclear {
-        float: none;
+        /* float: none; */
+        display: flex;
+        flex-direction: column;
+        /* float: right;  */
         width: 100%;
-        margin-left: none;
+        /* margin-left: none; */
     }
 
-    .editbutton {
+    /* .editbutton {
         width: 100%;
         float: none;
-        }
+        } */
 
     #floating-button {
         background-color: rgba(69, 74, 77, 0.8);

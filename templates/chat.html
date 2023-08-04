@@ -11,7 +11,7 @@
             <button class="editbutton" name="messageid" value="{{ .Index }}">Edit</button>
             </form>
             <form hx-post="/delete" hx-target="#main-content" hx-swap="innerHTML">
-            <button class="btn" name="messageid" value="{{ .Index }}">Delete</button>
+            <button class="editbutton" name="messageid" value="{{ .Index }}">Delete</button>
             </form>
         </div>
     </div>
@@ -21,15 +21,15 @@
     <div id="chattext" hx-get="/scroll" hx-trigger="load" hx-target="this" hx-swap="none, show:bottom"></div>    
 </div>
 
-<span class="bottom-row">
+<div class="bottom-row">
     <form style="width: auto;" id="chatForm" hx-post="/clearchat" hx-target="#chatinput" hx-swap="outerHTML">
-        <span id="chatbox" style="display: flex; height: 15vh;">
+        <div id="chatbox" style="display: flex; height: 15vh;">
         <textarea id="chatinput" type="text" name="text" autocomplete="off" tabindex="1"></textarea>
         <div class="chatsubmitclear">
             <button style="height: 100%;" hx-post="/clearchat" hx-target="#chatinput" hx-trigger="keydown[keyCode==13&&shiftKey!=true] from:#chatbox" hx-swap="outerHTML">Submit</button>
-            <button style="margin-top: auto;" class="btn" hx-post="/clear" hx-target="#main-content" hx-swap="innerHTML">Clear Chat</button>
+            <button style="margin-top: auto;" hx-post="/clear" hx-target="#main-content" hx-swap="innerHTML">Clear Chat</button>
         </div>
-        </span>
+    </div>
     </form>
-    <span class="mobile" hx-trigger="intersect" hx-get="/sidebar/off" hx-target="#sidebar" hx-swap="outerHTML"></span>
+    <div class="mobile" hx-trigger="intersect" hx-get="/sidebar/off" hx-target="#sidebar" hx-swap="outerHTML"></span>
 </span>
