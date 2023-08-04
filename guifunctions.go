@@ -100,19 +100,6 @@ func (agent *Agent) hgetresponse(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func (agent *Agent) hsubmit(w http.ResponseWriter, r *http.Request) {
-	// fmt.Println("hsubmit")
-	text := agent.req.Messages[len(agent.req.Messages)-1].Content
-	data := struct {
-		Usertext  string
-		MessageID string
-	}{
-		Usertext:  text,
-		MessageID: strconv.Itoa(len(agent.req.Messages) - 1),
-	}
-	render(w, husermessage, data)
-}
-
 func hscroll(w http.ResponseWriter, r *http.Request) {
 	// fmt.Println("hscroll")
 	render(w, "", nil)
@@ -153,8 +140,8 @@ func (agent *Agent) hloadchatscreen(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (agent *Agent) hclearchat(w http.ResponseWriter, r *http.Request) {
-	// fmt.Println("hclearchat")
+func (agent *Agent) hsubmit(w http.ResponseWriter, r *http.Request) {
+	// fmt.Println("hsubmit")
 	rawtext := r.FormValue("text")
 	if rawtext == "!" {
 		agent.setprompt()
@@ -167,7 +154,15 @@ func (agent *Agent) hclearchat(w http.ResponseWriter, r *http.Request) {
 		Content: rawtext,
 	}
 	agent.req.Messages = append(agent.req.Messages, query)
-	render(w, hinputbox, nil)
+	// text := agent.req.Messages[len(agent.req.Messages)-1].Content
+	data := struct {
+		Usertext  string
+		MessageID string
+	}{
+		Usertext:  rawtext,
+		MessageID: strconv.Itoa(len(agent.req.Messages) - 1),
+	}
+	render(w, husermessage, data)
 }
 
 func hgetchathistory(w http.ResponseWriter, r *http.Request) {
