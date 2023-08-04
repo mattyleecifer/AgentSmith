@@ -102,6 +102,10 @@ input {
     }
 
 .message {
+    display: flex;
+}
+
+.content {
     border-bottom: 1px solid #000;
     }
 

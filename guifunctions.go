@@ -156,11 +156,13 @@ func (agent *Agent) hsubmit(w http.ResponseWriter, r *http.Request) {
 	agent.req.Messages = append(agent.req.Messages, query)
 	// text := agent.req.Messages[len(agent.req.Messages)-1].Content
 	data := struct {
-		Usertext  string
-		MessageID string
+		Role    string
+		Content string
+		Index   string
 	}{
-		Usertext:  rawtext,
-		MessageID: strconv.Itoa(len(agent.req.Messages) - 1),
+		Role:    openai.ChatMessageRoleUser,
+		Content: rawtext,
+		Index:   strconv.Itoa(len(agent.req.Messages) - 1),
 	}
 	render(w, husermessage, data)
 }

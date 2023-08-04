@@ -1,6 +1,6 @@
-<div style="background-color: #393939; display: flex;">
+<div id="message" class="message" style="background-color: #393939; display: flex;">
     <div class="agent">assistant</div>
-    <div id="reply-{{.MessageID}}" class="message">
+    <div id="reply-{{.MessageID}}" class="content">
       <pre style="white-space: pre-wrap; font-family: inherit;">{{ .Message }}</pre>
       <form hx-get="/runfunctionload" hx-target="#chattext" hx-swap="outerHTML">
           {{ .Run }}
@@ -16,4 +16,4 @@
         <div hx-get="/tokenupdate" hx-trigger="load" hx-target="#tokens" hx-swap="innerHTML"></div>
     </div>
 </div>
-<div id="chattext" hx-get="/scroll" hx-trigger="load" hx-target="this" hx-swap="none, show:bottom"></div>
+<p>poo</p>

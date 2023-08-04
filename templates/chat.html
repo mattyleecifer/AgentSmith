@@ -1,10 +1,10 @@
-<div class="top-row">
+<div id="top-row" class="top-row">
     <div class="mobile" hx-trigger="intersect" hx-get="/sidebar/off" hx-target="#sidebar" hx-swap="outerHTML"></div>
     <div hx-get='/tokenupdate' hx-trigger='load' hx-target='#tokens' hx-swap='innerHTML'></div>
     {{ range .Messages }}
-    <div style="display: flex;">
+    <div id="message" class="message">
         <div class="agent">{{ .Role }}</div>
-        <div id="reply-{{ .Index }}" class="message">
+        <div id="reply-{{ .Index }}" class="content">
             <pre style="white-space: pre-wrap; font-family: inherit;">{{ .Content }}</pre>
         </div>
         <div class="editbutton">
@@ -17,19 +17,19 @@
         </div>
     </div>
     {{ else }}
-    <div id="chattext"><p>Start asking questions!</p></div>
+    <div id="welcometext"><p>Start asking questions!</p></div>
     {{ end }}
     <div id="chatloading" class="htmx-indicator"><p>Loading...</p></div>
     <div id="chattext" hx-get="/scroll" hx-trigger="load" hx-target="this" hx-swap="none, show:bottom"></div>    
 </div>
 <div class="bottom-row">
-    <form id="chatForm" hx-post="/submit" hx-target="#chattext" hx-swap="outerHTML">
+    <form id="chatForm" hx-post="/submit" hx-target="#chatloading" hx-swap="beforebegin">
     <div class="chatForm">
         <div id="chatbox" class="chatbox">
             <textarea id="chatinput" type="text" name="text" autocomplete="off" tabindex="1"></textarea>
         </div>
         <div class="chatsubmitclear">
-            <button style="height: 100%;" hx-post="/submit" hx-target="#chattext" hx-trigger="keydown[keyCode==13&&shiftKey!=true] from:#chatbox" hx-swap="outerHTML">Submit</button>
+            <button style="height: 100%;" hx-post="/submit" hx-target="#chatloading" hx-trigger="keydown[keyCode==13&&shiftKey!=true] from:#chatbox" hx-swap="beforebegin">Submit</button>
             <button style="margin-top: auto;" hx-post="/clear" hx-target="#main-content" hx-swap="innerHTML">Clear Chat</button>
         </div>
     </div>

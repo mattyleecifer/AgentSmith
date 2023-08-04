@@ -1,17 +1,18 @@
-<div style="display: flex;">
-  <div class="agent">user</div>
-  <div id="reply-{{.MessageID}}" class="message">
-        <pre style="white-space: pre-wrap; font-family: inherit;">{{.Usertext}}</pre>
+<div id="message" class="message">
+  <div class="agent">{{ .Role }}</div>
+  <div id="reply-{{ .Index }}" class="content">
+      <pre style="white-space: pre-wrap; font-family: inherit;">{{ .Content }}</pre>
   </div>
   <div class="editbutton">
-      <form hx-get="/edit" hx-target="#reply-{{.MessageID}}" hx-swap="outerHTML">
-        <button class="btn" name="messageid" value={{.MessageID}}>Edit</button>
+      <form hx-get="/edit" hx-target="#reply-{{ .Index }}" hx-swap="outerHTML">
+      <button class="editbutton" name="messageid" value="{{ .Index }}">Edit</button>
       </form>
-      <form hx-post="/delete" hx-get="/loadchatscreen" hx-target="#main-content" hx-swap="innerHTML">
-        <button class="btn" name="messageid" value="{{.MessageID}}">Delete</button>
+      <form hx-post="/delete" hx-target="#main-content" hx-swap="innerHTML">
+      <button class="editbutton" name="messageid" value="{{ .Index }}">Delete</button>
       </form>
   </div>
+  <div hx-get="/scroll" hx-trigger="load" hx-target="this" hx-swap="none, show:bottom"></div>
 </div>
-<div id="chattext" hx-target="this" hx-post="/getresponse" hx-trigger="load" hx-swap="outerHTML" hx-indicator="#chatloading" style="background-color: #393939"></div>
-<div hx-get="/scroll" hx-trigger="load" hx-target="this" hx-swap="none, show:bottom"></div>
+<div hx-select="#message" hx-target="this" hx-post="/getresponse" hx-trigger="load" hx-swap="outerHTML" hx-indicator="#chatloading" style="background-color: #393939"></div>
 <textarea hx-swap-oob="outerHTML:#chatinput" id="chatinput" type="text" name="text" autocomplete="off" tabindex="1"></textarea>
+<div id="welcometext" hx-swap-oob="outerHTML:#welcometext"></div>
