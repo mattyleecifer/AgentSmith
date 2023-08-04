@@ -4,6 +4,10 @@ html, body {
     background-color: #202324;
     }
 
+p {
+    text-align: center;
+}
+
 button {
     padding: 10px 5px;
     /* display: block; */

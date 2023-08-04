@@ -17,8 +17,9 @@
         </div>
     </div>
     {{ else }}
-    <div id="chattext" style="display: block;"><p style="text-align: center;">Start asking questions!</p></div>
+    <div id="chattext"><p>Start asking questions!</p></div>
     {{ end }}
+    <div id="chatloading" class="htmx-indicator"><p>Loading...</p></div>
     <div id="chattext" hx-get="/scroll" hx-trigger="load" hx-target="this" hx-swap="none, show:bottom"></div>    
 </div>
 <div class="bottom-row">
