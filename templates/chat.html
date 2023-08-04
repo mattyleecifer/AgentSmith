@@ -22,14 +22,17 @@
 </div>
 
 <div class="bottom-row">
-    <form style="width: auto;" id="chatForm" hx-post="/clearchat" hx-target="#chatinput" hx-swap="outerHTML">
-        <div id="chatbox" style="display: flex; height: 15vh;">
-        <textarea id="chatinput" type="text" name="text" autocomplete="off" tabindex="1"></textarea>
+    <form id="chatForm" hx-post="/clearchat" hx-target="#chatinput" hx-swap="outerHTML">
+    <div style="display: flex;">
+        <div id="chatbox" class="chatbox">
+            <textarea id="chatinput" type="text" name="text" autocomplete="off" tabindex="1"></textarea>
+        </div>
         <div class="chatsubmitclear">
             <button style="height: 100%;" hx-post="/clearchat" hx-target="#chatinput" hx-trigger="keydown[keyCode==13&&shiftKey!=true] from:#chatbox" hx-swap="outerHTML">Submit</button>
             <button style="margin-top: auto;" hx-post="/clear" hx-target="#main-content" hx-swap="innerHTML">Clear Chat</button>
         </div>
     </div>
     </form>
-    <div class="mobile" hx-trigger="intersect" hx-get="/sidebar/off" hx-target="#sidebar" hx-swap="outerHTML"></span>
-</span>
+</div>
+<div class="mobile" hx-trigger="intersect" hx-get="/sidebar/off" hx-target="#sidebar" hx-swap="outerHTML"></div>
+
