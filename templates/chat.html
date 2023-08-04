@@ -32,7 +32,8 @@
             <button style="margin-top: auto;" hx-post="/clear" hx-target="#main-content" hx-swap="innerHTML">Clear Chat</button>
         </div>
     </div>
+    <div class="mobile" hx-trigger="changed" hx-get="/sidebar/off" hx-target="#sidebar" hx-swap="outerHTML"></div>
     </form>
 </div>
-<div class="mobile" hx-trigger="intersect" hx-get="/sidebar/off" hx-target="#sidebar" hx-swap="outerHTML"></div>
+
 
