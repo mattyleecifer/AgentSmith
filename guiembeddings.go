@@ -13,6 +13,9 @@ var htokencount string
 //go:embed templates/newchat.html
 var husermessage string
 
+//go:embed templates/newchat.html
+var hnewmessage string
+
 //go:embed templates/edit.html
 var hedit string
 

@@ -71,41 +71,6 @@ func (agent *Agent) htokenupdate(w http.ResponseWriter, r *http.Request) {
 	render(w, htokencount, data)
 }
 
-func (agent *Agent) hgetresponse(w http.ResponseWriter, r *http.Request) {
-	response, err := agent.getresponse()
-	if err != nil {
-		fmt.Println(err)
-	}
-	var data struct {
-		Header   template.HTML
-		Role     string
-		Content  string
-		Index    string
-		Function template.HTML
-	}
-	data.Role = openai.ChatMessageRoleAssistant
-	data.Header = template.HTML(`<div id="message" class="message" style="background-color: #393939">
-	`)
-	if response.FunctionCall != nil {
-		if autofunction {
-			functionresponse := agent.callfunction(&response)
-			data.Content = functionresponse.Message.Content
-			data.Index = strconv.Itoa(len(agent.req.Messages) - 1)
-		} else {
-			data.Content = response.Message.Content
-			data.Index = strconv.Itoa(len(agent.req.Messages) - 1)
-			// this is currently broken - waiting to create switchboard to fix so it cant just call /function/run/functionname instead of grabbing a response from a form etc
-			data.Function = template.HTML(`<button hx-post="/runfunction" hx-target="#chatloading" hx-swap="beforebegin scroll:#top-row:bottom" hx-select="#message" name="functionname" hx-include="[functionname="` + response.FunctionCall.Name + `"]" value="` + response.FunctionCall.Name + `">Run</button>`)
-		}
-	} else {
-		data.Content = response.Message.Content
-		data.Index = strconv.Itoa(len(agent.req.Messages) - 1)
-	}
-
-	render(w, husermessage, data)
-
-}
-
 func hscroll(w http.ResponseWriter, r *http.Request) {
 	// fmt.Println("hscroll")
 	render(w, "", nil)
@@ -119,7 +84,11 @@ func (agent *Agent) hchat(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(query)
 	switch query[0] {
 	case "":
-		agent.hloadchatscreen(w, r)
+		if r.Method == http.MethodGet {
+			agent.hloadchatscreen(w, r)
+		} else {
+			agent.hchatpostput(w, r)
+		}
 	case "save":
 		agent.hchatsave(w, r)
 	case "clear":
@@ -160,35 +129,69 @@ func (agent *Agent) hloadchatscreen(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (agent *Agent) hsubmit(w http.ResponseWriter, r *http.Request) {
-	// fmt.Println("hsubmit")
-	rawtext := r.FormValue("text")
-	if rawtext == "!" {
-		agent.setprompt()
-		w.Header().Set("HX-Redirect", "/")
-		w.WriteHeader(http.StatusTemporaryRedirect)
-		return
+func (agent *Agent) hchatpostput(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodPost {
+		rawtext := r.FormValue("text")
+		if rawtext == "!" {
+			agent.setprompt()
+			w.Header().Set("HX-Redirect", "/")
+			w.WriteHeader(http.StatusTemporaryRedirect)
+			return
+		}
+		query := openai.ChatCompletionMessage{
+			Role:    openai.ChatMessageRoleUser,
+			Content: rawtext,
+		}
+		agent.req.Messages = append(agent.req.Messages, query)
+		// text := agent.req.Messages[len(agent.req.Messages)-1].Content
+		data := struct {
+			Header   template.HTML
+			Role     string
+			Content  string
+			Index    string
+			Function string
+		}{
+			Header: template.HTML(`<div id="message" class="message">
+			`),
+			Role:    openai.ChatMessageRoleUser,
+			Content: rawtext,
+			Index:   strconv.Itoa(len(agent.req.Messages) - 1),
+		}
+		render(w, hnewmessage, data)
 	}
-	query := openai.ChatCompletionMessage{
-		Role:    openai.ChatMessageRoleUser,
-		Content: rawtext,
+	if r.Method == http.MethodPut {
+		response, err := agent.getresponse()
+		if err != nil {
+			fmt.Println(err)
+		}
+		var data struct {
+			Header   template.HTML
+			Role     string
+			Content  string
+			Index    string
+			Function template.HTML
+		}
+		data.Role = openai.ChatMessageRoleAssistant
+		data.Header = template.HTML(`<div id="message" class="message" style="background-color: #393939">
+	`)
+		if response.FunctionCall != nil {
+			if autofunction {
+				functionresponse := agent.callfunction(&response)
+				data.Content = functionresponse.Message.Content
+				data.Index = strconv.Itoa(len(agent.req.Messages) - 1)
+			} else {
+				data.Content = response.Message.Content
+				data.Index = strconv.Itoa(len(agent.req.Messages) - 1)
+				// this is currently broken - waiting to create switchboard to fix so it cant just call /function/run/functionname instead of grabbing a response from a form etc
+				data.Function = template.HTML(`<button hx-post="/runfunction" hx-target="#chatloading" hx-swap="beforebegin scroll:#top-row:bottom" hx-select="#message" name="functionname" hx-include="[functionname="` + response.FunctionCall.Name + `"]" value="` + response.FunctionCall.Name + `">Run</button>`)
+			}
+		} else {
+			data.Content = response.Message.Content
+			data.Index = strconv.Itoa(len(agent.req.Messages) - 1)
+		}
+
+		render(w, hnewmessage, data)
 	}
-	agent.req.Messages = append(agent.req.Messages, query)
-	// text := agent.req.Messages[len(agent.req.Messages)-1].Content
-	data := struct {
-		Header   template.HTML
-		Role     string
-		Content  string
-		Index    string
-		Function string
-	}{
-		Header: template.HTML(`<div id="message" class="message">
-		`),
-		Role:    openai.ChatMessageRoleUser,
-		Content: rawtext,
-		Index:   strconv.Itoa(len(agent.req.Messages) - 1),
-	}
-	render(w, husermessage, data)
 }
 
 func hgetchathistory(w http.ResponseWriter, r *http.Request) {
@@ -281,7 +284,7 @@ func (agent *Agent) hchatsave(w http.ResponseWriter, r *http.Request) {
 	rawquery := strings.TrimPrefix(r.URL.Path, "/save/")
 	query := strings.Split(rawquery, "/")
 	switch query[0] {
-	case "chat":
+	case "":
 		if r.Method == http.MethodGet {
 			currentTime := time.Now()
 			filename := currentTime.Format("20060102150405")
@@ -298,38 +301,7 @@ func (agent *Agent) hchatsave(w http.ResponseWriter, r *http.Request) {
 			agent.save(filename)
 			render(w, "Chat Saved!", nil)
 		}
-		if r.Method == http.MethodDelete {
-			chatid := query[1]
-			err := deletesave(chatid + ".json")
-			if err != nil {
-				fmt.Println(err)
-			}
-			render(w, "<tr><td>Chat Deleted</td></tr>", nil)
-		}
-	}
-}
 
-func (agent *Agent) hsave(w http.ResponseWriter, r *http.Request) {
-	rawquery := strings.TrimPrefix(r.URL.Path, "/save/")
-	query := strings.Split(rawquery, "/")
-	switch query[0] {
-	case "chat":
-		if r.Method == http.MethodGet {
-			currentTime := time.Now()
-			filename := currentTime.Format("20060102150405")
-			data := struct {
-				Filename string
-			}{
-				Filename: filename,
-			}
-			render(w, hsave, data)
-		}
-
-		if r.Method == http.MethodPost {
-			filename := r.FormValue("filename")
-			agent.save(filename)
-			render(w, "Chat Saved!", nil)
-		}
 		if r.Method == http.MethodDelete {
 			chatid := query[1]
 			err := deletesave(chatid + ".json")

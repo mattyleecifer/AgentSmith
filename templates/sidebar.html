@@ -29,7 +29,7 @@
         <button class="menubtn" hx-get="/savedchats/" hx-target="#main-content" hx-swap="outerHTML">Load Chat</button>
     </div>
     <div>
-        <button hx-get="/save/chat/" hx-target="#chattext" hx-swap="outerHTML" class="menubtn">Save Chat</button>
+        <button class="menubtn" hx-get="/chat/save/" hx-target="#chatloading" hx-swap="beforebegin scroll:#top-row:bottom">Save Chat</button>
     </div>
     <br>
     <div id="autofunctiontoggle">
