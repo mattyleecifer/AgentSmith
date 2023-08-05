@@ -25,7 +25,6 @@ func (agent *Agent) gui() {
 	http.HandleFunc("/tokenupdate", RequireAuth(agent.htokenupdate))
 	http.HandleFunc("/getchathistory", RequireAuth(hgetchathistory))
 	http.HandleFunc("/runfunction", RequireAuth(agent.hrunfunction))
-	http.HandleFunc("/runfunctionload", RequireAuth(hfunctionloading))
 	http.HandleFunc("/settings/", RequireAuth(agent.hsettings))
 	http.HandleFunc("/savedchats/", RequireAuth(hsavedchats))
 	http.HandleFunc("/sidebar/", RequireAuth(hsidebar))

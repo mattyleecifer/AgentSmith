@@ -11,9 +11,6 @@ var hindex string
 var htokencount string
 
 //go:embed templates/newchat.html
-var hnewchat string
-
-//go:embed templates/usermessage.html
 var husermessage string
 
 //go:embed templates/edit.html
@@ -30,9 +27,6 @@ var hfunctionspage string
 
 //go:embed templates/editfunction.html
 var heditfunction string
-
-//go:embed templates/functionloading.html
-var hfunctionloadingtemplate string
 
 //go:embed templates/editprompt.html
 var heditprompt string

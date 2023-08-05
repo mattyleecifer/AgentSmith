@@ -8,10 +8,10 @@
     </div>
     <br>
 
-        <button class="menubtn" hx-post="/clear" hx-target="#main-content" hx-swap="innerHTML">Clear Chat</button>
+        <button class="menubtn" hx-post="/chat/clear/" hx-target="#main-content" hx-swap="innerHTML">Clear Chat</button>
 
     <div>
-        <button class="menubtn" hx-get="/loadchatscreen" hx-target="#main-content" hx-swap="innerHTML">Chat Screen</button>
+        <button class="menubtn" hx-get="/chat/" hx-target="#main-content" hx-swap="innerHTML">Chat Screen</button>
     </div>
     <div>
         <button class="menubtn" hx-post="/reset" hx-target="#main-content" hx-swap="innerHTML" hx-confirm="Are you sure?">Reset Chat</button>

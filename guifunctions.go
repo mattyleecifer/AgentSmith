@@ -94,7 +94,8 @@ func (agent *Agent) hgetresponse(w http.ResponseWriter, r *http.Request) {
 		} else {
 			data.Content = response.Message.Content
 			data.Index = strconv.Itoa(len(agent.req.Messages) - 1)
-			data.Function = template.HTML("<button class='btn' name='functionname' value='" + response.FunctionCall.Name + "'>Run</button>")
+			// this is currently broken - waiting to create switchboard to fix so it cant just call /function/run/functionname instead of grabbing a response from a form etc
+			data.Function = template.HTML(`<button hx-post="/runfunction" hx-target="#chatloading" hx-swap="beforebegin scroll:#top-row:bottom" hx-select="#message" name="functionname" hx-include="[functionname="` + response.FunctionCall.Name + `"]" value="` + response.FunctionCall.Name + `">Run</button>`)
 		}
 	} else {
 		data.Content = response.Message.Content
@@ -111,6 +112,20 @@ func hscroll(w http.ResponseWriter, r *http.Request) {
 }
 
 func (agent *Agent) hchat(w http.ResponseWriter, r *http.Request) {
+	fmt.Println(r.URL.Path)
+	rawquery := strings.TrimPrefix(r.URL.Path, "/chat/")
+	fmt.Println(rawquery)
+	query := strings.Split(rawquery, "/")
+	fmt.Println(query)
+	switch query[0] {
+	case "":
+		agent.hloadchatscreen(w, r)
+	case "save":
+		agent.hchatsave(w, r)
+	case "clear":
+		agent.setprompt()
+		agent.hloadchatscreen(w, r)
+	}
 
 }
 
@@ -262,6 +277,38 @@ func (agent *Agent) hedit(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func (agent *Agent) hchatsave(w http.ResponseWriter, r *http.Request) {
+	rawquery := strings.TrimPrefix(r.URL.Path, "/save/")
+	query := strings.Split(rawquery, "/")
+	switch query[0] {
+	case "chat":
+		if r.Method == http.MethodGet {
+			currentTime := time.Now()
+			filename := currentTime.Format("20060102150405")
+			data := struct {
+				Filename string
+			}{
+				Filename: filename,
+			}
+			render(w, hsave, data)
+		}
+
+		if r.Method == http.MethodPost {
+			filename := r.FormValue("filename")
+			agent.save(filename)
+			render(w, "Chat Saved!", nil)
+		}
+		if r.Method == http.MethodDelete {
+			chatid := query[1]
+			err := deletesave(chatid + ".json")
+			if err != nil {
+				fmt.Println(err)
+			}
+			render(w, "<tr><td>Chat Deleted</td></tr>", nil)
+		}
+	}
+}
+
 func (agent *Agent) hsave(w http.ResponseWriter, r *http.Request) {
 	rawquery := strings.TrimPrefix(r.URL.Path, "/save/")
 	query := strings.Split(rawquery, "/")
@@ -335,25 +382,17 @@ func (agent *Agent) hrunfunction(w http.ResponseWriter, r *http.Request) {
 	// agent.req.Messages = append(agent.req.Messages, response.Message)
 
 	var data struct {
-		Message   string
-		MessageID int
-		Run       string
+		Header   template.HTML
+		Role     string
+		Content  string
+		Index    string
+		Function string
 	}
-
-	data.Message = response.Message.Content
-	data.MessageID = len(agent.req.Messages) - 1
-	render(w, hnewchat, data)
-}
-
-func hfunctionloading(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("hfunctionloading")
-	var data struct {
-		Function template.HTML
-	}
-
-	data.Function = template.HTML("<input type='hidden' name='functionname' value='" + r.FormValue("functionname") + "'>")
-
-	render(w, hfunctionloadingtemplate, data)
+	data.Header = template.HTML(`<div id="message" class="message" style="background-color: #393939">`)
+	data.Role = openai.ChatMessageRoleAssistant
+	data.Content = response.Message.Content
+	data.Index = strconv.Itoa(len(agent.req.Messages) - 1)
+	render(w, husermessage, data)
 }
 
 func (agent *Agent) hautorequestfunctionoff(w http.ResponseWriter, r *http.Request) {

@@ -22,17 +22,15 @@
     <div id="chatloading" class="htmx-indicator"><p>Loading...</p></div>
 </div>
 <div class="bottom-row">
-    <form id="chatForm" hx-select="#message, #response" hx-select-oob="#chatinput" hx-post="/submit" hx-target="#chatloading" hx-swap="beforebegin scroll:#top-row:bottom">
-    <div class="chatForm">
-        <div id="chatbox" class="chatbox">
+    <div class="chatbox">
+        <div id="inputbox" class="inputbox">
             <textarea id="chatinput" type="text" name="text" autocomplete="off" tabindex="1"></textarea>
         </div>
         <div class="chatsubmitclear">
-            <button style="height: 100%;" hx-post="/submit" hx-trigger="keydown[keyCode==13&&shiftKey!=true] from:#chatbox">Submit</button>
-            <button style="margin-top: auto;" hx-post="/clear" hx-target="#main-content" hx-swap="innerHTML">Clear Chat</button>
+            <button style="height: 60%;" hx-select="#message, #response" hx-select-oob="#chatinput" hx-post="/submit" hx-target="#chatloading" hx-swap="beforebegin scroll:#top-row:bottom" hx-include="#chatinput" hx-trigger="click, keydown[keyCode==13&&shiftKey!=true] from:#inputbox">Submit</button>
+            <button style="margin-top: auto; height: 40%;" hx-post="/chat/clear/" hx-target="#main-content" hx-swap="innerHTML">Clear Chat</button>
         </div>
-    </div>
-    </form>
+    </div> 
 </div>
 
 
