@@ -16,7 +16,7 @@
                 <div class="nonmobile" hx-get="/sidebar/on" hx-target="#sidebar" hx-swap="outerHTML" hx-trigger="intersect"></div>
             </div>
             <div class="main-content" id="main-content">
-                <div hx-get="/loadchatscreen" hx-trigger="load" hx-swap="innerHTML" hx-target="#main-content"></div>
+                <div hx-get="/loadchatscreen" hx-trigger="load" hx-swap="innerHTML scroll:bottom" hx-target="#main-content"></div>
             </div>
         </div>
     </body>

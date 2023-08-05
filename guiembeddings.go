@@ -16,9 +16,6 @@ var hnewchat string
 //go:embed templates/usermessage.html
 var husermessage string
 
-//go:embed templates/inputbox.html
-var hinputbox string
-
 //go:embed templates/edit.html
 var hedit string
 

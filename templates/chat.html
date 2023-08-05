@@ -20,16 +20,15 @@
     <div id="welcometext"><p>Start asking questions!</p></div>
     {{ end }}
     <div id="chatloading" class="htmx-indicator"><p>Loading...</p></div>
-    <div id="chattext" hx-get="/scroll" hx-trigger="load" hx-target="this" hx-swap="none, show:bottom"></div>    
 </div>
 <div class="bottom-row">
-    <form id="chatForm" hx-post="/submit" hx-target="#chatloading" hx-swap="beforebegin">
+    <form id="chatForm" hx-select="#message, #response" hx-select-oob="#chatinput" hx-post="/submit" hx-target="#chatloading" hx-swap="beforebegin scroll:#top-row:bottom">
     <div class="chatForm">
         <div id="chatbox" class="chatbox">
             <textarea id="chatinput" type="text" name="text" autocomplete="off" tabindex="1"></textarea>
         </div>
         <div class="chatsubmitclear">
-            <button style="height: 100%;" hx-post="/submit" hx-target="#chatloading" hx-trigger="keydown[keyCode==13&&shiftKey!=true] from:#chatbox" hx-swap="beforebegin">Submit</button>
+            <button style="height: 100%;" hx-post="/submit" hx-trigger="keydown[keyCode==13&&shiftKey!=true] from:#chatbox">Submit</button>
             <button style="margin-top: auto;" hx-post="/clear" hx-target="#main-content" hx-swap="innerHTML">Clear Chat</button>
         </div>
     </div>

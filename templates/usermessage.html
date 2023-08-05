@@ -1,7 +1,8 @@
-<div id="message" class="message">
+{{ .Header }}
   <div class="agent">{{ .Role }}</div>
   <div id="reply-{{ .Index }}" class="content">
       <pre style="white-space: pre-wrap; font-family: inherit;">{{ .Content }}</pre>
+      {{ .Function }}
   </div>
   <div class="editbutton">
       <form hx-get="/edit" hx-target="#reply-{{ .Index }}" hx-swap="outerHTML">
@@ -11,8 +12,7 @@
       <button class="editbutton" name="messageid" value="{{ .Index }}">Delete</button>
       </form>
   </div>
-  <div hx-get="/scroll" hx-trigger="load" hx-target="this" hx-swap="none, show:bottom"></div>
 </div>
-<div hx-select="#message" hx-target="this" hx-post="/getresponse" hx-trigger="load" hx-swap="outerHTML" hx-indicator="#chatloading" style="background-color: #393939"></div>
-<textarea hx-swap-oob="outerHTML:#chatinput" id="chatinput" type="text" name="text" autocomplete="off" tabindex="1"></textarea>
+<div id="response" hx-select="#message" hx-target="this" hx-post="/getresponse" hx-trigger="load" hx-swap="outerHTML show:bottom" hx-indicator="#chatloading" style="background-color: #393939"></div>
+<textarea id="chatinput" type="text" name="text" autocomplete="off" tabindex="1"></textarea>
 <div id="welcometext" hx-swap-oob="outerHTML:#welcometext"></div>

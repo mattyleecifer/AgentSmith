@@ -77,26 +77,31 @@ func (agent *Agent) hgetresponse(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 	}
 	var data struct {
-		Message   string
-		MessageID int
-		Run       template.HTML
+		Header   template.HTML
+		Role     string
+		Content  string
+		Index    string
+		Function template.HTML
 	}
+	data.Role = openai.ChatMessageRoleAssistant
+	data.Header = template.HTML(`<div id="message" class="message" style="background-color: #393939">
+	`)
 	if response.FunctionCall != nil {
 		if autofunction {
 			functionresponse := agent.callfunction(&response)
-			data.Message = functionresponse.Message.Content
-			data.MessageID = len(agent.req.Messages) - 1
+			data.Content = functionresponse.Message.Content
+			data.Index = strconv.Itoa(len(agent.req.Messages) - 1)
 		} else {
-			data.Message = response.Message.Content
-			data.MessageID = len(agent.req.Messages) - 1
-			data.Run = template.HTML("<button class='btn' name='functionname' value='" + response.FunctionCall.Name + "'>Run</button>")
+			data.Content = response.Message.Content
+			data.Index = strconv.Itoa(len(agent.req.Messages) - 1)
+			data.Function = template.HTML("<button class='btn' name='functionname' value='" + response.FunctionCall.Name + "'>Run</button>")
 		}
 	} else {
-		data.Message = response.Message.Content
-		data.MessageID = len(agent.req.Messages) - 1
+		data.Content = response.Message.Content
+		data.Index = strconv.Itoa(len(agent.req.Messages) - 1)
 	}
 
-	render(w, hnewchat, data)
+	render(w, husermessage, data)
 
 }
 
@@ -156,10 +161,14 @@ func (agent *Agent) hsubmit(w http.ResponseWriter, r *http.Request) {
 	agent.req.Messages = append(agent.req.Messages, query)
 	// text := agent.req.Messages[len(agent.req.Messages)-1].Content
 	data := struct {
-		Role    string
-		Content string
-		Index   string
+		Header   template.HTML
+		Role     string
+		Content  string
+		Index    string
+		Function string
 	}{
+		Header: template.HTML(`<div id="message" class="message">
+		`),
 		Role:    openai.ChatMessageRoleUser,
 		Content: rawtext,
 		Index:   strconv.Itoa(len(agent.req.Messages) - 1),

@@ -138,10 +138,16 @@ input {
 
 .mobile {
     display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
 }
 
 .nonmobile {
     display: flex;
+    position: fixed;
+    top: 50%;
+    left: 50%;
 }
 
 @media (prefers-color-scheme: dark) {
