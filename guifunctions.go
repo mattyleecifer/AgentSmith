@@ -77,11 +77,8 @@ func hscroll(w http.ResponseWriter, r *http.Request) {
 }
 
 func (agent *Agent) hchat(w http.ResponseWriter, r *http.Request) {
-	fmt.Println(r.URL.Path)
 	rawquery := strings.TrimPrefix(r.URL.Path, "/chat/")
-	fmt.Println(rawquery)
 	query := strings.Split(rawquery, "/")
-	fmt.Println(query)
 	switch query[0] {
 	case "":
 		if r.Method == http.MethodGet {
@@ -91,11 +88,34 @@ func (agent *Agent) hchat(w http.ResponseWriter, r *http.Request) {
 		}
 	case "save":
 		agent.hchatsave(w, r)
+	case "delete":
+		agent.hchatdelete(w, r)
 	case "clear":
 		agent.setprompt()
 		agent.hloadchatscreen(w, r)
+
 	}
 
+}
+
+func (agent *Agent) hchatdelete(w http.ResponseWriter, r *http.Request) {
+	rawquery := strings.TrimPrefix(r.URL.Path, "/chat/delete/")
+	query := strings.Split(rawquery, "/")
+	fmt.Println(rawquery, query)
+	switch query[0] {
+	case "line":
+		err := agent.deletelines(query[1])
+		if err != nil {
+			fmt.Println(err)
+		}
+		agent.hloadchatscreen(w, r)
+	case "savedchat":
+		err := deletesave(query[1] + ".json")
+		if err != nil {
+			fmt.Println(err)
+		}
+		render(w, "<tr><td>Chat Deleted</td></tr>", nil)
+	}
 }
 
 func (agent *Agent) hloadchatscreen(w http.ResponseWriter, r *http.Request) {
@@ -211,7 +231,7 @@ func hgetchathistory(w http.ResponseWriter, r *http.Request) {
 			html += "<tr id='savedchat" + chatid + "' style='text-align: left;'><td>"
 			html += "<div class='savedchat'><div>"
 			html += filelist[i]
-			html += "</div><td><form hx-post='/load' hx-target='#main-content' hx-swap='innerHTML'><button class='btn' name='data' value='" + filelist[i] + "'>Load</button></form></td><td><form hx-delete='/delete/chat/" + chatid + "' hx-target='#savedchat" + chatid + "' hx-swap='outerHTML' hx-confirm='Are you sure?'><button class='btn'>Delete</button></form></td>"
+			html += "</div><td><form hx-post='/load' hx-target='#main-content' hx-swap='innerHTML'><button class='btn' name='data' value='" + filelist[i] + "'>Load</button></form></td><td><button class='btn' hx-delete='/chat/delete/savedchat/" + chatid + "/' hx-target='#savedchat" + chatid + "' hx-swap='outerHTML' hx-confirm='Are you sure?'>Delete</button></form></td>"
 			html += `</tr>`
 		}
 		html += "</table><div id='addchat'></div>"
@@ -230,16 +250,6 @@ func (agent *Agent) hload(w http.ResponseWriter, r *http.Request) {
 	// fmt.Println("hload")
 	data := r.FormValue("data")
 	agent.load(data)
-	agent.hloadchatscreen(w, r)
-}
-
-func (agent *Agent) hdeletelines(w http.ResponseWriter, r *http.Request) {
-	// fmt.Println("hdelete")
-	messageid := r.FormValue("messageid")
-	err := agent.deletelines(messageid)
-	if err != nil {
-		fmt.Println(err)
-	}
 	agent.hloadchatscreen(w, r)
 }
 
@@ -303,6 +313,7 @@ func (agent *Agent) hchatsave(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if r.Method == http.MethodDelete {
+			fmt.Println(query)
 			chatid := query[1]
 			err := deletesave(chatid + ".json")
 			if err != nil {
@@ -310,20 +321,6 @@ func (agent *Agent) hchatsave(w http.ResponseWriter, r *http.Request) {
 			}
 			render(w, "<tr><td>Chat Deleted</td></tr>", nil)
 		}
-	}
-}
-
-func (agent *Agent) hdelete(w http.ResponseWriter, r *http.Request) {
-	rawquery := strings.TrimPrefix(r.URL.Path, "/delete/")
-	query := strings.Split(rawquery, "/")
-	switch query[0] {
-	case "chat":
-		chatid := query[1]
-		err := deletesave(chatid + ".json")
-		if err != nil {
-			fmt.Println(err)
-		}
-		render(w, "<tr><td>Chat Deleted</td></tr>", nil)
 	}
 }
 
