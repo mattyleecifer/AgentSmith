@@ -75,7 +75,7 @@ func (agent *Agent) hfunctionremove(w http.ResponseWriter, r *http.Request) {
 func (agent *Agent) hfunctiondelete(w http.ResponseWriter, r *http.Request) {
 	functionname := r.FormValue("functionname")
 	functionname += ".json"
-	filedelete("Functions", functionname)
+	deletefile("Functions", functionname)
 	agent.hfunctions(w, r)
 }
 
@@ -179,7 +179,7 @@ func (agent *Agent) hfunctionsave(w http.ResponseWriter, r *http.Request) {
 
 	newfunction.Parameters = jsonData
 
-	agent.filesave(newfunction, "Functions", newfunction.Name)
+	agent.savefile(newfunction, "Functions", newfunction.Name)
 
 	agent.hfunctions(w, r)
 }

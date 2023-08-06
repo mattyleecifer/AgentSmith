@@ -22,7 +22,7 @@ func main() {
 		}
 		fmt.Println(response.Message.Content)
 		if savechatName != "" {
-			agent.filesave(agent.req.Messages, "Chats")
+			agent.savefile(agent.req.Messages, "Chats")
 		}
 	}
 }

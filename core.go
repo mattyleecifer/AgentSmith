@@ -235,7 +235,7 @@ func (agent *Agent) getflags() {
 			savechatName = os.Args[index+1]
 		case "-load":
 			// load chat from homeDir/Saves
-			agent.fileload("Chats", os.Args[index+1])
+			agent.loadfile("Chats", os.Args[index+1])
 		case "-prompt":
 			// Set prompt
 			agent.setprompt(os.Args[index+1])
@@ -440,7 +440,7 @@ func (agent *Agent) removefunction(funcname string) {
 func (agent *Agent) functionload(filename string) (openai.FunctionDefinition, error) {
 	var newfunction openai.FunctionDefinition
 
-	filedata, err := agent.fileload("Functions", filename)
+	filedata, err := agent.loadfile("Functions", filename)
 	if err != nil {
 		return newfunction, err
 	}
@@ -680,7 +680,7 @@ func (agent *Agent) setAutoRequestFunction() {
 	agent.setfunction(funcdef)
 }
 
-func (agent *Agent) filesave(data interface{}, filetype string, input ...string) (string, error) {
+func (agent *Agent) savefile(data interface{}, filetype string, input ...string) (string, error) {
 	// savetype must be Chats, Prompts, or Functions
 
 	var filename string
@@ -723,7 +723,7 @@ func (agent *Agent) filesave(data interface{}, filetype string, input ...string)
 	return filedir, nil
 }
 
-func (agent *Agent) fileload(filetype string, filename string) ([]byte, error) {
+func (agent *Agent) loadfile(filetype string, filename string) ([]byte, error) {
 
 	var filedir string
 	if strings.HasSuffix(filename, ".json") {
@@ -760,7 +760,7 @@ func (agent *Agent) fileload(filetype string, filename string) ([]byte, error) {
 	return nil, nil
 }
 
-func filedelete(filetype, filename string) error {
+func deletefile(filetype, filename string) error {
 	// removes from disk
 	filepath := filepath.Join(homeDir, filetype, filename)
 

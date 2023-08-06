@@ -39,7 +39,7 @@ func (agent *Agent) hprompt(w http.ResponseWriter, r *http.Request) {
 func (agent *Agent) hpromptdelete(w http.ResponseWriter, r *http.Request) {
 	promptname := r.FormValue("promptname")
 	promptname += ".json"
-	filedelete("Prompts", promptname)
+	deletefile("Prompts", promptname)
 	agent.hprompt(w, r)
 }
 
@@ -56,7 +56,7 @@ func (agent *Agent) hpromptload(w http.ResponseWriter, r *http.Request) {
 
 	prompt := promptDefinition{}
 
-	loaddata, err := agent.fileload("Prompts", promptname)
+	loaddata, err := agent.loadfile("Prompts", promptname)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -92,7 +92,7 @@ func (agent *Agent) hpromptsave(w http.ResponseWriter, r *http.Request) {
 		Parameters:  r.FormValue("edittext"),
 	}
 
-	agent.filesave(newprompt, "Prompts", newprompt.Name)
+	agent.savefile(newprompt, "Prompts", newprompt.Name)
 	agent.hprompt(w, r)
 }
 

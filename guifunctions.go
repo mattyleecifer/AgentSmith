@@ -107,7 +107,7 @@ func (agent *Agent) hchatsave(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == http.MethodPost {
 		filename := r.FormValue("filename")
-		agent.filesave(agent.req.Messages, "Chats", filename)
+		agent.savefile(agent.req.Messages, "Chats", filename)
 		render(w, "Chat Saved!", nil)
 	}
 
@@ -224,7 +224,7 @@ func (agent *Agent) hchatpostput(w http.ResponseWriter, r *http.Request) {
 				data.Content = response.Message.Content
 				data.Index = strconv.Itoa(len(agent.req.Messages) - 1)
 				// this is currently broken - waiting to create switchboard to fix so it cant just call /function/run/functionname instead of grabbing a response from a form etc
-				data.Function = template.HTML(`<button hx-post="/runfunction" hx-target="#chatloading" hx-swap="beforebegin scroll:#top-row:bottom" hx-select="#message" name="functionname" hx-include="[functionname="` + response.FunctionCall.Name + `"]" value="` + response.FunctionCall.Name + `">Run</button>`)
+				data.Function = template.HTML(`<button hx-post="/function/run/` + response.FunctionCall.Name + `/" hx-indicator="#chatloading" hx-target="#chatloading" hx-swap="beforebegin scroll:#top-row:bottom" hx-select="#message">Run</button>`)
 			}
 		} else {
 			data.Content = response.Message.Content
@@ -269,7 +269,7 @@ func (agent *Agent) hreset(w http.ResponseWriter, r *http.Request) {
 
 func (agent *Agent) hchatload(w http.ResponseWriter, r *http.Request) {
 	filename := r.FormValue("data")
-	_, err := agent.fileload("Chats", filename)
+	_, err := agent.loadfile("Chats", filename)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -313,25 +313,19 @@ func (agent *Agent) hedit(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (agent *Agent) hrunfunction(w http.ResponseWriter, r *http.Request) {
-	// fmt.Println("hrunfunction")
-	// parameters := r.FormValue("functioncall")
-	// parameters = strings.ReplaceAll(parameters, "\n", "")
-	// parameters = strings.ReplaceAll(parameters, "  ", "")
-	// function := openai.FunctionDefinition{
-	// 	Name:       r.FormValue("functionname"),
-	// 	Parameters: parameters,
-	// }
+func (agent *Agent) hfunctionrun(w http.ResponseWriter, r *http.Request) {
+	rawquery := strings.TrimPrefix(r.URL.Path, "/function/run/")
+	query := strings.Split(rawquery, "/")
+	fmt.Println(rawquery, query)
+
 	function := Response{
 		FunctionCall: &openai.FunctionCall{
-			Name:      r.FormValue("functionname"),
+			Name:      query[0],
 			Arguments: agent.req.Messages[len(agent.req.Messages)-1].Content,
 		},
 	}
 
 	response := agent.callfunction(&function)
-
-	// agent.req.Messages = append(agent.req.Messages, response.Message)
 
 	var data struct {
 		Header   template.HTML
@@ -344,7 +338,7 @@ func (agent *Agent) hrunfunction(w http.ResponseWriter, r *http.Request) {
 	data.Role = openai.ChatMessageRoleAssistant
 	data.Content = response.Message.Content
 	data.Index = strconv.Itoa(len(agent.req.Messages) - 1)
-	render(w, husermessage, data)
+	render(w, hnewmessage, data)
 }
 
 func (agent *Agent) hautorequestfunctionoff(w http.ResponseWriter, r *http.Request) {
