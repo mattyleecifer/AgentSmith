@@ -394,33 +394,6 @@ func gethomedir() (string, error) {
 	return homeDir, nil
 }
 
-func loadprompt(filename string) (promptDefinition, error) {
-	newprompt := promptDefinition{}
-
-	// Create a directory for your app
-	loadpath := filepath.Join(homeDir, "Prompts", filename)
-
-	file, err := os.Open(loadpath)
-	if err != nil {
-		return newprompt, err
-	}
-	defer file.Close()
-
-	data, err := ioutil.ReadAll(file)
-	if err != nil {
-		return newprompt, err
-	}
-
-	err = json.Unmarshal(data, &newprompt)
-	if err != nil {
-		return newprompt, err
-	}
-
-	// fmt.Println("\nLoaded prompt!")
-
-	return newprompt, nil
-}
-
 func (agent *Agent) setfunction(newfunction openai.FunctionDefinition) error {
 	// detects if function already loaded - will overwrite if it is
 	for _, item := range agent.req.Functions {
@@ -713,7 +686,7 @@ func (agent *Agent) save(input ...string) (string, error) {
 		filename = input[0]
 	}
 
-	appDir := filepath.Join(homeDir, "Saves")
+	appDir := filepath.Join(homeDir, "Chats")
 	err := os.MkdirAll(appDir, os.ModePerm)
 	if err != nil {
 		fmt.Println("Failed to create app directory:", err)

@@ -7,8 +7,6 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
-	"os"
-	"path/filepath"
 	"strings"
 
 	"github.com/sashabaranov/go-openai"
@@ -77,14 +75,14 @@ func (agent *Agent) hfunctionremove(w http.ResponseWriter, r *http.Request) {
 func (agent *Agent) hfunctiondelete(w http.ResponseWriter, r *http.Request) {
 	functionname := r.FormValue("functionname")
 	functionname += ".json"
-	deletefunction(functionname)
+	filedelete("Functions", functionname)
 	agent.hfunctions(w, r)
 }
 
 func (agent *Agent) hfunctionload(w http.ResponseWriter, r *http.Request) {
 	functionname := r.FormValue("functionname")
 	functionname += ".json"
-	newfunction, err := loadfunction(functionname)
+	newfunction, err := agent.functionload(functionname)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -181,57 +179,7 @@ func (agent *Agent) hfunctionsave(w http.ResponseWriter, r *http.Request) {
 
 	newfunction.Parameters = jsonData
 
-	savefunction(&newfunction)
+	agent.filesave(newfunction, "Functions", newfunction.Name)
 
 	agent.hfunctions(w, r)
-}
-
-func savefunction(f *openai.FunctionDefinition) (string, error) {
-	// saves to disk
-	appDir := filepath.Join(homeDir, "Functions")
-	err := os.MkdirAll(appDir, os.ModePerm)
-	if err != nil {
-		fmt.Println("Failed to create app directory:", err)
-		return "", err
-	}
-
-	jsonData, err := json.Marshal(f)
-	if err != nil {
-		return "", err
-	}
-
-	filename := strings.ReplaceAll(f.Name, " ", "")
-
-	savepath := filepath.Join(appDir, filename+".json")
-
-	file, err := os.OpenFile(savepath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
-	if err != nil {
-		return "", err
-	}
-	defer file.Close()
-
-	_, err = file.Write(jsonData)
-	if err != nil {
-		return "", err
-	}
-
-	fmt.Println("\nFile saved: ", savepath)
-
-	return filename + ".json", nil
-}
-
-func deletefunction(filename string) error {
-	// deletes from disk
-	// Create a directory for your app
-	filepath := filepath.Join(homeDir, "Functions", filename)
-
-	err := os.Remove(filepath)
-	if err != nil {
-		fmt.Println("Error deleting file:", err)
-		return err
-	}
-
-	fmt.Println("File deleted successfully.")
-
-	return nil
 }

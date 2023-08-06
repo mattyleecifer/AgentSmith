@@ -8,14 +8,14 @@
     </tr>
     <tr>
         <td>
-            <form hx-post="/promptset" hx-target="#main-content" hx-swap="none">
+            <form hx-post="/prompt/set/" hx-target="#main-content" hx-swap="none">
             <div><p>Prompt name:</p><input name="promptname" value="{{ .Name }}"></div>
             <div><p>Prompt description:</p><textarea name="promptdescription" rows="3">{{ .Description }}</textarea></div>
             <textarea name="edittext" rows="10">{{ .Parameters }}</textarea>
             <table style="display: flex;" id="centertext">
                 <tr>
                 <td><button class="btn">Set</button></td>
-                <td><button class="btn" hx-post="/promptsave" hx-target="#main-content" hx-swap="outerHTML">Save</button></td>
+                <td><button class="btn" hx-post="/prompt/save/" hx-target="#main-content" hx-swap="outerHTML">Save</button></td>
                 <td><a href="/"><button class="btn">Back</button></a></td>
                 </tr>
             </table>

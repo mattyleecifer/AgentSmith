@@ -13,14 +13,14 @@ import (
 )
 
 func (agent *Agent) handlersprompteditor() {
-	http.HandleFunc("/prompteditpage", RequireAuth(agent.hprompteditpage))
-	http.HandleFunc("/promptdelete", RequireAuth(agent.hpromptdelete))
-	http.HandleFunc("/promptload", RequireAuth(hpromptload))
-	http.HandleFunc("/promptset", RequireAuth(agent.hpromptset))
-	http.HandleFunc("/promptsave", RequireAuth(agent.hpromptsave))
+	http.HandleFunc("/prompt/", RequireAuth(agent.hprompt))
+	http.HandleFunc("/prompt/save/", RequireAuth(agent.hpromptsave))
+	http.HandleFunc("/prompt/load/", RequireAuth(agent.hpromptload))
+	http.HandleFunc("/prompt/delete/", RequireAuth(agent.hpromptdelete))
+	http.HandleFunc("/prompt/set/", RequireAuth(agent.hpromptset))
 }
 
-func (agent *Agent) hprompteditpage(w http.ResponseWriter, r *http.Request) {
+func (agent *Agent) hprompt(w http.ResponseWriter, r *http.Request) {
 	var data struct {
 		Name         string
 		Description  string
@@ -39,11 +39,11 @@ func (agent *Agent) hprompteditpage(w http.ResponseWriter, r *http.Request) {
 func (agent *Agent) hpromptdelete(w http.ResponseWriter, r *http.Request) {
 	promptname := r.FormValue("promptname")
 	promptname += ".json"
-	deleteprompt(promptname)
-	agent.hprompteditpage(w, r)
+	filedelete("Prompts", promptname)
+	agent.hprompt(w, r)
 }
 
-func hpromptload(w http.ResponseWriter, r *http.Request) {
+func (agent *Agent) hpromptload(w http.ResponseWriter, r *http.Request) {
 	var data struct {
 		Name         string
 		Description  string
@@ -54,10 +54,14 @@ func hpromptload(w http.ResponseWriter, r *http.Request) {
 	promptname := r.FormValue("promptname")
 	promptname += ".json"
 
-	prompt, err := loadprompt(promptname)
+	prompt := promptDefinition{}
+
+	loaddata, err := agent.fileload("Prompts", promptname)
 	if err != nil {
 		fmt.Println(err)
 	}
+
+	_ = json.Unmarshal(loaddata, &prompt)
 
 	data.Name = prompt.Name
 	data.Description = prompt.Description
@@ -88,57 +92,8 @@ func (agent *Agent) hpromptsave(w http.ResponseWriter, r *http.Request) {
 		Parameters:  r.FormValue("edittext"),
 	}
 
-	saveprompt(&newprompt)
-	agent.hprompteditpage(w, r)
-}
-
-func saveprompt(f *promptDefinition) (string, error) {
-	// saves to disk
-	appDir := filepath.Join(homeDir, "Prompts")
-	err := os.MkdirAll(appDir, os.ModePerm)
-	if err != nil {
-		fmt.Println("Failed to create app directory:", err)
-		return "", err
-	}
-
-	jsonData, err := json.Marshal(f)
-	if err != nil {
-		return "", err
-	}
-
-	filename := f.Name + ".json"
-
-	savepath := filepath.Join(appDir, filename)
-
-	file, err := os.OpenFile(savepath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
-	if err != nil {
-		return "", err
-	}
-	defer file.Close()
-
-	_, err = file.Write(jsonData)
-	if err != nil {
-		return "", err
-	}
-
-	fmt.Println("\nFile saved: ", savepath)
-
-	return filename, nil
-}
-
-func deleteprompt(filename string) error {
-	// removes from disk
-	filepath := filepath.Join(homeDir, "Prompts", filename)
-
-	err := os.Remove(filepath)
-	if err != nil {
-		fmt.Println("Error deleting file:", err)
-		return err
-	}
-
-	fmt.Println("File deleted successfully.")
-
-	return nil
+	agent.filesave(newprompt, "Prompts", newprompt.Name)
+	agent.hprompt(w, r)
 }
 
 func getsavepromptlist() ([]string, error) {
@@ -175,7 +130,7 @@ func rendersavedprompts() template.HTML {
 		savedprompts += `<table style="display: flex;" id="centertext">`
 		for i := 0; i < len(allsavedprompts); i++ {
 			name := strings.ReplaceAll(allsavedprompts[i], ".json", "")
-			savedprompts += "<tr><td>" + name + "</td><td><form hx-post='/promptload' hx-target='#main-content' hx-swap='outerHTML'><button class='btn' name='promptname' value='" + name + "'>Load</button></form></td><td><form hx-post='/promptdelete' hx-target='#main-content' hx-swap='outerHTML' hx-confirm='Are you sure?'><button class='btn' name='promptname' value='" + name + "'>Delete</button></form></td></tr>"
+			savedprompts += "<tr><td>" + name + "</td><td><form hx-post='/prompt/load/' hx-target='#main-content' hx-swap='outerHTML'><button class='btn' name='promptname' value='" + name + "'>Load</button></form></td><td><form hx-post='/prompt/delete/' hx-target='#main-content' hx-swap='outerHTML' hx-confirm='Are you sure?'><button class='btn' name='promptname' value='" + name + "'>Delete</button></form></td></tr>"
 		}
 		savedprompts += `</table>`
 	}

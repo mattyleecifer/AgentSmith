@@ -86,14 +86,29 @@ func (agent *Agent) hchat(w http.ResponseWriter, r *http.Request) {
 		} else {
 			agent.hchatpostput(w, r)
 		}
-	case "save":
-		agent.hchatsave(w, r)
-	case "delete":
-		agent.hchatdelete(w, r)
 	case "clear":
 		agent.setprompt()
 		agent.hloadchatscreen(w, r)
+	}
+}
 
+func (agent *Agent) hchatsave(w http.ResponseWriter, r *http.Request) {
+
+	if r.Method == http.MethodGet {
+		currentTime := time.Now()
+		filename := currentTime.Format("20060102150405")
+		data := struct {
+			Filename string
+		}{
+			Filename: filename,
+		}
+		render(w, hsave, data)
+	}
+
+	if r.Method == http.MethodPost {
+		filename := r.FormValue("filename")
+		agent.filesave(agent.req.Messages, "Chats", filename)
+		render(w, "Chat Saved!", nil)
 	}
 
 }
@@ -116,6 +131,12 @@ func (agent *Agent) hchatdelete(w http.ResponseWriter, r *http.Request) {
 		}
 		render(w, "<tr><td>Chat Deleted</td></tr>", nil)
 	}
+}
+
+func (agent *Agent) hchatclear(w http.ResponseWriter, r *http.Request) {
+	// fmt.Println("hclear")
+	agent.setprompt()
+	agent.hloadchatscreen(w, r)
 }
 
 func (agent *Agent) hloadchatscreen(w http.ResponseWriter, r *http.Request) {
@@ -231,7 +252,7 @@ func hgetchathistory(w http.ResponseWriter, r *http.Request) {
 			html += "<tr id='savedchat" + chatid + "' style='text-align: left;'><td>"
 			html += "<div class='savedchat'><div>"
 			html += filelist[i]
-			html += "</div><td><form hx-post='/load' hx-target='#main-content' hx-swap='innerHTML'><button class='btn' name='data' value='" + filelist[i] + "'>Load</button></form></td><td><button class='btn' hx-delete='/chat/delete/savedchat/" + chatid + "/' hx-target='#savedchat" + chatid + "' hx-swap='outerHTML' hx-confirm='Are you sure?'>Delete</button></form></td>"
+			html += "</div><td><form hx-post='/chat/load/' hx-target='#main-content' hx-swap='innerHTML'><button class='btn' name='data' value='" + filelist[i] + "'>Load</button></form></td><td><button class='btn' hx-delete='/chat/delete/savedchat/" + chatid + "/' hx-target='#savedchat" + chatid + "' hx-swap='outerHTML' hx-confirm='Are you sure?'>Delete</button></form></td>"
 			html += `</tr>`
 		}
 		html += "</table><div id='addchat'></div>"
@@ -246,10 +267,12 @@ func (agent *Agent) hreset(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusTemporaryRedirect)
 }
 
-func (agent *Agent) hload(w http.ResponseWriter, r *http.Request) {
-	// fmt.Println("hload")
-	data := r.FormValue("data")
-	agent.load(data)
+func (agent *Agent) hchatload(w http.ResponseWriter, r *http.Request) {
+	filename := r.FormValue("data")
+	_, err := agent.fileload("Chats", filename)
+	if err != nil {
+		fmt.Println(err)
+	}
 	agent.hloadchatscreen(w, r)
 }
 
@@ -288,46 +311,6 @@ func (agent *Agent) hedit(w http.ResponseWriter, r *http.Request) {
 		}
 		render(w, hedited, data)
 	}
-}
-
-func (agent *Agent) hchatsave(w http.ResponseWriter, r *http.Request) {
-	rawquery := strings.TrimPrefix(r.URL.Path, "/save/")
-	query := strings.Split(rawquery, "/")
-	switch query[0] {
-	case "":
-		if r.Method == http.MethodGet {
-			currentTime := time.Now()
-			filename := currentTime.Format("20060102150405")
-			data := struct {
-				Filename string
-			}{
-				Filename: filename,
-			}
-			render(w, hsave, data)
-		}
-
-		if r.Method == http.MethodPost {
-			filename := r.FormValue("filename")
-			agent.save(filename)
-			render(w, "Chat Saved!", nil)
-		}
-
-		if r.Method == http.MethodDelete {
-			fmt.Println(query)
-			chatid := query[1]
-			err := deletesave(chatid + ".json")
-			if err != nil {
-				fmt.Println(err)
-			}
-			render(w, "<tr><td>Chat Deleted</td></tr>", nil)
-		}
-	}
-}
-
-func (agent *Agent) hclear(w http.ResponseWriter, r *http.Request) {
-	// fmt.Println("hclear")
-	agent.setprompt()
-	agent.hloadchatscreen(w, r)
 }
 
 func (agent *Agent) hrunfunction(w http.ResponseWriter, r *http.Request) {
@@ -415,7 +398,7 @@ func hautofunctionstatus(w http.ResponseWriter, r *http.Request) {
 
 func getsavefilelist() ([]string, error) {
 	// Create a directory for your app
-	savepath := filepath.Join(homeDir, "Saves")
+	savepath := filepath.Join(homeDir, "Chats")
 	files, err := os.ReadDir(savepath)
 	if err != nil {
 		return nil, err
@@ -435,9 +418,9 @@ func getsavefilelist() ([]string, error) {
 func deletesave(filename string) error {
 	var savepath string
 	if strings.HasSuffix(filename, ".json") {
-		savepath = filepath.Join(homeDir, "Saves", filename)
+		savepath = filepath.Join(homeDir, "Chats", filename)
 	} else {
-		savepath = filepath.Join(homeDir, "Saves", filename+".json")
+		savepath = filepath.Join(homeDir, "Chats", filename+".json")
 	}
 
 	err := os.Remove(savepath)

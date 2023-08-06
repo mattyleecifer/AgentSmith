@@ -103,7 +103,7 @@ func (agent *Agent) process_text(text string) string {
 		fmt.Println("Lines deleted!")
 		return ""
 	case "save":
-		_, err := agent.save()
+		_, err := agent.filesave(agent.req.Messages, "Chats")
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -118,7 +118,7 @@ func (agent *Agent) process_text(text string) string {
 		if filename == "" {
 			return ""
 		}
-		err = agent.load(filename)
+		_, err = agent.fileload("Chats", filename)
 		if err != nil {
 			fmt.Println(err)
 		}

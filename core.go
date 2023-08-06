@@ -5,7 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"os"
 	"os/exec"
@@ -235,7 +235,7 @@ func (agent *Agent) getflags() {
 			savechatName = os.Args[index+1]
 		case "-load":
 			// load chat from homeDir/Saves
-			agent.load(os.Args[index+1])
+			agent.fileload("Chats", os.Args[index+1])
 		case "-prompt":
 			// Set prompt
 			agent.setprompt(os.Args[index+1])
@@ -247,7 +247,7 @@ func (agent *Agent) getflags() {
 			maxtokens, _ = strconv.Atoi(os.Args[index+1])
 		case "-function":
 			// Load function from file
-			newfunction, _ := loadfunction(os.Args[index+1])
+			newfunction, _ := agent.functionload(os.Args[index+1])
 			agent.setfunction(newfunction)
 		case "-message":
 			// Get the argument after the flag]
@@ -318,7 +318,7 @@ func (agent *Agent) getresponse() (Response, error) {
 		if resp.Choices[0].Message.FunctionCall.Name == "requestfunction" && autorequestfunction {
 			// main assistant gets funcdefs for autorequest from main dir
 			req := getsubrequest(resp.Choices[0].Message.FunctionCall.Arguments)
-			newfunction, _ := loadfunction(req["function"] + ".json")
+			newfunction, _ := agent.functionload(req["function"] + ".json")
 			response, err = agent.requestFunction(newfunction)
 			if err != nil {
 				return response, err
@@ -408,33 +408,6 @@ func gethomedir() (string, error) {
 	return homeDir, nil
 }
 
-func loadprompt(filename string) (promptDefinition, error) {
-	newprompt := promptDefinition{}
-
-	// Create a directory for your app
-	loadpath := filepath.Join(homeDir, "Prompts", filename)
-
-	file, err := os.Open(loadpath)
-	if err != nil {
-		return newprompt, err
-	}
-	defer file.Close()
-
-	data, err := ioutil.ReadAll(file)
-	if err != nil {
-		return newprompt, err
-	}
-
-	err = json.Unmarshal(data, &newprompt)
-	if err != nil {
-		return newprompt, err
-	}
-
-	// fmt.Println("\nLoaded prompt!")
-
-	return newprompt, nil
-}
-
 func (agent *Agent) setfunction(newfunction openai.FunctionDefinition) error {
 	// detects if function already loaded - will overwrite if it is
 	for _, item := range agent.req.Functions {
@@ -464,29 +437,18 @@ func (agent *Agent) removefunction(funcname string) {
 	agent.req.Functions = newlist
 }
 
-func loadfunction(filename string) (openai.FunctionDefinition, error) {
+func (agent *Agent) functionload(filename string) (openai.FunctionDefinition, error) {
 	var newfunction openai.FunctionDefinition
 
-	// Create a directory for your app
-	loadpath := filepath.Join(homeDir, "Functions", filename)
-
-	file, err := os.Open(loadpath)
-	if err != nil {
-		return newfunction, err
-	}
-	defer file.Close()
-
-	data, err := ioutil.ReadAll(file)
+	filedata, err := agent.fileload("Functions", filename)
 	if err != nil {
 		return newfunction, err
 	}
 
-	err = json.Unmarshal(data, &newfunction)
+	err = json.Unmarshal(filedata, &newfunction)
 	if err != nil {
 		return newfunction, err
 	}
-
-	// fmt.Println("\nLoaded Function!")
 
 	return newfunction, nil
 }
@@ -574,7 +536,7 @@ func (agent *Agent) getkey() {
 
 		// fmt.Println("File created successfully!")
 
-		armor, err := helper.EncryptMessageArmored(pubkey, key)
+		armor, _ := helper.EncryptMessageArmored(pubkey, key)
 
 		_, err = file.WriteString(armor)
 		if err != nil {
@@ -586,7 +548,7 @@ func (agent *Agent) getkey() {
 
 		// fmt.Println("API key set.")
 	} else {
-		content, err := ioutil.ReadFile(filePath)
+		content, err := os.ReadFile(filePath)
 		if err != nil {
 			fmt.Println("Failed to read file:", err)
 			os.Exit(0)
@@ -691,7 +653,7 @@ func (agent *Agent) setAutoRequestFunction() {
 	var description string
 	var enum []string
 	for _, item := range functions {
-		newfunction, _ := loadfunction(item)
+		newfunction, _ := agent.functionload(item)
 		if strings.HasPrefix(newfunction.Name, "_") {
 			continue
 		}
@@ -718,7 +680,9 @@ func (agent *Agent) setAutoRequestFunction() {
 	agent.setfunction(funcdef)
 }
 
-func (agent *Agent) save(input ...string) (string, error) {
+func (agent *Agent) filesave(data interface{}, filetype string, input ...string) (string, error) {
+	// savetype must be Chats, Prompts, or Functions
+
 	var filename string
 	if len(input) == 0 {
 		currentTime := time.Now()
@@ -727,21 +691,25 @@ func (agent *Agent) save(input ...string) (string, error) {
 		filename = input[0]
 	}
 
-	appDir := filepath.Join(homeDir, "Saves")
+	var filedir string
+	if strings.HasSuffix(filename, ".json") {
+		filedir = filepath.Join(homeDir, filetype, filename)
+	} else {
+		filedir = filepath.Join(homeDir, filetype, filename+".json")
+	}
+	appDir := filepath.Join(homeDir, filetype)
 	err := os.MkdirAll(appDir, os.ModePerm)
 	if err != nil {
 		fmt.Println("Failed to create app directory:", err)
 		return "", err
 	}
 
-	jsonData, err := json.Marshal(agent.req.Messages)
+	jsonData, err := json.Marshal(data)
 	if err != nil {
 		return "", err
 	}
 
-	savepath := filepath.Join(appDir, filename+".json")
-
-	file, err := os.OpenFile(savepath, os.O_WRONLY|os.O_CREATE, 0644)
+	file, err := os.OpenFile(filedir, os.O_WRONLY|os.O_CREATE, 0644)
 	if err != nil {
 		return "", err
 	}
@@ -752,35 +720,57 @@ func (agent *Agent) save(input ...string) (string, error) {
 		return "", err
 	}
 
-	// fmt.Println("\nFile saved: ", savepath)
-
-	return filename + ".json", nil
+	return filedir, nil
 }
 
-func (agent *Agent) load(filename string) error {
-	loadpath := filepath.Join(homeDir, "Saves", filename)
+func (agent *Agent) fileload(filetype string, filename string) ([]byte, error) {
 
-	file, err := os.Open(loadpath)
+	var filedir string
+	if strings.HasSuffix(filename, ".json") {
+		filedir = filepath.Join(homeDir, filetype, filename)
+	} else {
+		filedir = filepath.Join(homeDir, filetype, filename+".json")
+	}
+
+	file, err := os.Open(filedir)
 	if err != nil {
-		// Handle the error
+		return nil, err
 	}
 	defer file.Close()
-
-	agent.reset()
-	newmessages := []openai.ChatCompletionMessage{}
-
-	data, err := ioutil.ReadAll(file)
+	data, err := io.ReadAll(file)
 	if err != nil {
-		return err
-	}
-	err = json.Unmarshal(data, &newmessages)
-	if err != nil {
-		return err
+		return nil, err
 	}
 
-	agent.req.Messages = newmessages
+	switch filetype {
+	case "Chats":
+		agent.reset()
+		newmessages := []openai.ChatCompletionMessage{}
+		err = json.Unmarshal(data, &newmessages)
+		if err != nil {
+			return nil, err
+		}
+		agent.req.Messages = newmessages
+		return nil, err
+	case "Functions":
+		return data, nil
+	case "Prompts":
+		return data, nil
+	}
+	return nil, nil
+}
 
-	// fmt.Println("\nLoaded messages!")
+func filedelete(filetype, filename string) error {
+	// removes from disk
+	filepath := filepath.Join(homeDir, filetype, filename)
+
+	err := os.Remove(filepath)
+	if err != nil {
+		fmt.Println("Error deleting file:", err)
+		return err
+	}
+
+	fmt.Println("File deleted successfully.")
 
 	return nil
 }
