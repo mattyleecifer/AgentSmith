@@ -761,10 +761,14 @@ func (agent *Agent) loadfile(filetype string, filename string) ([]byte, error) {
 }
 
 func deletefile(filetype, filename string) error {
-	// removes from disk
-	filepath := filepath.Join(homeDir, filetype, filename)
+	var filedir string
+	if strings.HasSuffix(filename, ".json") {
+		filedir = filepath.Join(homeDir, filetype, filename)
+	} else {
+		filedir = filepath.Join(homeDir, filetype, filename+".json")
+	}
 
-	err := os.Remove(filepath)
+	err := os.Remove(filedir)
 	if err != nil {
 		fmt.Println("Error deleting file:", err)
 		return err

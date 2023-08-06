@@ -72,23 +72,71 @@ func hscroll(w http.ResponseWriter, r *http.Request) {
 }
 
 func (agent *Agent) hchat(w http.ResponseWriter, r *http.Request) {
-	rawquery := strings.TrimPrefix(r.URL.Path, "/chat/")
-	query := strings.Split(rawquery, "/")
-	switch query[0] {
-	case "":
-		if r.Method == http.MethodGet {
-			agent.hloadchatscreen(w, r)
-		} else {
-			agent.hchatpostput(w, r)
-		}
-	case "clear":
-		agent.setprompt()
+	var data struct {
+		Header   template.HTML
+		Role     string
+		Content  string
+		Index    string
+		Function template.HTML
+	}
+
+	if r.Method == http.MethodGet {
 		agent.hloadchatscreen(w, r)
+	}
+
+	if r.Method == http.MethodPost {
+		rawtext := r.FormValue("text")
+		if rawtext == "!" {
+			agent.setprompt()
+			w.Header().Set("HX-Redirect", "/")
+			w.WriteHeader(http.StatusTemporaryRedirect)
+			return
+		}
+		query := openai.ChatCompletionMessage{
+			Role:    openai.ChatMessageRoleUser,
+			Content: rawtext,
+		}
+		agent.req.Messages = append(agent.req.Messages, query)
+		// text := agent.req.Messages[len(agent.req.Messages)-1].Content
+
+		data.Header = template.HTML(`<div id="message" class="message">`)
+		data.Role = openai.ChatMessageRoleUser
+		data.Content = rawtext
+		data.Index = strconv.Itoa(len(agent.req.Messages) - 1)
+
+		render(w, hnewmessage, data)
+	}
+
+	if r.Method == http.MethodPut {
+		response, err := agent.getresponse()
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		w.Header().Set("HX-Trigger-After-Settle", `tokenupdate`)
+
+		data.Role = openai.ChatMessageRoleAssistant
+		data.Header = template.HTML(`<div id="message" class="message" style="background-color: #393939">`)
+
+		if response.FunctionCall != nil {
+			if autofunction {
+				functionresponse := agent.callfunction(&response)
+				data.Content = functionresponse.Message.Content
+				data.Index = strconv.Itoa(len(agent.req.Messages) - 1)
+			} else {
+				data.Content = response.Message.Content
+				data.Index = strconv.Itoa(len(agent.req.Messages) - 1)
+				data.Function = template.HTML(`<button hx-post="/function/run/` + response.FunctionCall.Name + `/" hx-indicator="#chatloading" hx-target="#chatloading" hx-swap="beforebegin scroll:#top-row:bottom" hx-select="#message">Run</button>`)
+			}
+		} else {
+			data.Content = response.Message.Content
+			data.Index = strconv.Itoa(len(agent.req.Messages) - 1)
+		}
+		render(w, hnewmessage, data)
 	}
 }
 
 func (agent *Agent) hchatsave(w http.ResponseWriter, r *http.Request) {
-
 	if r.Method == http.MethodGet {
 		currentTime := time.Now()
 		filename := currentTime.Format("20060102150405")
@@ -105,7 +153,6 @@ func (agent *Agent) hchatsave(w http.ResponseWriter, r *http.Request) {
 		agent.savefile(agent.req.Messages, "Chats", filename)
 		render(w, "Chat Saved!", nil)
 	}
-
 }
 
 func (agent *Agent) hchatdelete(w http.ResponseWriter, r *http.Request) {
@@ -120,7 +167,7 @@ func (agent *Agent) hchatdelete(w http.ResponseWriter, r *http.Request) {
 		}
 		agent.hloadchatscreen(w, r)
 	case "savedchat":
-		err := deletesave(query[1] + ".json")
+		err := deletefile("Chats", query[1])
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -129,7 +176,6 @@ func (agent *Agent) hchatdelete(w http.ResponseWriter, r *http.Request) {
 }
 
 func (agent *Agent) hchatclear(w http.ResponseWriter, r *http.Request) {
-	// fmt.Println("hclear")
 	agent.setprompt()
 	agent.hloadchatscreen(w, r)
 }
@@ -162,66 +208,6 @@ func (agent *Agent) hloadchatscreen(w http.ResponseWriter, r *http.Request) {
 			data.Messages = append(data.Messages, msg)
 		}
 		render(w, hchatpage, data)
-	}
-}
-
-func (agent *Agent) hchatpostput(w http.ResponseWriter, r *http.Request) {
-	var data struct {
-		Header   template.HTML
-		Role     string
-		Content  string
-		Index    string
-		Function template.HTML
-	}
-	if r.Method == http.MethodPost {
-		rawtext := r.FormValue("text")
-		if rawtext == "!" {
-			agent.setprompt()
-			w.Header().Set("HX-Redirect", "/")
-			w.WriteHeader(http.StatusTemporaryRedirect)
-			return
-		}
-		query := openai.ChatCompletionMessage{
-			Role:    openai.ChatMessageRoleUser,
-			Content: rawtext,
-		}
-		agent.req.Messages = append(agent.req.Messages, query)
-		// text := agent.req.Messages[len(agent.req.Messages)-1].Content
-
-		data.Header = template.HTML(`<div id="message" class="message">`)
-		data.Role = openai.ChatMessageRoleUser
-		data.Content = rawtext
-		data.Index = strconv.Itoa(len(agent.req.Messages) - 1)
-
-		render(w, hnewmessage, data)
-	}
-	if r.Method == http.MethodPut {
-		response, err := agent.getresponse()
-		if err != nil {
-			fmt.Println(err)
-		}
-
-		w.Header().Set("HX-Trigger-After-Settle", `tokenupdate`)
-
-		data.Role = openai.ChatMessageRoleAssistant
-		data.Header = template.HTML(`<div id="message" class="message" style="background-color: #393939">`)
-
-		if response.FunctionCall != nil {
-			if autofunction {
-				functionresponse := agent.callfunction(&response)
-				data.Content = functionresponse.Message.Content
-				data.Index = strconv.Itoa(len(agent.req.Messages) - 1)
-			} else {
-				data.Content = response.Message.Content
-				data.Index = strconv.Itoa(len(agent.req.Messages) - 1)
-				data.Function = template.HTML(`<button hx-post="/function/run/` + response.FunctionCall.Name + `/" hx-indicator="#chatloading" hx-target="#chatloading" hx-swap="beforebegin scroll:#top-row:bottom" hx-select="#message">Run</button>`)
-			}
-		} else {
-			data.Content = response.Message.Content
-			data.Index = strconv.Itoa(len(agent.req.Messages) - 1)
-		}
-
-		render(w, hnewmessage, data)
 	}
 }
 
@@ -392,23 +378,4 @@ func getsavefilelist() ([]string, error) {
 	}
 
 	return res, nil
-}
-
-func deletesave(filename string) error {
-	var savepath string
-	if strings.HasSuffix(filename, ".json") {
-		savepath = filepath.Join(homeDir, "Chats", filename)
-	} else {
-		savepath = filepath.Join(homeDir, "Chats", filename+".json")
-	}
-
-	err := os.Remove(savepath)
-	if err != nil {
-		fmt.Println("Error deleting file:", err)
-		return err
-	}
-
-	fmt.Println("File deleted successfully.")
-
-	return nil
 }
