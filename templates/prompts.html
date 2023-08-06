@@ -1,29 +1,17 @@
-<div class="main-content" id="main-content"> 
-<table id="centertext">
-    <tr class="page" id="centertext">
-        <td><h3>Prompt Editor</h3></td>
-    </tr>
-    <tr>
-        <td><a href="/"><button class="btn">Back</button></a></td>
-    </tr>
-    <tr>
-        <td>
-            <form hx-post="/prompt/set/" hx-target="#main-content" hx-swap="none">
-            <div><p>Prompt name:</p><input name="promptname" value="{{ .Name }}"></div>
-            <div><p>Prompt description:</p><textarea name="promptdescription" rows="3">{{ .Description }}</textarea></div>
-            <textarea name="edittext" rows="10">{{ .Parameters }}</textarea>
-            <table style="display: flex;" id="centertext">
-                <tr>
-                <td><button class="btn">Set</button></td>
-                <td><button class="btn" hx-post="/prompt/save/" hx-target="#main-content" hx-swap="outerHTML">Save</button></td>
-                <td><a href="/"><button class="btn">Back</button></a></td>
-                </tr>
-            </table>
-            </form>
-            <div class="mobile" hx-trigger="intersect" hx-delete="/sidebar/" hx-target="#sidebar" hx-swap="outerHTML"></div>
-        </td>
-    </tr>
-    <tr><td><h4>Saved Prompts</h4></td></tr>
-    <tr><td>{{ .SavedPrompts }}</td></tr>
-</table>
+<div style="display: flex; flex-direction: column; margin-top: 5%" class="centertext">
+    <div class="mobile" hx-trigger="intersect" hx-delete="/sidebar/" hx-target="#sidebar" hx-swap="outerHTML"></div>
+    <div style="width: 50%;">
+        <button class="btn" hx-get="/chat/" hx-target="#main-content" hx-swap="innerHTML scroll:#top-row:bottom">Back</button>
+        <p><h3>Prompt Editor</h3></p>
+        <div><p>Prompt name:</p><input id="promptname" name="promptname" value="{{ .Name }}"></div>
+        <div><p>Prompt description:</p><textarea id="promptdescription" name="promptdescription" rows="3">{{ .Description }}</textarea></div>
+        <div><textarea id="edittext" name="edittext" rows="10">{{ .Parameters }}</textarea></div>
+        <div style="display: inline;" hx-target="#main-content" hx-swap="innerHTML" hx-include="#promptname, #promptdescription, #edittext">
+            <button class="btn" hx-post="/prompt/set/">Set</button>
+            <button class="btn" hx-post="/prompt/save/">Save</button>
+            <button class="btn" hx-get="/chat/" hx-swap="innerHTML scroll:#top-row:bottom">Back</button>
+        </div>
+    <p><h4>Saved Prompts</h4></p>
+    {{ .SavedPrompts }}
+    </div>
 </div>

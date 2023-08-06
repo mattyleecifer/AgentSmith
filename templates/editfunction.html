@@ -1,27 +1,17 @@
-<div class="main-content" id="main-content">
-    <table id="centertext">
-        <tr class='page' id="centertext">
-            <td><h3>Function Editor</h3></td>
-        </tr>
-        <tr>
-            <td><button class="btn" hx-get='/function/' hx-target='#main-content' hx-swap='outerHTML'>Back</button></td>
-        </tr>
-        <tr>
-            <td>
-            <form hx-post="/functionset" hx-target="#main-content" hx-swap="outerHTML">
-                <p>Function name:</p><input name="functionname" value="{{ .Name }}"><br>
-                <p>Function description:</p><textarea name="functiondescription" rows="3" style="height: 100%;">{{ .Description }}</textarea><br>
-                <p>Function arguments:</p><textarea name="edittext" rows="10" style="height: 100%;">{{ .Parameters }}</textarea>
-                <br>
-                <table style="display: flex;" id="centertext">
-                    <tr>
-                        <td><button class="btn">Set</button></td>
-                        <td><button class="btn" hx-post="/functionsave" hx-target="#main-content" hx-swap="outerHTML">Save</button></td>
-                        <td><button class="btn" hx-get='/function/' hx-target='#main-content' hx-swap='outerHTML'>Back</button></td>
-                    </tr>
-                </table>
-            </form>
-            </td>
-        </tr>
-    </table>
+<div style="display: flex; flex-direction: column; margin-top: 5%" class="centertext">
+    <div class="mobile" hx-trigger="intersect" hx-delete="/sidebar/" hx-target="#sidebar" hx-swap="outerHTML"></div>
+    <div style="width: 50%;">
+        <button class="btn" hx-get='/function/' hx-target='#main-content' hx-swap='innerHTML'>Back</button>
+        <p><h3>Function Editor</h3></p>
+        <p>Function name:</p><input id="functionname" name="functionname" value="{{ .Name }}"><br>
+        <p>Function description:</p>
+        <div><textarea id="functiondescription" name="functiondescription" rows="3">{{ .Description }}</textarea></div>
+        <p>Function arguments:</p>
+        <div><textarea id="edittext" name="edittext" rows="10">{{ .Parameters }}</textarea></div>
+        <div style="display: inline;" hx-target="#main-content" hx-swap="innerHTML" hx-include="#functionname, #functiondescription, #edittext">
+            <button class="btn" hx-post="/functionset"  >Set</button>
+            <button class="btn" hx-post="/functionsave">Save</button>
+            <button class="btn" hx-get='/function/' hx-swap="innerHTML">Back</button>
+        </div>
+    </div>
 </div>

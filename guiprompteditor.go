@@ -72,9 +72,7 @@ func (agent *Agent) hpromptset(w http.ResponseWriter, r *http.Request) {
 	}
 	agent.prompt = newprompt
 	agent.setprompt()
-
-	w.Header().Set("HX-Redirect", "/")
-	w.WriteHeader(http.StatusTemporaryRedirect)
+	agent.hloadchatscreen(w, r)
 }
 
 func (agent *Agent) hpromptsave(w http.ResponseWriter, r *http.Request) {
@@ -122,7 +120,7 @@ func rendersavedprompts() template.HTML {
 		savedprompts += `<table style="display: flex;" id="centertext">`
 		for i := 0; i < len(allsavedprompts); i++ {
 			name := strings.ReplaceAll(allsavedprompts[i], ".json", "")
-			savedprompts += "<tr><td>" + name + "</td><td><form hx-post='/prompt/load/' hx-target='#main-content' hx-swap='outerHTML'><button class='btn' name='promptname' value='" + name + "'>Load</button></form></td><td><form hx-post='/prompt/delete/' hx-target='#main-content' hx-swap='outerHTML' hx-confirm='Are you sure?'><button class='btn' name='promptname' value='" + name + "'>Delete</button></form></td></tr>"
+			savedprompts += "<tr><td>" + name + "</td><td><form hx-post='/prompt/load/' hx-target='#main-content' hx-swap='innerHTML'><button class='btn' name='promptname' value='" + name + "'>Load</button></form></td><td><form hx-post='/prompt/delete/' hx-target='#main-content' hx-swap='innerHTML' hx-confirm='Are you sure?'><button class='btn' name='promptname' value='" + name + "'>Delete</button></form></td></tr>"
 		}
 		savedprompts += `</table>`
 	}

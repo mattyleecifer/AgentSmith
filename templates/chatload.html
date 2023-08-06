@@ -1,8 +1,8 @@
 <div style="display: flex; flex-direction: column; margin-top: 5%" class="centertext">
     <div class="mobile" hx-trigger="intersect" hx-delete="/sidebar/" hx-target="#sidebar" hx-swap="outerHTML"></div>
     <div style="width: 50%;">
-        <p><h3>Saved Chats</h3><button class="btn" hx-get="/chat/" hx-target="#main-content" hx-swap="innerHTML">Back</button></p>
-
+        <button class="btn" hx-get="/chat/" hx-target="#main-content" hx-swap="innerHTML scroll:#top-row:bottom">Back</button>
+        <p><h3>Saved Chats</h3></p>
         {{ range .Filelist }}
         <div style="display: flex;" id="savedchat-{{ . }}">
             <div style="text-align: left; float: left;">{{ . }}</div>
