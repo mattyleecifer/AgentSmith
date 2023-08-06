@@ -62,11 +62,6 @@ func (agent *Agent) htokenupdate(w http.ResponseWriter, r *http.Request) {
 	render(w, "#Tokens: "+tokencount+"<br>$Est: "+estcoststr, nil)
 }
 
-func hscroll(w http.ResponseWriter, r *http.Request) {
-	// fmt.Println("hscroll")
-	render(w, "", nil)
-}
-
 func (agent *Agent) hchat(w http.ResponseWriter, r *http.Request) {
 	var data struct {
 		Header   template.HTML
@@ -82,6 +77,10 @@ func (agent *Agent) hchat(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == http.MethodPost {
 		rawtext := r.FormValue("text")
+		if strings.TrimSpace(rawtext) == "" {
+			render(w, "", nil)
+			return
+		}
 		if rawtext == "!" {
 			agent.setprompt()
 			w.Header().Set("HX-Redirect", "/")
@@ -215,27 +214,19 @@ func (agent *Agent) hreset(w http.ResponseWriter, r *http.Request) {
 }
 
 func (agent *Agent) hchatload(w http.ResponseWriter, r *http.Request) {
-	type Filelist struct {
-		Filename string
-		Index    int
-	}
+
 	rawquery := strings.TrimPrefix(r.URL.Path, "/chat/load/")
 	query := strings.Split(rawquery, "/")
 	fmt.Println(rawquery, query)
 	if query[0] == "" {
 		var data struct {
-			Filelist []Filelist
+			Filelist []string
 		}
 		filelist, err := getsavefilelist()
 		if err != nil {
 			fmt.Println(err)
 		}
-		for index, item := range filelist {
-			file := Filelist{}
-			file.Filename = item
-			file.Index = index
-			data.Filelist = append(data.Filelist, file)
-		}
+		data.Filelist = filelist
 		render(w, hchatloadpage, data)
 	} else {
 		_, err := agent.loadfile("Chats", query[0])

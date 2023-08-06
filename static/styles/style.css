@@ -133,12 +133,6 @@ input {
     float: right; 
 }
 
-.page {
-    display: flex;
-    flex-direction: column;
-    margin-top: 5%;
-}
-
 .mobile {
     display: none;
     position: fixed;

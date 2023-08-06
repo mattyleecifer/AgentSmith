@@ -16,7 +16,6 @@ func (agent *Agent) gui() {
 	http.HandleFunc("/chat/delete/", RequireAuth(agent.hchatdelete))
 	http.HandleFunc("/chat/clear/", RequireAuth(agent.hchatclear))
 	http.HandleFunc("/chat/reset/", RequireAuth(agent.hreset))
-	http.HandleFunc("/scroll", RequireAuth(hscroll))
 	http.HandleFunc("/edit", RequireAuth(agent.hedit))
 	http.HandleFunc("/function/run/", RequireAuth(agent.hfunctionrun))
 	http.HandleFunc("/settings/", RequireAuth(agent.hsettings))
