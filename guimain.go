@@ -43,7 +43,7 @@ func (agent *Agent) gui() {
 }
 
 func index(w http.ResponseWriter, r *http.Request) {
-	render(w, hindex, nil)
+	render(w, hindexpage, nil)
 }
 
 func render(w http.ResponseWriter, html string, data any) {

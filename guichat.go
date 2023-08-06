@@ -99,7 +99,7 @@ func (agent *Agent) hchat(w http.ResponseWriter, r *http.Request) {
 		data.Content = rawtext
 		data.Index = strconv.Itoa(len(agent.req.Messages) - 1)
 
-		render(w, hnewmessage, data)
+		render(w, hchatnewpage, data)
 	}
 
 	if r.Method == http.MethodPut {
@@ -127,7 +127,7 @@ func (agent *Agent) hchat(w http.ResponseWriter, r *http.Request) {
 			data.Content = response.Message.Content
 			data.Index = strconv.Itoa(len(agent.req.Messages) - 1)
 		}
-		render(w, hnewmessage, data)
+		render(w, hchatnewpage, data)
 	}
 }
 
@@ -140,7 +140,7 @@ func (agent *Agent) hchatsave(w http.ResponseWriter, r *http.Request) {
 		}{
 			Filename: filename,
 		}
-		render(w, hsave, data)
+		render(w, hchatsavepage, data)
 	}
 
 	if r.Method == http.MethodPost {
@@ -301,7 +301,7 @@ func (agent *Agent) hfunctionrun(w http.ResponseWriter, r *http.Request) {
 	data.Role = openai.ChatMessageRoleAssistant
 	data.Content = response.Message.Content
 	data.Index = strconv.Itoa(len(agent.req.Messages) - 1)
-	render(w, hnewmessage, data)
+	render(w, hchatnewpage, data)
 }
 
 func hautofunction(w http.ResponseWriter, r *http.Request) {

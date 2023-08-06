@@ -108,7 +108,7 @@ func (agent *Agent) hfunctionedit(w http.ResponseWriter, r *http.Request, f open
 	data.Description = f.Description
 	data.Parameters = string(functiondata)
 
-	render(w, heditfunction, data)
+	render(w, hfunctioneditpage, data)
 }
 
 func (agent *Agent) hfunctioneditcurrent(w http.ResponseWriter, r *http.Request) {
