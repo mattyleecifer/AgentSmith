@@ -48,12 +48,12 @@ func (agent *Agent) hsettings(w http.ResponseWriter, r *http.Request) {
 }
 
 func hsidebar(w http.ResponseWriter, r *http.Request) {
-	mode := strings.TrimPrefix(r.URL.Path, "/sidebar/")
-	switch mode {
-	case "on":
+	if r.Method == http.MethodGet {
+		w.Header().Set("HX-Trigger-After-Settle", `tokenupdate`)
 		render(w, hsidebarpage, nil)
-	case "off":
-		button := `<div class="sidebar" id="sidebar" style="width: 0; background-color: transparent;"><button class="btn" id="floating-button" hx-get="/sidebar/on" hx-target="#sidebar" hx-swap="outerHTML">Show Menu</button></div>`
+	}
+	if r.Method == http.MethodDelete {
+		button := `<div class="sidebar" id="sidebar" style="width: 0; background-color: transparent;"><button class="btn" id="floating-button" hx-get="/sidebar/" hx-target="#sidebar" hx-swap="outerHTML">Show Menu</button></div>`
 		render(w, button, nil)
 	}
 }
@@ -61,14 +61,9 @@ func hsidebar(w http.ResponseWriter, r *http.Request) {
 func (agent *Agent) htokenupdate(w http.ResponseWriter, r *http.Request) {
 	// fmt.Println("htokenupdate")
 	estcost := (float64(agent.tokencount) / 1000) * callcost
-	data := struct {
-		Tokencount string
-		Estcost    string
-	}{
-		Tokencount: strconv.Itoa(agent.tokencount),
-		Estcost:    strconv.FormatFloat(estcost, 'f', 6, 64),
-	}
-	render(w, htokencount, data)
+	tokencount := strconv.Itoa(agent.tokencount)
+	estcoststr := strconv.FormatFloat(estcost, 'f', 6, 64)
+	render(w, "#Tokens: "+tokencount+"<br>$Est: "+estcoststr, nil)
 }
 
 func hscroll(w http.ResponseWriter, r *http.Request) {
@@ -171,6 +166,13 @@ func (agent *Agent) hloadchatscreen(w http.ResponseWriter, r *http.Request) {
 }
 
 func (agent *Agent) hchatpostput(w http.ResponseWriter, r *http.Request) {
+	var data struct {
+		Header   template.HTML
+		Role     string
+		Content  string
+		Index    string
+		Function template.HTML
+	}
 	if r.Method == http.MethodPost {
 		rawtext := r.FormValue("text")
 		if rawtext == "!" {
@@ -185,19 +187,12 @@ func (agent *Agent) hchatpostput(w http.ResponseWriter, r *http.Request) {
 		}
 		agent.req.Messages = append(agent.req.Messages, query)
 		// text := agent.req.Messages[len(agent.req.Messages)-1].Content
-		data := struct {
-			Header   template.HTML
-			Role     string
-			Content  string
-			Index    string
-			Function string
-		}{
-			Header: template.HTML(`<div id="message" class="message">
-			`),
-			Role:    openai.ChatMessageRoleUser,
-			Content: rawtext,
-			Index:   strconv.Itoa(len(agent.req.Messages) - 1),
-		}
+
+		data.Header = template.HTML(`<div id="message" class="message">`)
+		data.Role = openai.ChatMessageRoleUser
+		data.Content = rawtext
+		data.Index = strconv.Itoa(len(agent.req.Messages) - 1)
+
 		render(w, hnewmessage, data)
 	}
 	if r.Method == http.MethodPut {
@@ -205,16 +200,12 @@ func (agent *Agent) hchatpostput(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			fmt.Println(err)
 		}
-		var data struct {
-			Header   template.HTML
-			Role     string
-			Content  string
-			Index    string
-			Function template.HTML
-		}
+
+		w.Header().Set("HX-Trigger-After-Settle", `tokenupdate`)
+
 		data.Role = openai.ChatMessageRoleAssistant
-		data.Header = template.HTML(`<div id="message" class="message" style="background-color: #393939">
-	`)
+		data.Header = template.HTML(`<div id="message" class="message" style="background-color: #393939">`)
+
 		if response.FunctionCall != nil {
 			if autofunction {
 				functionresponse := agent.callfunction(&response)
@@ -223,7 +214,6 @@ func (agent *Agent) hchatpostput(w http.ResponseWriter, r *http.Request) {
 			} else {
 				data.Content = response.Message.Content
 				data.Index = strconv.Itoa(len(agent.req.Messages) - 1)
-				// this is currently broken - waiting to create switchboard to fix so it cant just call /function/run/functionname instead of grabbing a response from a form etc
 				data.Function = template.HTML(`<button hx-post="/function/run/` + response.FunctionCall.Name + `/" hx-indicator="#chatloading" hx-target="#chatloading" hx-swap="beforebegin scroll:#top-row:bottom" hx-select="#message">Run</button>`)
 			}
 		} else {
@@ -327,6 +317,8 @@ func (agent *Agent) hfunctionrun(w http.ResponseWriter, r *http.Request) {
 
 	response := agent.callfunction(&function)
 
+	w.Header().Set("HX-Trigger-After-Settle", `tokenupdate`)
+
 	var data struct {
 		Header   template.HTML
 		Role     string
@@ -341,53 +333,46 @@ func (agent *Agent) hfunctionrun(w http.ResponseWriter, r *http.Request) {
 	render(w, hnewmessage, data)
 }
 
-func (agent *Agent) hautorequestfunctionoff(w http.ResponseWriter, r *http.Request) {
-	// remove autorequestfunction
-	agent.removefunction("requestfunction")
-
-	autorequestfunction = false
-	button := `<button class="menubtn" style="background-color: darkred;" hx-post="/autorequestfunctionon" hx-target="#autorequestfunctiontoggle" hx-swap="innerHTML">Autorequestfunction</button>`
-	render(w, button, nil)
-}
-
-func (agent *Agent) hautorequestfunctionon(w http.ResponseWriter, r *http.Request) {
-	autorequestfunction = true
-	agent.setAutoRequestFunction()
-	button := `<button class="menubtn" style="background-color: darkgreen;" hx-post="/autorequestfunctionoff" hx-target="#autorequestfunctiontoggle" hx-swap="innerHTML">Autorequestfunction</button>`
-	render(w, button, nil)
-}
-
-func hautorequestfunctionstatus(w http.ResponseWriter, r *http.Request) {
-	if autorequestfunction {
-		button := `<button class="menubtn" style="background-color: darkgreen;" hx-post="/autorequestfunctionoff" hx-target="#autorequestfunctiontoggle" hx-swap="innerHTML">Autorequestfunction</button>`
-		render(w, button, nil)
-	} else {
-		button := `<button class="menubtn" style="background-color: darkred;" hx-post="/autorequestfunctionon" hx-target="#autorequestfunctiontoggle" hx-swap="innerHTML">Autorequestfunction</button>`
-		render(w, button, nil)
+func hautofunction(w http.ResponseWriter, r *http.Request) {
+	buttonon := `<button class="menubtn" style="background-color: darkred;" hx-put="/autofunction/" hx-target="#autofunctiontoggle" hx-swap="innerHTML">Autofunction</button>`
+	buttonoff := `<button class="menubtn" style="background-color: darkgreen;" hx-delete="/autofunction/" hx-target="#autofunctiontoggle" hx-swap="innerHTML">Autofunction</button>`
+	if r.Method == http.MethodGet {
+		if autofunction {
+			render(w, buttonoff, nil)
+		} else {
+			render(w, buttonon, nil)
+		}
+	}
+	if r.Method == http.MethodPut {
+		autofunction = true
+		render(w, buttonoff, nil)
+	}
+	if r.Method == http.MethodDelete {
+		autofunction = false
+		render(w, buttonon, nil)
 	}
 }
 
-func hautofunctionoff(w http.ResponseWriter, r *http.Request) {
-	autofunction = false
-	button := `<button class="menubtn" style="background-color: darkred;" hx-post="/autofunctionon" hx-target="#autofunctiontoggle" hx-swap="innerHTML">Autofunction</button>`
-	render(w, button, nil)
-}
-
-func hautofunctionon(w http.ResponseWriter, r *http.Request) {
-	autofunction = true
-	button := `<button class="menubtn" style="background-color: darkgreen;" hx-post="/autofunctionoff" hx-target="#autofunctiontoggle" hx-swap="innerHTML">Autofunction</button>`
-	render(w, button, nil)
-}
-
-func hautofunctionstatus(w http.ResponseWriter, r *http.Request) {
-	if autofunction {
-		button := `<button class="menubtn" style="background-color: darkgreen;" hx-post="/autofunctionoff" hx-target="#autofunctiontoggle" hx-swap="innerHTML">Autofunction</button>`
-		render(w, button, nil)
-	} else {
-		button := `<button class="menubtn" style="background-color: darkred;" hx-post="/autofunctionon" hx-target="#autofunctiontoggle" hx-swap="innerHTML">Autofunction</button>`
-		render(w, button, nil)
+func (agent *Agent) hautorequestfunction(w http.ResponseWriter, r *http.Request) {
+	buttonon := `<button class="menubtn" style="background-color: darkred;" hx-put="/autorequestfunction/" hx-target="#autorequestfunctiontoggle" hx-swap="innerHTML">Autorequestfunction</button>`
+	buttonoff := `<button class="menubtn" style="background-color: darkgreen;" hx-delete="/autorequestfunction/" hx-target="#autorequestfunctiontoggle" hx-swap="innerHTML">Autorequestfunction</button>`
+	if r.Method == http.MethodGet {
+		if autorequestfunction {
+			render(w, buttonoff, nil)
+		} else {
+			render(w, buttonon, nil)
+		}
 	}
-
+	if r.Method == http.MethodPut {
+		autorequestfunction = true
+		agent.setAutoRequestFunction()
+		render(w, buttonoff, nil)
+	}
+	if r.Method == http.MethodDelete {
+		agent.removefunction("requestfunction")
+		autorequestfunction = false
+		render(w, buttonon, nil)
+	}
 }
 
 func getsavefilelist() ([]string, error) {

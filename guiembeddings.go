@@ -7,8 +7,11 @@ import "embed"
 //go:embed templates/index.html
 var hindex string
 
-//go:embed templates/tokencount.html
-var htokencount string
+//go:embed templates/sidebar.html
+var hsidebarpage string
+
+//go:embed templates/chat.html
+var hchatpage string
 
 //go:embed templates/newchat.html
 var hnewmessage string
@@ -22,8 +25,11 @@ var hedited string
 //go:embed templates/save.html
 var hsave string
 
+//go:embed templates/savedchats.html
+var hsavedchatspage string
+
 //go:embed templates/functions.html
-var hfunctionspage string
+var hfunctionpage string
 
 //go:embed templates/editfunction.html
 var heditfunction string
@@ -33,15 +39,6 @@ var heditprompt string
 
 //go:embed templates/settings.html
 var hsettingspage string
-
-//go:embed templates/savedchats.html
-var hsavedchatspage string
-
-//go:embed templates/sidebar.html
-var hsidebarpage string
-
-//go:embed templates/chat.html
-var hchatpage string
 
 //go:embed static
 var hcss embed.FS

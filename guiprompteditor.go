@@ -12,14 +12,6 @@ import (
 	"strings"
 )
 
-func (agent *Agent) handlersprompteditor() {
-	http.HandleFunc("/prompt/", RequireAuth(agent.hprompt))
-	http.HandleFunc("/prompt/save/", RequireAuth(agent.hpromptsave))
-	http.HandleFunc("/prompt/load/", RequireAuth(agent.hpromptload))
-	http.HandleFunc("/prompt/delete/", RequireAuth(agent.hpromptdelete))
-	http.HandleFunc("/prompt/set/", RequireAuth(agent.hpromptset))
-}
-
 func (agent *Agent) hprompt(w http.ResponseWriter, r *http.Request) {
 	var data struct {
 		Name         string

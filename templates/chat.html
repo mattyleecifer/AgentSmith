@@ -1,6 +1,5 @@
 <div id="top-row" class="top-row">
-    <div class="mobile" hx-trigger="intersect" hx-get="/sidebar/off" hx-target="#sidebar" hx-swap="outerHTML"></div>
-    <div hx-get='/tokenupdate' hx-trigger='load' hx-target='#tokens' hx-swap='innerHTML'></div>
+    <div class="mobile" hx-trigger="intersect" hx-delete="/sidebar/" hx-target="#sidebar" hx-swap="outerHTML"></div>
     {{ range .Messages }}
     <div id="message" class="message">
         <div class="agent">{{ .Role }}</div>

@@ -13,18 +13,7 @@ import (
 	"github.com/sashabaranov/go-openai/jsonschema"
 )
 
-func (agent *Agent) handlersfunctioneditor() {
-	http.HandleFunc("/functions", RequireAuth(agent.hfunctions))
-	http.HandleFunc("/functiondelete", RequireAuth(agent.hfunctiondelete))
-	http.HandleFunc("/functionremove", RequireAuth(agent.hfunctionremove))
-	http.HandleFunc("/functioneditcurrent", RequireAuth(agent.hfunctioneditcurrent))
-	http.HandleFunc("/functioneditadd", RequireAuth(agent.hfunctioneditadd))
-	http.HandleFunc("/functionload", RequireAuth(agent.hfunctionload))
-	http.HandleFunc("/functionset", RequireAuth(agent.hfunctionset))
-	http.HandleFunc("/functionsave", RequireAuth(agent.hfunctionsave))
-}
-
-func (agent *Agent) hfunctions(w http.ResponseWriter, r *http.Request) {
+func (agent *Agent) hfunction(w http.ResponseWriter, r *http.Request) {
 	var data struct {
 		CurrentFunctions template.HTML
 		SavedFunctions   template.HTML
@@ -63,20 +52,20 @@ func (agent *Agent) hfunctions(w http.ResponseWriter, r *http.Request) {
 	data.CurrentFunctions = tcurrentfunctions
 	data.SavedFunctions = tsavedfunctions
 
-	render(w, hfunctionspage, data)
+	render(w, hfunctionpage, data)
 }
 
 func (agent *Agent) hfunctionremove(w http.ResponseWriter, r *http.Request) {
 	functionname := r.FormValue("functionname")
 	agent.removefunction(functionname)
-	agent.hfunctions(w, r)
+	agent.hfunction(w, r)
 }
 
 func (agent *Agent) hfunctiondelete(w http.ResponseWriter, r *http.Request) {
 	functionname := r.FormValue("functionname")
 	functionname += ".json"
 	deletefile("Functions", functionname)
-	agent.hfunctions(w, r)
+	agent.hfunction(w, r)
 }
 
 func (agent *Agent) hfunctionload(w http.ResponseWriter, r *http.Request) {
@@ -87,7 +76,7 @@ func (agent *Agent) hfunctionload(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 	}
 	agent.setfunction(newfunction)
-	agent.hfunctions(w, r)
+	agent.hfunction(w, r)
 }
 
 func (agent *Agent) hfunctionset(w http.ResponseWriter, r *http.Request) {
@@ -105,7 +94,7 @@ func (agent *Agent) hfunctionset(w http.ResponseWriter, r *http.Request) {
 	}
 
 	agent.setfunction(newfunction)
-	agent.hfunctions(w, r)
+	agent.hfunction(w, r)
 }
 
 func (agent *Agent) hfunctionedit(w http.ResponseWriter, r *http.Request, f openai.FunctionDefinition) {
@@ -181,5 +170,5 @@ func (agent *Agent) hfunctionsave(w http.ResponseWriter, r *http.Request) {
 
 	agent.savefile(newfunction, "Functions", newfunction.Name)
 
-	agent.hfunctions(w, r)
+	agent.hfunction(w, r)
 }

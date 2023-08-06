@@ -1,41 +1,16 @@
 <div class="sidebar" id="sidebar">
-    <div id="lookatthesidebar" hx-get="/scroll" hx-trigger="load" hx-target="this" hx-swap="none, show:top"></div>
-    <div>
-        <button class="menubtn" hx-get="/sidebar/off" hx-target="#sidebar" hx-swap="outerHTML">Hide Menu</button>
-    </div>
-    <br>
-    <div id="tokens" hx-get="/tokenupdate" hx-trigger="load" hx-target="this" hx-swap="innerHTML">
-    </div>
-    <br>
-
-        <button class="menubtn" hx-post="/chat/clear/" hx-target="#main-content" hx-swap="innerHTML">Clear Chat</button>
-
-    <div>
-        <button class="menubtn" hx-get="/chat/" hx-target="#main-content" hx-swap="innerHTML">Chat Screen</button>
-    </div>
-    <div>
-        <button class="menubtn" hx-post="/reset" hx-target="#main-content" hx-swap="innerHTML" hx-confirm="Are you sure?">Reset Chat</button>
-    </div>
-    <div>
-        <button class="menubtn" hx-get="/prompt/" hx-target="#main-content" hx-swap="outerHTML">Edit System Prompt</button>
-    </div>
-    <div>
-        <button class="menubtn" hx-get="/functions" hx-target="#main-content" hx-swap="outerHTML">Functions</button>
-    </div>
-    <div>
-        <button class="menubtn" hx-get="/settings/" hx-target="#main-content" hx-swap="outerHTML">Settings</button>
-    </div>
-    <div>
-        <button class="menubtn" hx-get="/savedchats/" hx-target="#main-content" hx-swap="outerHTML">Load Chat</button>
-    </div>
-    <div>
-        <button class="menubtn" hx-get="/chat/save/" hx-target="#chatloading" hx-swap="beforebegin scroll:#top-row:bottom">Save Chat</button>
-    </div>
-    <br>
-    <div id="autofunctiontoggle">
-        <div hx-post="/autofunctionstatus" hx-target="#autofunctiontoggle" hx-swap="innerHTML" hx-trigger="load"></div>
-    </div>
-    <div id="autorequestfunctiontoggle">
-        <div hx-post="/autorequestfunctionstatus" hx-target="#autorequestfunctiontoggle" hx-swap="innerHTML" hx-trigger="load"></div>
-    </div>
+    <button class="menubtn" hx-delete="/sidebar/" hx-target="#sidebar" hx-swap="outerHTML">Hide Menu</button>
+    <p id="tokens" class="centertext" hx-get="/sidebar/tokens/" hx-trigger="tokenupdate from:body" hx-target="this" hx-swap="innerHTML"></p>
+    <button class="menubtn" hx-post="/chat/clear/" hx-target="#main-content" hx-swap="innerHTML">Clear Chat</button>
+    <button class="menubtn" hx-get="/chat/" hx-target="#main-content" hx-swap="innerHTML">Chat Screen</button>
+    <button class="menubtn" hx-post="/chat/reset/" hx-target="#main-content" hx-swap="innerHTML" hx-confirm="Are you sure?">Reset Chat</button>
+    <button class="menubtn" hx-get="/prompt/" hx-target="#main-content" hx-swap="outerHTML">Edit System Prompt</button>
+    <button class="menubtn" hx-get="/function/" hx-target="#main-content" hx-swap="outerHTML">Functions</button>
+    <button class="menubtn" hx-get="/settings/" hx-target="#main-content" hx-swap="outerHTML">Settings</button>
+    <button class="menubtn" hx-get="/savedchats/" hx-target="#main-content" hx-swap="outerHTML">Load Chat</button>
+    <button class="menubtn" hx-get="/chat/save/" hx-target="#chatloading" hx-swap="beforebegin scroll:#top-row:bottom">Save Chat</button>
+    <p>
+        <div id="autofunctiontoggle" hx-get="/autofunction/" hx-target="this" hx-swap="innerHTML" hx-trigger="load"></div>
+        <div id="autorequestfunctiontoggle" hx-get="/autorequestfunction/" hx-target="this" hx-swap="innerHTML" hx-trigger="load"></div>
+    </p>
 </div>
