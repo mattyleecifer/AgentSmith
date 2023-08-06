@@ -1,0 +1,19 @@
+<div style="display: flex; flex-direction: column; margin-top: 5%" class="centertext">
+    <div class="mobile" hx-trigger="intersect" hx-delete="/sidebar/" hx-target="#sidebar" hx-swap="outerHTML"></div>
+    <div style="width: 50%;">
+        <p><h3>Saved Chats</h3><button class="btn" hx-get="/chat/" hx-target="#main-content" hx-swap="innerHTML">Back</button></p>
+
+        {{ range .Filelist }}
+        <div style="display: flex;" id="savedchat-{{ .Index }}">
+            <div style="text-align: left; float: left;">{{ .Filename }}</div>
+            <div style="float: right; margin-left: auto; display: inline;">
+                <button class='btn' hx-get='/chat/load/{{ .Filename }}/' hx-target='#main-content' hx-swap='innerHTML'>Load</button>
+                <button class='btn' hx-delete='/chat/delete/savedchat/{{ .Filename }}/' hx-target='#savedchat-{{ .Index }}' hx-swap='outerHTML' hx-confirm='Are you sure?'>Delete</button>
+            </div>
+        </div>
+        {{ else }}
+        <p>No saved files</p>
+        {{ end }}
+    </div>
+</div>
+

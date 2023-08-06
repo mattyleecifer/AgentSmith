@@ -25,8 +25,8 @@ var hedited string
 //go:embed templates/save.html
 var hsave string
 
-//go:embed templates/savedchats.html
-var hsavedchatspage string
+//go:embed templates/chatload.html
+var hchatloadpage string
 
 //go:embed templates/functions.html
 var hfunctionpage string
@@ -34,8 +34,8 @@ var hfunctionpage string
 //go:embed templates/editfunction.html
 var heditfunction string
 
-//go:embed templates/editprompt.html
-var heditprompt string
+//go:embed templates/prompts.html
+var hpromptspage string
 
 //go:embed templates/settings.html
 var hsettingspage string

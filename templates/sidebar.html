@@ -7,7 +7,7 @@
     <button class="menubtn" hx-get="/prompt/" hx-target="#main-content" hx-swap="outerHTML">Edit System Prompt</button>
     <button class="menubtn" hx-get="/function/" hx-target="#main-content" hx-swap="outerHTML">Functions</button>
     <button class="menubtn" hx-get="/settings/" hx-target="#main-content" hx-swap="outerHTML">Settings</button>
-    <button class="menubtn" hx-get="/savedchats/" hx-target="#main-content" hx-swap="outerHTML">Load Chat</button>
+    <button class="menubtn" hx-get="/chat/load/" hx-target="#main-content" hx-swap="innerHTML">Load Chat</button>
     <button class="menubtn" hx-get="/chat/save/" hx-target="#chatloading" hx-swap="beforebegin scroll:#top-row:bottom">Save Chat</button>
     <p>
         <div id="autofunctiontoggle" hx-get="/autofunction/" hx-target="this" hx-swap="innerHTML" hx-trigger="load"></div>

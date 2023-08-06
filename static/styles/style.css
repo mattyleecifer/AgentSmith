@@ -81,8 +81,7 @@ input {
     align-items: center;
     text-align: center;
     overflow-y: auto;
-    width: 100%;
-    }
+}
 
 .agent {
     width: 8vw;
@@ -92,7 +91,7 @@ input {
     justify-content: center;
     /* overflow: hidden; */
     /* text-overflow: ellipsis; */
-    }
+}
 
 .message {
     display: flex;
@@ -134,10 +133,10 @@ input {
     float: right; 
 }
 
-/* probably about to be removed */
 .page {
     display: flex;
-    padding-top: 5vh;
+    flex-direction: column;
+    margin-top: 5%;
 }
 
 .mobile {

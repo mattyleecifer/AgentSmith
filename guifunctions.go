@@ -13,10 +13,6 @@ import (
 	"github.com/sashabaranov/go-openai"
 )
 
-func hsavedchats(w http.ResponseWriter, r *http.Request) {
-	render(w, hsavedchatspage, nil)
-}
-
 func (agent *Agent) hsettings(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
 		data := struct {
@@ -171,7 +167,7 @@ func (agent *Agent) hchatdelete(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			fmt.Println(err)
 		}
-		render(w, "<tr><td>Chat Deleted</td></tr>", nil)
+		render(w, "<p>Chat Deleted</p>", nil)
 	}
 }
 
@@ -211,31 +207,6 @@ func (agent *Agent) hloadchatscreen(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func hgetchathistory(w http.ResponseWriter, r *http.Request) {
-	// fmt.Println("hgetchathistory")
-	filelist, err := getsavefilelist()
-	if err != nil {
-		fmt.Println(err)
-	}
-	if filelist == nil {
-		html := "<div id='addchat'></div>"
-		render(w, html, nil)
-		return
-	} else {
-		html := `<table style="display: flex;" id="centertext">`
-		for i := 0; i < len(filelist); i++ {
-			chatid := strings.ReplaceAll(filelist[i], ".json", "")
-			html += "<tr id='savedchat" + chatid + "' style='text-align: left;'><td>"
-			html += "<div class='savedchat'><div>"
-			html += filelist[i]
-			html += "</div><td><form hx-post='/chat/load/' hx-target='#main-content' hx-swap='innerHTML'><button class='btn' name='data' value='" + filelist[i] + "'>Load</button></form></td><td><button class='btn' hx-delete='/chat/delete/savedchat/" + chatid + "/' hx-target='#savedchat" + chatid + "' hx-swap='outerHTML' hx-confirm='Are you sure?'>Delete</button></form></td>"
-			html += `</tr>`
-		}
-		html += "</table><div id='addchat'></div>"
-		render(w, html, nil)
-	}
-}
-
 func (agent *Agent) hreset(w http.ResponseWriter, r *http.Request) {
 	// fmt.Println("hreset")
 	agent.reset()
@@ -244,12 +215,35 @@ func (agent *Agent) hreset(w http.ResponseWriter, r *http.Request) {
 }
 
 func (agent *Agent) hchatload(w http.ResponseWriter, r *http.Request) {
-	filename := r.FormValue("data")
-	_, err := agent.loadfile("Chats", filename)
-	if err != nil {
-		fmt.Println(err)
+	type Filelist struct {
+		Filename string
+		Index    int
 	}
-	agent.hloadchatscreen(w, r)
+	rawquery := strings.TrimPrefix(r.URL.Path, "/chat/load/")
+	query := strings.Split(rawquery, "/")
+	fmt.Println(rawquery, query)
+	if query[0] == "" {
+		var data struct {
+			Filelist []Filelist
+		}
+		filelist, err := getsavefilelist()
+		if err != nil {
+			fmt.Println(err)
+		}
+		for index, item := range filelist {
+			file := Filelist{}
+			file.Filename = item
+			file.Index = index
+			data.Filelist = append(data.Filelist, file)
+		}
+		render(w, hchatloadpage, data)
+	} else {
+		_, err := agent.loadfile("Chats", query[0])
+		if err != nil {
+			fmt.Println(err)
+		}
+		agent.hloadchatscreen(w, r)
+	}
 }
 
 func (agent *Agent) hedit(w http.ResponseWriter, r *http.Request) {
@@ -373,7 +367,8 @@ func getsavefilelist() ([]string, error) {
 	fmt.Println("\nFiles:")
 
 	for _, file := range files {
-		res = append(res, file.Name())
+		filename := strings.ReplaceAll(file.Name(), ".json", "")
+		res = append(res, filename)
 		fmt.Println(file.Name())
 	}
 

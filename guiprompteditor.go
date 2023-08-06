@@ -25,7 +25,7 @@ func (agent *Agent) hprompt(w http.ResponseWriter, r *http.Request) {
 	data.Parameters = agent.prompt.Parameters
 	data.SavedPrompts = rendersavedprompts()
 
-	render(w, heditprompt, data)
+	render(w, hpromptspage, data)
 }
 
 func (agent *Agent) hpromptdelete(w http.ResponseWriter, r *http.Request) {
@@ -61,7 +61,7 @@ func (agent *Agent) hpromptload(w http.ResponseWriter, r *http.Request) {
 
 	data.SavedPrompts = rendersavedprompts()
 
-	render(w, heditprompt, data)
+	render(w, hpromptspage, data)
 }
 
 func (agent *Agent) hpromptset(w http.ResponseWriter, r *http.Request) {
