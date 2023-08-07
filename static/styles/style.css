@@ -20,10 +20,6 @@ button {
     background-color: #454a4d;
 }
 
-.menubtn {
-    width: 100%;
-}
-
 .btn {
     width: 7vw;
 }
@@ -64,6 +60,10 @@ input {
     background-color: #202324;
     height: 100%;
     /* border-right: 2px solid #000; */
+}
+
+.sidebar button {
+    width: 100%;
 }
 
 .main-content {

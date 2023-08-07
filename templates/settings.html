@@ -1,17 +1,18 @@
 <div style="display: flex; flex-direction: column; margin-top: 5%" class="centertext">
     <div class="mobile" hx-trigger="intersect" hx-delete="/sidebar/" hx-target="#sidebar" hx-swap="outerHTML"></div>
-    <div style="width: 50%;">
-        <button class="btn" hx-get="/chat/" hx-target="#main-content" hx-swap="innerHTML scroll:#top-row:bottom">Back</button>
+    <div style="width: 50%;" hx-target="#main-content">
+        <button class="btn" hx-get="/chat/" hx-target="#main-content" hx-swap="scroll:#top-row:bottom">Back</button>
         <p><h3>Settings</h3></p>
-        <form hx-put="/settings/" hx-target="#main-content" hx-swap="innerHTML">
+        <form hx-put="/settings/">
             <p>Key: <input name="apikey" value=""></p>
             <p>Chat Model: <input name="chatmodel" value="{{ .Model }}"></p>
             <p>Function Model: <input name="functionmodel" value="{{ .Functionmodel }}"></p>
             <p>Max Tokens: <input name="maxtokens" value="{{ .Maxtokens }}"></p>
             <p>Call cost: <input name="callcost" value="{{ .Callcost }}"></p>
             <p>AutoClearFunction: <select name="autoclearfunction">
-                <option value="true" selected>True</option>
-                <option value="false">False</option>
+                <option value="{{ .Autoclearfunction }}" selected>{{ .Autoclearfunction }}</option>
+                <option value="true">true</option>
+                <option value="false">false</option>
                 </select></p>
             <p><button class="btn">Save</button></p>
         </form>

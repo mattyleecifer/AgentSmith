@@ -16,15 +16,17 @@ import (
 func (agent *Agent) hsettings(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
 		data := struct {
-			Model         string
-			Functionmodel string
-			Maxtokens     string
-			Callcost      string
+			Model             string
+			Functionmodel     string
+			Maxtokens         int
+			Callcost          float64
+			Autoclearfunction bool
 		}{
-			Model:         model,
-			Functionmodel: functionmodel,
-			Maxtokens:     strconv.Itoa(maxtokens),
-			Callcost:      strconv.FormatFloat(callcost, 'f', -1, 64),
+			Model:             model,
+			Functionmodel:     functionmodel,
+			Maxtokens:         maxtokens,
+			Callcost:          callcost,
+			Autoclearfunction: autoclearfunction,
 		}
 		render(w, hsettingspage, data)
 	}

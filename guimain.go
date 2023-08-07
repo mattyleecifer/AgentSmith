@@ -26,10 +26,7 @@ func (agent *Agent) gui() {
 	http.HandleFunc("/function/files/", RequireAuth(agent.hfunctionfiles))
 	http.HandleFunc("/function/run/", RequireAuth(agent.hfunctionrun))
 	http.HandleFunc("/prompt/", RequireAuth(agent.hprompt))
-	http.HandleFunc("/prompt/save/", RequireAuth(agent.hpromptsave))
-	http.HandleFunc("/prompt/load/", RequireAuth(agent.hpromptload))
-	http.HandleFunc("/prompt/delete/", RequireAuth(agent.hpromptdelete))
-	http.HandleFunc("/prompt/set/", RequireAuth(agent.hpromptset))
+	http.HandleFunc("/prompt/files/", RequireAuth(agent.hpromptfiles))
 
 	http.Handle("/static/", http.FileServer(http.FS(hcss)))
 	fmt.Println("Running GUI on http://127.0.0.1"+port, "(ctrl-click link to open)")

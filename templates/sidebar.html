@@ -1,16 +1,16 @@
-<div class="sidebar" id="sidebar">
-    <button class="menubtn" hx-delete="/sidebar/" hx-target="#sidebar" hx-swap="outerHTML">Hide Menu</button>
-    <p id="tokens" class="centertext" hx-get="/sidebar/tokens/" hx-trigger="tokenupdate from:body" hx-target="this" hx-swap="innerHTML"></p>
-    <button class="menubtn" hx-post="/chat/clear/" hx-target="#main-content" hx-swap="innerHTML">Clear Chat</button>
-    <button class="menubtn" hx-get="/chat/" hx-target="#main-content" hx-swap="innerHTML scroll:#top-row:bottom">Chat Screen</button>
-    <button class="menubtn" hx-post="/chat/reset/" hx-target="#main-content" hx-swap="innerHTML" hx-confirm="Are you sure?">Reset Chat</button>
-    <button class="menubtn" hx-get="/prompt/" hx-target="#main-content" hx-swap="innerHTML">Edit System Prompt</button>
-    <button class="menubtn" hx-get="/function/" hx-target="#main-content" hx-swap="innerHTML">Functions</button>
-    <button class="menubtn" hx-get="/settings/" hx-target="#main-content" hx-swap="innerHTML">Settings</button>
-    <button class="menubtn" hx-get="/chat/load/" hx-target="#main-content" hx-swap="innerHTML">Load Chat</button>
-    <button class="menubtn" hx-get="/chat/save/" hx-target="#chatloading" hx-swap="beforebegin scroll:#top-row:bottom">Save Chat</button>
+<div class="sidebar" id="sidebar" hx-target="#main-content">
+    <button hx-delete="/sidebar/" hx-target="#sidebar" hx-swap="outerHTML">Hide Menu</button>
+    <p id="tokens" class="centertext" hx-get="/sidebar/tokens/" hx-trigger="tokenupdate from:body" hx-target="this"></p>
+    <button hx-post="/chat/clear/">Clear Chat</button>
+    <button hx-get="/chat/" hx-swap="innerHTML scroll:#top-row:bottom">Chat Screen</button>
+    <button hx-post="/chat/reset/" hx-confirm="Are you sure?">Reset Chat</button>
+    <button hx-get="/prompt/">Edit System Prompt</button>
+    <button hx-get="/function/">Functions</button>
+    <button hx-get="/settings/">Settings</button>
+    <button hx-get="/chat/load/">Load Chat</button>
+    <button hx-get="/chat/save/" hx-target="#chatloading" hx-swap="beforebegin scroll:#top-row:bottom">Save Chat</button>
     <p>
-        <div id="autofunctiontoggle" hx-get="/autofunction/" hx-target="this" hx-swap="innerHTML" hx-trigger="load"></div>
-        <div id="autorequestfunctiontoggle" hx-get="/autorequestfunction/" hx-target="this" hx-swap="innerHTML" hx-trigger="load"></div>
+        <div id="autofunctiontoggle" hx-get="/autofunction/" hx-target="this" hx-trigger="load"></div>
+        <div id="autorequestfunctiontoggle" hx-get="/autorequestfunction/" hx-target="this" hx-trigger="load"></div>
     </p>
 </div>

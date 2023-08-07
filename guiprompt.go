@@ -5,7 +5,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"html/template"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -13,77 +12,84 @@ import (
 )
 
 func (agent *Agent) hprompt(w http.ResponseWriter, r *http.Request) {
-	var data struct {
-		Name         string
-		Description  string
-		Parameters   string
-		SavedPrompts template.HTML
+	if r.Method == http.MethodGet {
+		var data struct {
+			Name         string
+			Description  string
+			Parameters   string
+			Savedprompts []string
+		}
+
+		data.Name = agent.prompt.Name
+		data.Description = agent.prompt.Description
+		data.Parameters = agent.prompt.Parameters
+		data.Savedprompts, _ = getsavepromptlist()
+
+		render(w, hpromptspage, data)
 	}
 
-	data.Name = agent.prompt.Name
-	data.Description = agent.prompt.Description
-	data.Parameters = agent.prompt.Parameters
-	data.SavedPrompts = rendersavedprompts()
+	if r.Method == http.MethodPost {
+		newprompt := promptDefinition{
+			Name:        r.FormValue("promptname"),
+			Description: r.FormValue("promptdescription"),
+			Parameters:  r.FormValue("edittext"),
+		}
 
-	render(w, hpromptspage, data)
+		agent.prompt = newprompt
+		agent.setprompt()
+
+		r.Method = http.MethodGet
+		agent.hchat(w, r)
+	}
 }
 
-func (agent *Agent) hpromptdelete(w http.ResponseWriter, r *http.Request) {
-	promptname := r.FormValue("promptname")
-	promptname += ".json"
-	deletefile("Prompts", promptname)
-	agent.hprompt(w, r)
-}
+func (agent *Agent) hpromptfiles(w http.ResponseWriter, r *http.Request) {
+	query := strings.TrimPrefix(r.URL.Path, "/prompt/files/")
 
-func (agent *Agent) hpromptload(w http.ResponseWriter, r *http.Request) {
-	var data struct {
-		Name         string
-		Description  string
-		Parameters   string
-		SavedPrompts template.HTML
+	if r.Method == http.MethodGet {
+		var data struct {
+			Name         string
+			Description  string
+			Parameters   string
+			Savedprompts []string
+		}
+
+		prompt := promptDefinition{}
+
+		loaddata, err := agent.loadfile("Prompts", query)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		_ = json.Unmarshal(loaddata, &prompt)
+
+		data.Name = prompt.Name
+		data.Description = prompt.Description
+		data.Parameters = prompt.Parameters
+		data.Savedprompts, _ = getsavepromptlist()
+
+		render(w, hpromptspage, data)
 	}
 
-	promptname := r.FormValue("promptname")
-	promptname += ".json"
+	if r.Method == http.MethodPost {
+		newprompt := promptDefinition{
+			Name:        r.FormValue("promptname"),
+			Description: r.FormValue("promptdescription"),
+			Parameters:  r.FormValue("edittext"),
+		}
 
-	prompt := promptDefinition{}
+		agent.savefile(newprompt, "Prompts", newprompt.Name)
 
-	loaddata, err := agent.loadfile("Prompts", promptname)
-	if err != nil {
-		fmt.Println(err)
+		r.Method = http.MethodGet
+		agent.hprompt(w, r)
 	}
 
-	_ = json.Unmarshal(loaddata, &prompt)
+	if r.Method == http.MethodDelete {
+		deletefile("Prompts", query)
 
-	data.Name = prompt.Name
-	data.Description = prompt.Description
-	data.Parameters = prompt.Parameters
-
-	data.SavedPrompts = rendersavedprompts()
-
-	render(w, hpromptspage, data)
-}
-
-func (agent *Agent) hpromptset(w http.ResponseWriter, r *http.Request) {
-	newprompt := promptDefinition{
-		Name:        r.FormValue("promptname"),
-		Description: r.FormValue("promptdescription"),
-		Parameters:  r.FormValue("edittext"),
+		r.Method = http.MethodGet
+		agent.hprompt(w, r)
 	}
-	agent.prompt = newprompt
-	agent.setprompt()
-	agent.hloadchatscreen(w, r)
-}
-
-func (agent *Agent) hpromptsave(w http.ResponseWriter, r *http.Request) {
-	newprompt := promptDefinition{
-		Name:        r.FormValue("promptname"),
-		Description: r.FormValue("promptdescription"),
-		Parameters:  r.FormValue("edittext"),
-	}
-
-	agent.savefile(newprompt, "Prompts", newprompt.Name)
-	agent.hprompt(w, r)
 }
 
 func getsavepromptlist() ([]string, error) {
@@ -93,38 +99,16 @@ func getsavepromptlist() ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	var res []string
 
 	fmt.Println("\nFiles:")
 
 	for _, file := range files {
-		res = append(res, file.Name())
+		filename := strings.ReplaceAll(file.Name(), ".json", "")
+		res = append(res, filename)
 		fmt.Println(file.Name())
 	}
 
 	return res, nil
-}
-
-func rendersavedprompts() template.HTML {
-	allsavedprompts, err := getsavepromptlist()
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	var savedprompts string
-	if allsavedprompts != nil {
-		allsavedprompts, err := getsavepromptlist()
-		if err != nil {
-			fmt.Println(err)
-		}
-		savedprompts += `<table style="display: flex;" id="centertext">`
-		for i := 0; i < len(allsavedprompts); i++ {
-			name := strings.ReplaceAll(allsavedprompts[i], ".json", "")
-			savedprompts += "<tr><td>" + name + "</td><td><form hx-post='/prompt/load/' hx-target='#main-content' hx-swap='innerHTML'><button class='btn' name='promptname' value='" + name + "'>Load</button></form></td><td><form hx-post='/prompt/delete/' hx-target='#main-content' hx-swap='innerHTML' hx-confirm='Are you sure?'><button class='btn' name='promptname' value='" + name + "'>Delete</button></form></td></tr>"
-		}
-		savedprompts += `</table>`
-	}
-
-	tsavedprompts := template.HTML(savedprompts)
-	return tsavedprompts
 }

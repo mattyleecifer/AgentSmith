@@ -104,9 +104,7 @@ func (agent *Agent) hfunction(w http.ResponseWriter, r *http.Request) {
 
 func (agent *Agent) hfunctionfiles(w http.ResponseWriter, r *http.Request) {
 	query := strings.TrimPrefix(r.URL.Path, "/function/files/")
-	if !strings.HasSuffix(query, ".json") {
-		query = query + ".json"
-	}
+
 	if r.Method == http.MethodGet {
 		functionname := query
 		newfunction, err := agent.functionload(functionname)
@@ -139,6 +137,7 @@ func (agent *Agent) hfunctionfiles(w http.ResponseWriter, r *http.Request) {
 		r.Method = http.MethodGet
 		agent.hfunction(w, r)
 	}
+
 	if r.Method == http.MethodDelete {
 		functionname := query
 		deletefile("Functions", functionname)
@@ -153,6 +152,7 @@ func (agent *Agent) hfunctionedit(w http.ResponseWriter, r *http.Request, f open
 	if err != nil {
 		fmt.Println("Error:", err)
 	}
+
 	data.Name = f.Name
 	data.Description = f.Description
 	data.Parameters = string(functiondata)
