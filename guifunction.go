@@ -5,7 +5,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"html/template"
 	"net/http"
 	"strings"
 
@@ -14,87 +13,137 @@ import (
 )
 
 func (agent *Agent) hfunction(w http.ResponseWriter, r *http.Request) {
-	var data struct {
-		CurrentFunctions template.HTML
-		SavedFunctions   template.HTML
-	}
-
-	var currentfunctions string
-	if agent.req.Functions != nil {
-		currentfunctions += `<table style="display: flex;" id="centertext">`
-		for i := 0; i < len(agent.req.Functions); i++ {
-			name := agent.req.Functions[i].Name
-			description := agent.req.Functions[i].Description
-			currentfunctions += "<tr style='text-align: left;'><td>" + name + ":<br>" + description + "<br></td><td><form hx-get='/functioneditcurrent' hx-target='#main-content' hx-swap='innerHTML'><button class='btn' name='functionname' value='" + name + "'>Edit</button></form><br></td><td><form hx-get='/functionremove' hx-target='#main-content' hx-swap='innerHTML'><button class='btn' name='functionname' value='" + name + "'>Remove</button></form><br></td></tr>"
+	if r.Method == http.MethodGet {
+		type Funcdef struct {
+			Name        string
+			Description string
 		}
-		currentfunctions += `</table>`
-	}
-	allsavedfunctions, err := getsavefunctionlist()
-	if err != nil {
-		fmt.Println(err)
+
+		var data struct {
+			Currentfunctions []Funcdef
+			Savedfunctions   []string
+		}
+
+		for _, item := range agent.req.Functions {
+			newfunc := Funcdef{
+				Name:        item.Name,
+				Description: item.Description,
+			}
+			data.Currentfunctions = append(data.Currentfunctions, newfunc)
+		}
+
+		data.Savedfunctions, _ = getsavefunctionlist()
+		render(w, hfunctionpage, data)
 	}
 
-	var savedfunctions string
-	if allsavedfunctions != nil {
-		allsavedfunctions, err := getsavefunctionlist()
+	if r.Method == http.MethodPost {
+		functionname := r.FormValue("functionname")
+		functiondescription := r.FormValue("functiondescription")
+		parameters := r.FormValue("edittext")
+
+		var jsonData map[string]interface{}
+		_ = json.Unmarshal([]byte(parameters), &jsonData)
+
+		newfunction := openai.FunctionDefinition{
+			Name:        functionname,
+			Description: functiondescription,
+			Parameters:  jsonData,
+		}
+
+		agent.setfunction(newfunction)
+
+		r.Method = http.MethodGet
+		agent.hfunction(w, r)
+	}
+
+	query := strings.TrimPrefix(r.URL.Path, "/function/")
+
+	if r.Method == http.MethodPatch {
+		if query == "" {
+			f := openai.FunctionDefinition{
+				Name:        "New",
+				Description: "New",
+				Parameters: jsonschema.Definition{
+					Type: jsonschema.Object,
+					Properties: map[string]jsonschema.Definition{
+						"Variable1": {
+							Type: jsonschema.Object,
+							Properties: map[string]jsonschema.Definition{
+								"Variable2": {
+									Type:        jsonschema.String,
+									Description: "Description of variable",
+								},
+							},
+						},
+						"Variable3": {
+							Type: jsonschema.String,
+							Enum: []string{"Choice1", "Choice2"},
+						},
+					},
+					Required: []string{"Variable1", "Variable3"},
+				},
+			}
+			agent.hfunctionedit(w, r, f)
+		} else {
+			for _, function := range agent.req.Functions {
+				if query == function.Name {
+					agent.hfunctionedit(w, r, function)
+					continue
+				}
+			}
+
+		}
+	}
+
+	if r.Method == http.MethodDelete {
+		agent.removefunction(query)
+		r.Method = http.MethodGet
+		agent.hfunction(w, r)
+	}
+}
+
+func (agent *Agent) hfunctionfiles(w http.ResponseWriter, r *http.Request) {
+	query := strings.TrimPrefix(r.URL.Path, "/function/files/")
+	if !strings.HasSuffix(query, ".json") {
+		query = query + ".json"
+	}
+	if r.Method == http.MethodGet {
+		functionname := query
+		newfunction, err := agent.functionload(functionname)
 		if err != nil {
 			fmt.Println(err)
 		}
-		savedfunctions += `<table style="display: flex;" id="centertext">`
-		for i := 0; i < len(allsavedfunctions); i++ {
-			name := strings.ReplaceAll(allsavedfunctions[i], ".json", "")
-			savedfunctions += "<tr><td style='text-align: left;'>" + name + "</td><td><form hx-post='/functionload' hx-target='#main-content' hx-swap='innerHTML'><button class='btn' name='functionname' value='" + name + "'>Load</button></form></td><td><form hx-post='/functiondelete' hx-target='#main-content' hx-swap='innerHTML' hx-confirm='Are you sure?'><button class='btn' name='functionname' value='" + name + "'>Delete</button></form></td></tr>"
+		agent.setfunction(newfunction)
+		agent.hfunction(w, r)
+	}
+
+	if r.Method == http.MethodPost {
+		newfunction := openai.FunctionDefinition{
+			Name:        r.FormValue("functionname"),
+			Description: r.FormValue("functiondescription"),
+			Parameters:  map[string]interface{}{},
 		}
-		savedfunctions += `</table>`
+		edittext := r.FormValue("edittext")
+		edittext = strings.ReplaceAll(edittext, "\n", "")
+		edittext = strings.ReplaceAll(edittext, "    ", "")
+
+		var jsonData map[string]interface{}
+		err := json.Unmarshal([]byte(edittext), &jsonData)
+		if err != nil {
+			fmt.Println("Error:", err)
+		}
+		newfunction.Parameters = jsonData
+
+		agent.savefile(newfunction, "Functions", newfunction.Name)
+
+		r.Method = http.MethodGet
+		agent.hfunction(w, r)
 	}
-	tcurrentfunctions := template.HTML(currentfunctions)
-	tsavedfunctions := template.HTML(savedfunctions)
-	data.CurrentFunctions = tcurrentfunctions
-	data.SavedFunctions = tsavedfunctions
-
-	render(w, hfunctionpage, data)
-}
-
-func (agent *Agent) hfunctionremove(w http.ResponseWriter, r *http.Request) {
-	functionname := r.FormValue("functionname")
-	agent.removefunction(functionname)
-	agent.hfunction(w, r)
-}
-
-func (agent *Agent) hfunctiondelete(w http.ResponseWriter, r *http.Request) {
-	functionname := r.FormValue("functionname")
-	functionname += ".json"
-	deletefile("Functions", functionname)
-	agent.hfunction(w, r)
-}
-
-func (agent *Agent) hfunctionload(w http.ResponseWriter, r *http.Request) {
-	functionname := r.FormValue("functionname")
-	functionname += ".json"
-	newfunction, err := agent.functionload(functionname)
-	if err != nil {
-		fmt.Println(err)
+	if r.Method == http.MethodDelete {
+		functionname := query
+		deletefile("Functions", functionname)
+		agent.hfunction(w, r)
 	}
-	agent.setfunction(newfunction)
-	agent.hfunction(w, r)
-}
-
-func (agent *Agent) hfunctionset(w http.ResponseWriter, r *http.Request) {
-	functionname := r.FormValue("functionname")
-	functiondescription := r.FormValue("functiondescription")
-	parameters := r.FormValue("edittext")
-
-	var jsonData map[string]interface{}
-	_ = json.Unmarshal([]byte(parameters), &jsonData)
-
-	newfunction := openai.FunctionDefinition{
-		Name:        functionname,
-		Description: functiondescription,
-		Parameters:  jsonData,
-	}
-
-	agent.setfunction(newfunction)
-	agent.hfunction(w, r)
 }
 
 func (agent *Agent) hfunctionedit(w http.ResponseWriter, r *http.Request, f openai.FunctionDefinition) {
@@ -109,66 +158,4 @@ func (agent *Agent) hfunctionedit(w http.ResponseWriter, r *http.Request, f open
 	data.Parameters = string(functiondata)
 
 	render(w, hfunctioneditpage, data)
-}
-
-func (agent *Agent) hfunctioneditcurrent(w http.ResponseWriter, r *http.Request) {
-	functionname := r.FormValue("functionname")
-
-	for _, function := range agent.req.Functions {
-		if functionname == function.Name {
-			agent.hfunctionedit(w, r, function)
-			continue
-		}
-	}
-}
-
-func (agent *Agent) hfunctioneditadd(w http.ResponseWriter, r *http.Request) {
-	f := openai.FunctionDefinition{
-		Name:        "New",
-		Description: "New",
-		Parameters: jsonschema.Definition{
-			Type: jsonschema.Object,
-			Properties: map[string]jsonschema.Definition{
-				"Variable1": {
-					Type: jsonschema.Object,
-					Properties: map[string]jsonschema.Definition{
-						"Variable2": {
-							Type:        jsonschema.String,
-							Description: "Description of variable",
-						},
-					},
-				},
-				"Variable3": {
-					Type: jsonschema.String,
-					Enum: []string{"Choice1", "Choice2"},
-				},
-			},
-			Required: []string{"Variable1", "Variable3"},
-		},
-	}
-	agent.hfunctionedit(w, r, f)
-}
-
-func (agent *Agent) hfunctionsave(w http.ResponseWriter, r *http.Request) {
-	newfunction := openai.FunctionDefinition{
-		Name:        r.FormValue("functionname"),
-		Description: r.FormValue("functiondescription"),
-		Parameters:  map[string]interface{}{},
-	}
-
-	edittext := r.FormValue("edittext")
-	edittext = strings.ReplaceAll(edittext, "\n", "")
-	edittext = strings.ReplaceAll(edittext, "    ", "")
-
-	var jsonData map[string]interface{}
-	err := json.Unmarshal([]byte(edittext), &jsonData)
-	if err != nil {
-		fmt.Println("Error:", err)
-	}
-
-	newfunction.Parameters = jsonData
-
-	agent.savefile(newfunction, "Functions", newfunction.Name)
-
-	agent.hfunction(w, r)
 }

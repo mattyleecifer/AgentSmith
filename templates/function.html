@@ -1,14 +1,33 @@
 <div style="display: flex; flex-direction: column; margin-top: 5%" class="centertext">
     <div class="mobile" hx-trigger="intersect" hx-delete="/sidebar/" hx-target="#sidebar" hx-swap="outerHTML"></div>
     <div style="width: 50%;">
-        <div style="display: inline;">
-            <button hx-get="/functioneditadd" hx-target="#main-content" hx-swap="innerHTML"class="btn">New</button>
-            <button class="btn" hx-get="/chat/" hx-target="#main-content" hx-swap="innerHTML scroll:#top-row:bottom">Back</button>
+        <div style="display: inline;" hx-target="#main-content">
+            <button class="btn" hx-patch="/function/">New</button>
+            <button class="btn" hx-get="/chat/" hx-swap="scroll:#top-row:bottom">Back</button>
         </div>
         <p><h3>Functions</h3></p>
         <p>Current functions:</p>
-            {{ .CurrentFunctions }}
-        
+        {{ range .Currentfunctions }}
+        <div style="display: flex;">
+		    <div style="text-align: left; float: left;">
+                {{ .Name }}:<br>
+                {{ .Description }}
+            </div>
+            <div style="float: right; margin-left: auto; display: inline;" hx-target='#main-content'>
+                <button class='btn' hx-patch='/function/{{ .Name }}'>Edit</button>
+                <button class='btn' hx-delete='/function/{{ .Name }}'>Remove</button>
+           </div>
+        </div>
+        {{ end }}
         <p>Saved functions:</p>
-            {{ .SavedFunctions }}
+        {{ range .Savedfunctions }}
+        <div style="display: flex;">
+		    <div style="text-align: left; float: left;">{{ . }}</div>
+            <div style="float: right; margin-left: auto; display: inline;" hx-target='#main-content'>
+	            <button class='btn' hx-get='/function/files/{{ . }}'>Load</button>
+                <button class='btn' hx-delete='/function/files/{{ . }}' hx-confirm='Are you sure?'>Delete</button>
+            </div>
+        </div>
+        {{ end }}
+    </div>
 </div>
