@@ -6,8 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"os"
-	"path/filepath"
 	"strings"
 )
 
@@ -23,7 +21,7 @@ func (agent *Agent) hprompt(w http.ResponseWriter, r *http.Request) {
 		data.Name = agent.prompt.Name
 		data.Description = agent.prompt.Description
 		data.Parameters = agent.prompt.Parameters
-		data.Savedprompts, _ = getsavepromptlist()
+		data.Savedprompts, _ = getsavefilelist("Prompts")
 
 		render(w, hpromptspage, data)
 	}
@@ -66,7 +64,7 @@ func (agent *Agent) hpromptfiles(w http.ResponseWriter, r *http.Request) {
 		data.Name = prompt.Name
 		data.Description = prompt.Description
 		data.Parameters = prompt.Parameters
-		data.Savedprompts, _ = getsavepromptlist()
+		data.Savedprompts, _ = getsavefilelist("Prompts")
 
 		render(w, hpromptspage, data)
 	}
@@ -90,25 +88,4 @@ func (agent *Agent) hpromptfiles(w http.ResponseWriter, r *http.Request) {
 		r.Method = http.MethodGet
 		agent.hprompt(w, r)
 	}
-}
-
-func getsavepromptlist() ([]string, error) {
-	// Create a directory for your app
-	savepath := filepath.Join(homeDir, "Prompts")
-	files, err := os.ReadDir(savepath)
-	if err != nil {
-		return nil, err
-	}
-
-	var res []string
-
-	fmt.Println("\nFiles:")
-
-	for _, file := range files {
-		filename := strings.ReplaceAll(file.Name(), ".json", "")
-		res = append(res, filename)
-		fmt.Println(file.Name())
-	}
-
-	return res, nil
 }

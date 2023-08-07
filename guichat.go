@@ -4,65 +4,12 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
-	"os"
-	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
 
 	"github.com/sashabaranov/go-openai"
 )
-
-func (agent *Agent) hsettings(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodGet {
-		data := struct {
-			Model             string
-			Functionmodel     string
-			Maxtokens         int
-			Callcost          float64
-			Autoclearfunction bool
-		}{
-			Model:             model,
-			Functionmodel:     functionmodel,
-			Maxtokens:         maxtokens,
-			Callcost:          callcost,
-			Autoclearfunction: autoclearfunction,
-		}
-		render(w, hsettingspage, data)
-	}
-	if r.Method == http.MethodPut {
-		apikey := r.FormValue("apikey")
-		if apikey != "" {
-			c := openai.NewClient(apikey)
-			agent.client = c
-		}
-		model = r.FormValue("chatmodel")
-		functionmodel = r.FormValue("functionmodel")
-		maxtokens, _ = strconv.Atoi(r.FormValue("maxtokens"))
-		callcost, _ = strconv.ParseFloat(r.FormValue("callcost"), 64)
-		autoclearfunction, _ = strconv.ParseBool(r.FormValue("autoclearfunction"))
-		agent.hloadchatscreen(w, r)
-	}
-}
-
-func hsidebar(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodGet {
-		w.Header().Set("HX-Trigger-After-Settle", `tokenupdate`)
-		render(w, hsidebarpage, nil)
-	}
-	if r.Method == http.MethodDelete {
-		button := `<div class="sidebar" id="sidebar" style="width: 0; background-color: transparent;"><button class="btn" id="floating-button" hx-get="/sidebar/" hx-target="#sidebar" hx-swap="outerHTML">Show Menu</button></div>`
-		render(w, button, nil)
-	}
-}
-
-func (agent *Agent) htokenupdate(w http.ResponseWriter, r *http.Request) {
-	// fmt.Println("htokenupdate")
-	estcost := (float64(agent.tokencount) / 1000) * callcost
-	tokencount := strconv.Itoa(agent.tokencount)
-	estcoststr := strconv.FormatFloat(estcost, 'f', 6, 64)
-	render(w, "#Tokens: "+tokencount+"<br>$Est: "+estcoststr, nil)
-}
 
 func (agent *Agent) hchat(w http.ResponseWriter, r *http.Request) {
 	var data struct {
@@ -74,7 +21,34 @@ func (agent *Agent) hchat(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if r.Method == http.MethodGet {
-		agent.hloadchatscreen(w, r)
+		type message struct {
+			Role    string
+			Content string
+			Index   int
+		}
+		var data struct {
+			Messages []message
+		}
+
+		messages := agent.req.Messages
+		if len(messages) == 1 {
+			render(w, hchatpage, data)
+		} else {
+			for i, item := range messages[1:] {
+				var content string
+				lines := strings.Split(item.Content, "\n")
+				for _, line := range lines {
+					content += line + "<br>"
+				}
+				msg := message{
+					Role:    item.Role,
+					Content: item.Content,
+					Index:   i + 1,
+				}
+				data.Messages = append(data.Messages, msg)
+			}
+			render(w, hchatpage, data)
+		}
 	}
 
 	if r.Method == http.MethodPost {
@@ -133,6 +107,51 @@ func (agent *Agent) hchat(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func (agent *Agent) hchatedit(w http.ResponseWriter, r *http.Request) {
+	query := strings.TrimPrefix(r.URL.Path, "/chat/edit/")
+	if r.Method == http.MethodGet {
+		id, err := strconv.Atoi(query)
+		if err != nil {
+			fmt.Println(err)
+		}
+		data := struct {
+			Edittext  string
+			MessageID int
+		}{
+			Edittext:  agent.req.Messages[id].Content,
+			MessageID: id,
+		}
+		render(w, hedit, data)
+	}
+
+	if r.Method == http.MethodPost {
+		id, err := strconv.Atoi(query)
+		if err != nil {
+			fmt.Println(err)
+		}
+		edittext := r.FormValue("edittext")
+		agent.req.Messages[id].Content = edittext
+		newtext := strings.Split(edittext, "\n")
+		data := struct {
+			Edittext  []string
+			MessageID int
+		}{
+			Edittext:  newtext,
+			MessageID: id,
+		}
+		render(w, hedited, data)
+	}
+
+	if r.Method == http.MethodDelete {
+		err := agent.deletelines(query)
+		if err != nil {
+			fmt.Println(err)
+		}
+		r.Method = http.MethodGet
+		agent.hchat(w, r)
+	}
+}
+
 func (agent *Agent) hchatsave(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
 		currentTime := time.Now()
@@ -152,19 +171,32 @@ func (agent *Agent) hchatsave(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (agent *Agent) hchatdelete(w http.ResponseWriter, r *http.Request) {
-	rawquery := strings.TrimPrefix(r.URL.Path, "/chat/delete/")
-	query := strings.Split(rawquery, "/")
-	fmt.Println(rawquery, query)
-	switch query[0] {
-	case "line":
-		err := agent.deletelines(query[1])
-		if err != nil {
-			fmt.Println(err)
+func (agent *Agent) hchatfile(w http.ResponseWriter, r *http.Request) {
+	query := strings.TrimPrefix(r.URL.Path, "/chat/files/")
+	if r.Method == http.MethodGet {
+		if query == "" {
+			var data struct {
+				Filelist []string
+			}
+			filelist, err := getsavefilelist("Chats")
+			if err != nil {
+				fmt.Println(err)
+			}
+			data.Filelist = filelist
+			render(w, hchatloadpage, data)
+		} else {
+			_, err := agent.loadfile("Chats", query)
+			if err != nil {
+				fmt.Println(err)
+			}
+			r.Method = http.MethodGet
+			agent.hchat(w, r)
 		}
-		agent.hloadchatscreen(w, r)
-	case "savedchat":
-		err := deletefile("Chats", query[1])
+
+	}
+
+	if r.Method == http.MethodDelete {
+		err := deletefile("Chats", query)
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -174,136 +206,67 @@ func (agent *Agent) hchatdelete(w http.ResponseWriter, r *http.Request) {
 
 func (agent *Agent) hchatclear(w http.ResponseWriter, r *http.Request) {
 	agent.setprompt()
-	agent.hloadchatscreen(w, r)
-}
-
-func (agent *Agent) hloadchatscreen(w http.ResponseWriter, r *http.Request) {
-	type message struct {
-		Role    string
-		Content string
-		Index   int
-	}
-	var data struct {
-		Messages []message
-	}
-
-	messages := agent.req.Messages
-	if len(messages) == 1 {
-		render(w, hchatpage, data)
-	} else {
-		for i, item := range messages {
-			var content string
-			lines := strings.Split(item.Content, "\n")
-			for _, line := range lines {
-				content += line + "<br>"
-			}
-			msg := message{
-				Role:    item.Role,
-				Content: item.Content,
-				Index:   i,
-			}
-			data.Messages = append(data.Messages, msg)
-		}
-		render(w, hchatpage, data)
-	}
+	r.Method = http.MethodGet
+	agent.hchat(w, r)
 }
 
 func (agent *Agent) hreset(w http.ResponseWriter, r *http.Request) {
-	// fmt.Println("hreset")
 	agent.reset()
-	w.Header().Set("HX-Redirect", "/")
-	w.WriteHeader(http.StatusTemporaryRedirect)
+	r.Method = http.MethodGet
+	agent.hchat(w, r)
 }
 
-func (agent *Agent) hchatload(w http.ResponseWriter, r *http.Request) {
-
-	rawquery := strings.TrimPrefix(r.URL.Path, "/chat/load/")
-	query := strings.Split(rawquery, "/")
-	fmt.Println(rawquery, query)
-	if query[0] == "" {
-		var data struct {
-			Filelist []string
-		}
-		filelist, err := getsavefilelist()
-		if err != nil {
-			fmt.Println(err)
-		}
-		data.Filelist = filelist
-		render(w, hchatloadpage, data)
-	} else {
-		_, err := agent.loadfile("Chats", query[0])
-		if err != nil {
-			fmt.Println(err)
-		}
-		agent.hloadchatscreen(w, r)
-	}
-}
-
-func (agent *Agent) hedit(w http.ResponseWriter, r *http.Request) {
-	// fmt.Println("hedit")
+func (agent *Agent) hsettings(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
-		messageid := r.FormValue("messageid")
-		id, err := strconv.Atoi(messageid)
-		if err != nil {
-			fmt.Println(err)
-		}
-		edittext := agent.req.Messages[id].Content
 		data := struct {
-			Edittext  string
-			MessageID string
+			Model             string
+			Functionmodel     string
+			Maxtokens         int
+			Callcost          float64
+			Autoclearfunction bool
 		}{
-			Edittext:  edittext,
-			MessageID: messageid,
+			Model:             model,
+			Functionmodel:     functionmodel,
+			Maxtokens:         maxtokens,
+			Callcost:          callcost,
+			Autoclearfunction: autoclearfunction,
 		}
-		render(w, hedit, data)
-	} else if r.Method == http.MethodPost {
-		messageid := r.FormValue("messageid")
-		id, err := strconv.Atoi(messageid)
-		if err != nil {
-			fmt.Println(err)
+		render(w, hsettingspage, data)
+	}
+	if r.Method == http.MethodPut {
+		apikey := r.FormValue("apikey")
+		if apikey != "" {
+			c := openai.NewClient(apikey)
+			agent.client = c
 		}
-		edittext := r.FormValue("edittext")
-		agent.req.Messages[id].Content = edittext
-		newtext := strings.Split(edittext, "\n")
-		data := struct {
-			Edittext  []string
-			MessageID string
-		}{
-			Edittext:  newtext,
-			MessageID: messageid,
-		}
-		render(w, hedited, data)
+		model = r.FormValue("chatmodel")
+		functionmodel = r.FormValue("functionmodel")
+		maxtokens, _ = strconv.Atoi(r.FormValue("maxtokens"))
+		callcost, _ = strconv.ParseFloat(r.FormValue("callcost"), 64)
+		autoclearfunction, _ = strconv.ParseBool(r.FormValue("autoclearfunction"))
+
+		r.Method = http.MethodGet
+		agent.hchat(w, r)
 	}
 }
 
-func (agent *Agent) hfunctionrun(w http.ResponseWriter, r *http.Request) {
-	rawquery := strings.TrimPrefix(r.URL.Path, "/function/run/")
-	query := strings.Split(rawquery, "/")
-	fmt.Println(rawquery, query)
-
-	function := Response{
-		FunctionCall: &openai.FunctionCall{
-			Name:      query[0],
-			Arguments: agent.req.Messages[len(agent.req.Messages)-1].Content,
-		},
+func hsidebar(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodGet {
+		w.Header().Set("HX-Trigger-After-Settle", `tokenupdate`)
+		render(w, hsidebarpage, nil)
 	}
-
-	response := agent.callfunction(&function)
-
-	w.Header().Set("HX-Trigger-After-Settle", `tokenupdate`)
-
-	var data struct {
-		Header   template.HTML
-		Role     string
-		Content  string
-		Index    string
-		Function string
+	if r.Method == http.MethodDelete {
+		button := `<div class="sidebar" id="sidebar" style="width: 0; background-color: transparent;"><button class="btn" id="floating-button" hx-get="/sidebar/" hx-target="#sidebar" hx-swap="outerHTML">Show Menu</button></div>`
+		render(w, button, nil)
 	}
-	data.Header = template.HTML(`<div id="message" class="message" style="background-color: #393939">`)
-	data.Role = openai.ChatMessageRoleAssistant
-	data.Content = response.Message.Content
-	data.Index = strconv.Itoa(len(agent.req.Messages) - 1)
-	render(w, hchatnewpage, data)
+}
+
+func (agent *Agent) htokenupdate(w http.ResponseWriter, r *http.Request) {
+	// fmt.Println("htokenupdate")
+	estcost := (float64(agent.tokencount) / 1000) * callcost
+	tokencount := strconv.Itoa(agent.tokencount)
+	estcoststr := strconv.FormatFloat(estcost, 'f', 6, 64)
+	render(w, "#Tokens: "+tokencount+"<br>$Est: "+estcoststr, nil)
 }
 
 func hautofunction(w http.ResponseWriter, r *http.Request) {
@@ -346,24 +309,4 @@ func (agent *Agent) hautorequestfunction(w http.ResponseWriter, r *http.Request)
 		autorequestfunction = false
 		render(w, buttonon, nil)
 	}
-}
-
-func getsavefilelist() ([]string, error) {
-	// Create a directory for your app
-	savepath := filepath.Join(homeDir, "Chats")
-	files, err := os.ReadDir(savepath)
-	if err != nil {
-		return nil, err
-	}
-	var res []string
-
-	fmt.Println("\nFiles:")
-
-	for _, file := range files {
-		filename := strings.ReplaceAll(file.Name(), ".json", "")
-		res = append(res, filename)
-		fmt.Println(file.Name())
-	}
-
-	return res, nil
 }

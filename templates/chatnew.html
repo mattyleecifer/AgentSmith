@@ -5,10 +5,8 @@
       {{ .Function }}
   </div>
   <div class="editbutton">
-      <form hx-get="/edit" hx-target="#reply-{{ .Index }}" hx-swap="outerHTML">
-      <button class="editbutton" name="messageid" value="{{ .Index }}">Edit</button>
-      </form>
-      <button class='btn' hx-delete="/chat/delete/line/{{ .Index }}/" hx-target="#main-content" hx-swap="innerHTML">Delete</button>
+      <button class="editbutton" hx-get="/chat/edit/{{ .Index }}" hx-target="#reply-{{ .Index }}">Edit</button>
+      <button class='btn' hx-delete="/chat/edit/{{ .Index }}" hx-target="#main-content">Delete</button>
   </div>
 </div>
 <div id="response" hx-select="#message" hx-target="this" hx-put="/chat/" hx-trigger="load" hx-swap="outerHTML show:bottom" hx-indicator="#chatloading" style="background-color: #393939"></div>

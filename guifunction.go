@@ -5,7 +5,9 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/sashabaranov/go-openai"
@@ -32,7 +34,7 @@ func (agent *Agent) hfunction(w http.ResponseWriter, r *http.Request) {
 			data.Currentfunctions = append(data.Currentfunctions, newfunc)
 		}
 
-		data.Savedfunctions, _ = getsavefunctionlist()
+		data.Savedfunctions, _ = getsavefilelist("Functions")
 		render(w, hfunctionpage, data)
 	}
 
@@ -158,4 +160,34 @@ func (agent *Agent) hfunctionedit(w http.ResponseWriter, r *http.Request, f open
 	data.Parameters = string(functiondata)
 
 	render(w, hfunctioneditpage, data)
+}
+
+func (agent *Agent) hfunctionrun(w http.ResponseWriter, r *http.Request) {
+	rawquery := strings.TrimPrefix(r.URL.Path, "/function/run/")
+	query := strings.Split(rawquery, "/")
+	fmt.Println(rawquery, query)
+
+	function := Response{
+		FunctionCall: &openai.FunctionCall{
+			Name:      query[0],
+			Arguments: agent.req.Messages[len(agent.req.Messages)-1].Content,
+		},
+	}
+
+	response := agent.callfunction(&function)
+
+	w.Header().Set("HX-Trigger-After-Settle", `tokenupdate`)
+
+	var data struct {
+		Header   template.HTML
+		Role     string
+		Content  string
+		Index    string
+		Function string
+	}
+	data.Header = template.HTML(`<div id="message" class="message" style="background-color: #393939">`)
+	data.Role = openai.ChatMessageRoleAssistant
+	data.Content = response.Message.Content
+	data.Index = strconv.Itoa(len(agent.req.Messages) - 1)
+	render(w, hchatnewpage, data)
 }

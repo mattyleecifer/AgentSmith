@@ -628,28 +628,10 @@ func (agent *Agent) requestFunction(newfunction openai.FunctionDefinition) (Resp
 	return response, nil
 }
 
-func getsavefunctionlist() ([]string, error) {
-	savepath := filepath.Join(homeDir, "Functions")
-	files, err := os.ReadDir(savepath)
-	if err != nil {
-		return nil, err
-	}
-	var res []string
-
-	fmt.Println("\nFiles:")
-
-	for _, file := range files {
-		res = append(res, file.Name())
-		fmt.Println(file.Name())
-	}
-
-	return res, nil
-}
-
 func (agent *Agent) setAutoRequestFunction() {
 	// detects functions in homedir/Functions and sets them, tells assistant it has new abilities
 
-	functions, _ := getsavefunctionlist()
+	functions, _ := getsavefilelist("Functions")
 	var description string
 	var enum []string
 	for _, item := range functions {
@@ -777,6 +759,26 @@ func deletefile(filetype, filename string) error {
 	fmt.Println("File deleted successfully.")
 
 	return nil
+}
+
+func getsavefilelist(filetype string) ([]string, error) {
+	// Create a directory for your app
+	savepath := filepath.Join(homeDir, filetype)
+	files, err := os.ReadDir(savepath)
+	if err != nil {
+		return nil, err
+	}
+	var res []string
+
+	fmt.Println("\nFiles:")
+
+	for _, file := range files {
+		filename := strings.ReplaceAll(file.Name(), ".json", "")
+		res = append(res, filename)
+		fmt.Println(file.Name())
+	}
+
+	return res, nil
 }
 
 func (agent *Agent) deletelines(editchoice string) error {

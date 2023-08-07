@@ -109,7 +109,7 @@ func (agent *Agent) process_text(text string) string {
 		}
 		return ""
 	case "load":
-		_, err := getsavefilelist()
+		_, err := getsavefilelist("Chats")
 		if err != nil {
 			fmt.Println(err)
 		}
