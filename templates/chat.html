@@ -8,7 +8,7 @@
         </div>
         <div class="editbutton">
             <form >
-            <button class="editbutton" hx-get="/chat/edit/{{ .Index }}" hx-target="#reply-{{ .Index }}">Edit</button>
+            <button class="btn" hx-get="/chat/edit/{{ .Index }}" hx-target="#reply-{{ .Index }}">Edit</button>
             </form>
             <button class='btn' hx-delete="/chat/edit/{{ .Index }}" hx-target="#main-content">Delete</button>
         </div>
@@ -25,7 +25,7 @@
         </div>
         <div class="chatsubmitclear">
             <button style="height: 60%;" hx-select="#message, #response" hx-select-oob="#chatinput" hx-post="/chat/" hx-target="#chatloading" hx-swap="beforebegin scroll:#top-row:bottom" hx-include="#chatinput" hx-trigger="click, keydown[keyCode==13&&shiftKey!=true] from:#inputbox">Submit</button>
-            <button style="margin-top: auto; height: 40%;" hx-post="/chat/clear/" hx-target="#main-content" hx-swap="innerHTML">Clear Chat</button>
+            <button style="margin-top: auto; height: 40%;" hx-post="/chat/clear/" hx-target="#main-content">Clear Chat</button>
         </div>
     </div> 
 </div>

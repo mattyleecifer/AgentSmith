@@ -24,6 +24,14 @@ button {
     width: 7vw;
 }
 
+.buttonon{
+    background-color: darkred;
+}
+
+.buttonoff{
+    background-color: darkgreen;
+}
+
 #floating-button {
     background-color: rgba(69, 74, 77, 0.8);
     border: none;
@@ -84,6 +92,7 @@ input {
 }
 
 .agent {
+    display: flex;
     width: 8vw;
     float: left;
     text-align: center;
@@ -98,8 +107,10 @@ input {
 }
 
 .content {
-    /* border-bottom: 1px solid #000; */
-    }
+    padding-left: 10px;
+    padding-right: 10px;
+    width: 100%;
+}
 
 .editbutton {
     width: 7vw;

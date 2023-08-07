@@ -11,9 +11,9 @@
     </head>
     <body>
         <div class="container">
-            <div class="sidebar" id="sidebar">
-                <div class="mobile"><button class="btn" id="floating-button" hx-get="/sidebar/" hx-target="#sidebar" hx-swap="outerHTML">Show Menu</button></div>
-                <div class="nonmobile" hx-get="/sidebar/" hx-target="#sidebar" hx-swap="outerHTML" hx-trigger="intersect"></div>
+            <div class="sidebar" id="sidebar" hx-target="#sidebar" hx-swap="outerHTML">
+                <div class="mobile"><button class="btn" id="floating-button" hx-get="/sidebar/">Show Menu</button></div>
+                <div class="nonmobile" hx-get="/sidebar/" hx-trigger="intersect"></div>
             </div>
             <div class="main-content" id="main-content">
                 <div hx-get="/chat/" hx-trigger="load" hx-swap="innerHTML scroll:#top-row:bottom" hx-target="#main-content"></div>

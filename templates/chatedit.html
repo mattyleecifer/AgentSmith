@@ -1,0 +1,4 @@
+<div style="display: block; width: 100%;">
+<textarea id="edittext" name="edittext" rows="15">{{ .Edittext }}</textarea>
+<button class="editbutton" hx-post="/chat/edit/{{.MessageID}}" hx-include="#edittext" hx-target="#reply-{{.MessageID}}" hx-trigger="click, keydown[keyCode==13&&shiftKey!=true] from:#reply-{{.MessageID}}">Submit</button>
+</div>

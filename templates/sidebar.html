@@ -10,7 +10,7 @@
     <button hx-get="/chat/files/">Load Chat</button>
     <button hx-get="/chat/save/" hx-target="#chatloading" hx-swap="beforebegin scroll:#top-row:bottom">Save Chat</button>
     <p>
-        <div id="autofunctiontoggle" hx-get="/autofunction/" hx-target="this" hx-trigger="load"></div>
-        <div id="autorequestfunctiontoggle" hx-get="/autorequestfunction/" hx-target="this" hx-trigger="load"></div>
+        <div id="autofunctiontoggle" hx-target="#autofunctiontoggle" hx-get="/autofunction/" hx-trigger="load"></div>
+        <div id="autorequestfunctiontoggle" hx-target="#autorequestfunctiontoggle" hx-get="/autorequestfunction/" hx-trigger="load"></div>
     </p>
 </div>

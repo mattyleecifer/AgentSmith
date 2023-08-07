@@ -121,7 +121,7 @@ func (agent *Agent) hchatedit(w http.ResponseWriter, r *http.Request) {
 			Edittext:  agent.req.Messages[id].Content,
 			MessageID: id,
 		}
-		render(w, hedit, data)
+		render(w, hchatedit, data)
 	}
 
 	if r.Method == http.MethodPost {
@@ -131,15 +131,8 @@ func (agent *Agent) hchatedit(w http.ResponseWriter, r *http.Request) {
 		}
 		edittext := r.FormValue("edittext")
 		agent.req.Messages[id].Content = edittext
-		newtext := strings.Split(edittext, "\n")
-		data := struct {
-			Edittext  []string
-			MessageID int
-		}{
-			Edittext:  newtext,
-			MessageID: id,
-		}
-		render(w, hedited, data)
+		newtext := `<pre style="white-space: pre-wrap; font-family: inherit;">` + edittext + `</pre>`
+		render(w, newtext, nil)
 	}
 
 	if r.Method == http.MethodDelete {
@@ -183,7 +176,7 @@ func (agent *Agent) hchatfile(w http.ResponseWriter, r *http.Request) {
 				fmt.Println(err)
 			}
 			data.Filelist = filelist
-			render(w, hchatloadpage, data)
+			render(w, hchatfilespage, data)
 		} else {
 			_, err := agent.loadfile("Chats", query)
 			if err != nil {
@@ -270,8 +263,8 @@ func (agent *Agent) htokenupdate(w http.ResponseWriter, r *http.Request) {
 }
 
 func hautofunction(w http.ResponseWriter, r *http.Request) {
-	buttonon := `<button class="menubtn" style="background-color: darkred;" hx-put="/autofunction/" hx-target="#autofunctiontoggle" hx-swap="innerHTML">Autofunction</button>`
-	buttonoff := `<button class="menubtn" style="background-color: darkgreen;" hx-delete="/autofunction/" hx-target="#autofunctiontoggle" hx-swap="innerHTML">Autofunction</button>`
+	buttonon := `<button class="buttonon" hx-put="/autofunction/">Autofunction</button>`
+	buttonoff := `<button class="buttonoff" hx-delete="/autofunction/">Autofunction</button>`
 	if r.Method == http.MethodGet {
 		if autofunction {
 			render(w, buttonoff, nil)
@@ -290,8 +283,8 @@ func hautofunction(w http.ResponseWriter, r *http.Request) {
 }
 
 func (agent *Agent) hautorequestfunction(w http.ResponseWriter, r *http.Request) {
-	buttonon := `<button class="menubtn" style="background-color: darkred;" hx-put="/autorequestfunction/" hx-target="#autorequestfunctiontoggle" hx-swap="innerHTML">Autorequestfunction</button>`
-	buttonoff := `<button class="menubtn" style="background-color: darkgreen;" hx-delete="/autorequestfunction/" hx-target="#autorequestfunctiontoggle" hx-swap="innerHTML">Autorequestfunction</button>`
+	buttonon := `<button class="buttonon" hx-put="/autorequestfunction/">Autorequestfunction</button>`
+	buttonoff := `<button class="buttonoff" hx-delete="/autorequestfunction/">Autorequestfunction</button>`
 	if r.Method == http.MethodGet {
 		if autorequestfunction {
 			render(w, buttonoff, nil)

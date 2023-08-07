@@ -1,9 +1,0 @@
-<td id="reply-{{.MessageID}}" class="message">
-    <form hx-post="/edit" hx-target="#reply-{{.MessageID}}" hx-swap="outerHTML">
-        <textarea name="edittext">{{ .Edittext }}</textarea>
-        <input type="hidden" name="messageid" value={{.MessageID}}>
-        <button class="btn" hx-post="/edit" hx-target="#reply-{{.MessageID}}" hx-trigger="keydown[keyCode==13&&shiftKey!=true] from:#reply-{{.MessageID}}" hx-swap="outerHTML">Submit</button>
-    </form>
-</td>
-
-
