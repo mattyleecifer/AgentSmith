@@ -57,7 +57,7 @@ func (agent *Agent) hchat(w http.ResponseWriter, r *http.Request) {
 			render(w, "", nil)
 			return
 		}
-		if rawtext == "!" {
+		if strings.TrimSpace(rawtext) == "!" {
 			agent.setprompt()
 			w.Header().Set("HX-Redirect", "/")
 			w.WriteHeader(http.StatusTemporaryRedirect)
