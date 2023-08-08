@@ -42,7 +42,7 @@ func (agent *Agent) hprompt(w http.ResponseWriter, r *http.Request) {
 }
 
 func (agent *Agent) hpromptfiles(w http.ResponseWriter, r *http.Request) {
-	query := strings.TrimPrefix(r.URL.Path, "/prompt/files/")
+	query := strings.TrimPrefix(r.URL.Path, "/prompt/data/")
 
 	if r.Method == http.MethodGet {
 		var data struct {

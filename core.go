@@ -222,43 +222,51 @@ func (agent *Agent) getflags() {
 	}
 
 	// range over args to get flags
-	for index, arg := range os.Args {
-		switch arg {
+	for index, flag := range os.Args {
+		var arg string
+		if index < len(os.Args)-1 {
+			item := os.Args[index+1]
+			if !strings.HasPrefix(item, "-") {
+				arg = item
+			}
+		}
+
+		switch flag {
 		case "-key":
 			// Set API key
-			agent.api_key = os.Args[index+1]
+			agent.api_key = arg
 		case "-home":
 			// Set home directory
-			homeDir = os.Args[index+1]
+			homeDir = arg
 		case "-save":
 			// chats save to homeDir/Saves
-			savechatName = os.Args[index+1]
+			savechatName = arg
 		case "-load":
 			// load chat from homeDir/Saves
-			agent.loadfile("Chats", os.Args[index+1])
+			agent.loadfile("Chats", arg)
 		case "-prompt":
 			// Set prompt
-			agent.setprompt(os.Args[index+1])
+			agent.setprompt(arg)
 		case "-model":
 			// Set model
-			model = os.Args[index+1]
+			model = arg
 		case "-maxtokens":
 			// Change setting variable
-			maxtokens, _ = strconv.Atoi(os.Args[index+1])
+			maxtokens, _ = strconv.Atoi(arg)
 		case "-function":
 			// Load function from file
-			newfunction, _ := agent.functionload(os.Args[index+1])
+			newfunction, _ := agent.functionload(arg)
 			agent.setfunction(newfunction)
 		case "-message":
 			// Get the argument after the flag]
 			// Set messages for the agent/create chat history
-			agent.setmessage(openai.ChatMessageRoleUser, os.Args[index+1], "")
+			agent.setmessage(openai.ChatMessageRoleUser, arg, "")
 		case "-messageassistant":
 			// Allows multiple messages with different users to be loaded in order
-			agent.setmessage(openai.ChatMessageRoleAssistant, os.Args[index+1], "")
+			agent.setmessage(openai.ChatMessageRoleAssistant, arg, "")
 		case "-messagefunction":
 			// Sets as functioncall user
-			agent.setmessage(openai.ChatMessageRoleFunction, os.Args[index+1], "")
+			agent.setmessage(openai.ChatMessageRoleFunction, arg, "")
 		case "-autofunction":
 			// autofunction detects whether the assistant has made a functioncall request and automatically executes it - otherwise it will just return a response with the functioncall request
 			autofunction = true
@@ -274,14 +282,14 @@ func (agent *Agent) getflags() {
 			guiFlag = true
 		case "-ip":
 			// allow ip
-			if os.Args[index+1] == "all" {
+			if arg == "all" {
 				allowAllIps = true
 			} else {
-				allowedIps = append(allowedIps, os.Args[index+1])
+				allowedIps = append(allowedIps, arg)
 			}
 		case "-port":
 			// change port
-			port = ":" + os.Args[index+1]
+			port = ":" + arg
 		case "-allowallips":
 			// allow all ips
 			fmt.Println("Warning: Allowing all incoming connections.")

@@ -10,7 +10,7 @@
         <div><textarea id="edittext" name="edittext" rows="10">{{ .Parameters }}</textarea></div>
         <div style="display: inline;" hx-target="#main-content" hx-include="#functionname, #functiondescription, #edittext">
             <button class="btn" hx-post="/function/">Set</button>
-            <button class="btn" hx-post="/function/files/">Save</button>
+            <button class="btn" hx-post="/function/data/">Save</button>
             <button class="btn" hx-get='/function/'>Back</button>
         </div>
     </div>

@@ -7,8 +7,8 @@
         <div style="display: flex;" id="savedchat-{{ . }}">
             <div style="text-align: left; float: left;">{{ . }}</div>
             <div style="float: right; margin-left: auto; display: inline;">
-                <button class='btn' hx-get='/chat/files/{{ . }}' hx-target='#main-content' hx-swap='innerHTML scroll:#top-row:bottom'>Load</button>
-                <button class='btn' hx-delete='/chat/files/{{ . }}' hx-target='#savedchat-{{ . }}' hx-swap='outerHTML' hx-confirm='Are you sure?'>Delete</button>
+                <button class='btn' hx-get='/chat/data/{{ . }}' hx-target='#main-content' hx-swap='innerHTML scroll:#top-row:bottom'>Load</button>
+                <button class='btn' hx-delete='/chat/data/{{ . }}' hx-target='#savedchat-{{ . }}' hx-swap='outerHTML' hx-confirm='Are you sure?'>Delete</button>
             </div>
         </div>
         {{ else }}

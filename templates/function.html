@@ -24,8 +24,8 @@
         <div style="display: flex;">
 		    <div style="text-align: left; float: left;">{{ . }}</div>
             <div style="float: right; margin-left: auto; display: inline;" hx-target='#main-content'>
-	            <button class='btn' hx-get='/function/files/{{ . }}'>Load</button>
-                <button class='btn' hx-delete='/function/files/{{ . }}' hx-confirm='Are you sure?'>Delete</button>
+	            <button class='btn' hx-get='/function/data/{{ . }}'>Load</button>
+                <button class='btn' hx-delete='/function/data/{{ . }}' hx-confirm='Are you sure?'>Delete</button>
             </div>
         </div>
         {{ end }}

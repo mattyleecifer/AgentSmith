@@ -8,7 +8,7 @@
         <div><textarea id="edittext" name="edittext" rows="10">{{ .Parameters }}</textarea></div>
         <div style="display: inline;" hx-include="#promptname, #promptdescription, #edittext">
             <button class="btn" hx-post="/prompt/">Set</button>
-            <button class="btn" hx-post="/prompt/files/">Save</button>
+            <button class="btn" hx-post="/prompt/data/">Save</button>
             <button class="btn" hx-get="/chat/" hx-swap=" scroll:#top-row:bottom">Back</button>
         </div>
     <p><h4>Saved Prompts</h4></p>
@@ -16,8 +16,8 @@
     <div style="display: flex;">
         <div style="text-align: left; float: left;">{{ . }}</div>
         <div style="float: right; margin-left: auto; display: inline;" hx-target='#main-content'>
-            <button class='btn' hx-get='/prompt/files/{{ . }}'>Load</button>
-            <button class='btn' hx-delete='/prompt/files/{{ . }}' hx-confirm='Are you sure?'>Delete</button>
+            <button class='btn' hx-get='/prompt/data/{{ . }}'>Load</button>
+            <button class='btn' hx-delete='/prompt/data/{{ . }}' hx-confirm='Are you sure?'>Delete</button>
         </div>
     </div>
     {{ end }}
