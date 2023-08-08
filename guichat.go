@@ -59,8 +59,7 @@ func (agent *Agent) hchat(w http.ResponseWriter, r *http.Request) {
 		}
 		if strings.TrimSpace(rawtext) == "!" {
 			agent.setprompt()
-			w.Header().Set("HX-Redirect", "/")
-			w.WriteHeader(http.StatusTemporaryRedirect)
+			render(w, `<div id="message" hx-target="#main-content" hx-post="/chat/clear/" hx-trigger="load"></div>`, nil)
 			return
 		}
 		query := openai.ChatCompletionMessage{
