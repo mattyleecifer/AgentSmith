@@ -7,10 +7,8 @@
             <pre style="white-space: pre-wrap; font-family: inherit;">{{ .Content }}</pre>
         </div>
         <div class="editbutton">
-            <form >
-            <button class="btn" hx-get="/chat/edit/{{ .Index }}" hx-target="#reply-{{ .Index }}">Edit</button>
-            </form>
-            <button class='btn' hx-delete="/chat/edit/{{ .Index }}" hx-target="#main-content">Delete</button>
+            <button hx-get="/chat/edit/{{ .Index }}" hx-target="#reply-{{ .Index }}">Edit</button>
+            <button hx-delete="/chat/edit/{{ .Index }}" hx-target="#main-content">Delete</button>
         </div>
     </div>
     {{ else }}
@@ -18,7 +16,7 @@
     {{ end }}
     <div id="chatloading" class="htmx-indicator"><p>Loading...</p></div>
 </div>
-<div class="bottom-row">
+<div id="bottom-row" class="bottom-row">
     <div class="chatbox">
         <div id="inputbox" class="inputbox">
             <textarea id="chatinput" type="text" name="text" autocomplete="off" tabindex="1"></textarea>

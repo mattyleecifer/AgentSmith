@@ -10,6 +10,7 @@ p {
 
 button {
     padding: 10px 5px;
+    width: 7vw;
     /* display: block; */
     /* margin: auto; */
     font-size: 14px;
@@ -20,9 +21,9 @@ button {
     background-color: #454a4d;
 }
 
-.btn {
-    width: 7vw;
-}
+/* .btn {
+    width: 7%;
+} */
 
 .buttonon{
     background-color: darkred;
@@ -93,7 +94,7 @@ input {
 
 .agent {
     display: flex;
-    width: 8vw;
+    width: 8%;
     float: left;
     text-align: center;
     align-items: center;
@@ -113,7 +114,7 @@ input {
 }
 
 .editbutton {
-    width: 7vw;
+    width: 7%;
     float: right;
     margin-left: auto;
 }

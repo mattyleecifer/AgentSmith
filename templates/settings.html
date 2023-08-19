@@ -1,7 +1,7 @@
 <div style="display: flex; flex-direction: column; margin-top: 5%" class="centertext">
     <div class="mobile" hx-trigger="intersect" hx-delete="/sidebar/" hx-target="#sidebar" hx-swap="outerHTML"></div>
     <div style="width: 50%;" hx-target="#main-content">
-        <button class="btn" hx-get="/chat/" hx-target="#main-content" hx-swap="scroll:#top-row:bottom">Back</button>
+        <button hx-get="/chat/" hx-target="#main-content" hx-swap="scroll:#top-row:bottom">Back</button>
         <p><h3>Settings</h3></p>
         <form hx-put="/settings/">
             <p>Key: <input name="apikey" value=""></p>

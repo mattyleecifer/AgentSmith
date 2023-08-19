@@ -2,8 +2,8 @@
     <div class="mobile" hx-trigger="intersect" hx-delete="/sidebar/" hx-target="#sidebar" hx-swap="outerHTML"></div>
     <div style="width: 50%;">
         <div style="display: inline;" hx-target="#main-content">
-            <button class="btn" hx-patch="/function/">New</button>
-            <button class="btn" hx-get="/chat/" hx-swap="scroll:#top-row:bottom">Back</button>
+            <button hx-patch="/function/">New</button>
+            <button hx-get="/chat/" hx-swap="scroll:#top-row:bottom">Back</button>
         </div>
         <p><h3>Functions</h3></p>
         <p>Current functions:</p>
@@ -14,8 +14,8 @@
                 {{ .Description }}
             </div>
             <div style="float: right; margin-left: auto; display: inline;" hx-target='#main-content'>
-                <button class='btn' hx-patch='/function/{{ .Name }}'>Edit</button>
-                <button class='btn' hx-delete='/function/{{ .Name }}'>Remove</button>
+                <button hx-patch='/function/{{ .Name }}'>Edit</button>
+                <button hx-delete='/function/{{ .Name }}'>Remove</button>
            </div>
         </div>
         {{ end }}
@@ -24,8 +24,8 @@
         <div style="display: flex;">
 		    <div style="text-align: left; float: left;">{{ . }}</div>
             <div style="float: right; margin-left: auto; display: inline;" hx-target='#main-content'>
-	            <button class='btn' hx-get='/function/data/{{ . }}'>Load</button>
-                <button class='btn' hx-delete='/function/data/{{ . }}' hx-confirm='Are you sure?'>Delete</button>
+	            <button hx-get='/function/data/{{ . }}'>Load</button>
+                <button hx-delete='/function/data/{{ . }}' hx-confirm='Are you sure?'>Delete</button>
             </div>
         </div>
         {{ end }}

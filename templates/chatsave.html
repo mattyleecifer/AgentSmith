@@ -1,6 +1,6 @@
 <div class="centertext" style="background-color: #393939;">
   <div id="saveinput">
       <input id="filename" name="filename" value="{{ .Filename }}">
-      <button class="btn" hx-post="/chat/save/" hx-target="#saveinput" hx-swap="outerHTML" hx-include="#filename">Save</button>  
+      <button hx-post="/chat/save/" hx-target="#saveinput" hx-swap="outerHTML" hx-include="#filename">Save</button>  
   </div>
 </div>

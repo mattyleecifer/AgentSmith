@@ -1,4 +1,7 @@
 @media only screen and (max-width: 800px) {
+    button {
+        width: 100%;
+    }
     .sidebar {
         position: absolute;
         width: 100%;

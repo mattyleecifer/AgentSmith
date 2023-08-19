@@ -12,7 +12,7 @@
     <body>
         <div class="container">
             <div class="sidebar" id="sidebar" hx-target="#sidebar" hx-swap="outerHTML">
-                <div class="mobile"><button class="btn" id="floating-button" hx-get="/sidebar/">Show Menu</button></div>
+                <div class="mobile"><button id="floating-button" hx-get="/sidebar/">Show Menu</button></div>
                 <div class="nonmobile" hx-get="/sidebar/" hx-trigger="intersect"></div>
             </div>
             <div class="main-content" id="main-content">

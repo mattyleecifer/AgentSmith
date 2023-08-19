@@ -1,7 +1,7 @@
 <div style="display: flex; flex-direction: column; margin-top: 5%" class="centertext">
     <div class="mobile" hx-trigger="intersect" hx-delete="/sidebar/" hx-target="#sidebar" hx-swap="outerHTML"></div>
     <div style="width: 50%;">
-        <button class="btn" hx-get='/function/' hx-target='#main-content'>Back</button>
+        <button hx-get='/function/' hx-target='#main-content'>Back</button>
         <p><h3>Function Editor</h3></p>
         <p>Function name:</p><input id="functionname" name="functionname" value="{{ .Name }}"><br>
         <p>Function description:</p>
@@ -9,9 +9,9 @@
         <p>Function arguments:</p>
         <div><textarea id="edittext" name="edittext" rows="10">{{ .Parameters }}</textarea></div>
         <div style="display: inline;" hx-target="#main-content" hx-include="#functionname, #functiondescription, #edittext">
-            <button class="btn" hx-post="/function/">Set</button>
-            <button class="btn" hx-post="/function/data/">Save</button>
-            <button class="btn" hx-get='/function/'>Back</button>
+            <button hx-post="/function/">Set</button>
+            <button hx-post="/function/data/">Save</button>
+            <button hx-get='/function/'>Back</button>
         </div>
     </div>
 </div>

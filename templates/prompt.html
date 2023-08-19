@@ -1,23 +1,23 @@
 <div style="display: flex; flex-direction: column; margin-top: 5%" class="centertext">
     <div class="mobile" hx-trigger="intersect" hx-delete="/sidebar/" hx-target="#sidebar" hx-swap="outerHTML"></div>
     <div style="width: 50%;" hx-target="#main-content">
-        <button class="btn" hx-get="/chat/" hx-swap="scroll:#top-row:bottom">Back</button>
+        <button hx-get="/chat/" hx-swap="scroll:#top-row:bottom">Back</button>
         <p><h3>Prompt Editor</h3></p>
         <p>Prompt name:</p><input id="promptname" name="promptname" value="{{ .Name }}">
         <div><p>Prompt description:</p><textarea id="promptdescription" name="promptdescription" rows="3">{{ .Description }}</textarea></div>
         <div><textarea id="edittext" name="edittext" rows="10">{{ .Parameters }}</textarea></div>
         <div style="display: inline;" hx-include="#promptname, #promptdescription, #edittext">
-            <button class="btn" hx-post="/prompt/">Set</button>
-            <button class="btn" hx-post="/prompt/data/">Save</button>
-            <button class="btn" hx-get="/chat/" hx-swap=" scroll:#top-row:bottom">Back</button>
+            <button hx-post="/prompt/">Set</button>
+            <button hx-post="/prompt/data/">Save</button>
+            <button hx-get="/chat/" hx-swap=" scroll:#top-row:bottom">Back</button>
         </div>
     <p><h4>Saved Prompts</h4></p>
     {{ range .Savedprompts }}
     <div style="display: flex;">
         <div style="text-align: left; float: left;">{{ . }}</div>
         <div style="float: right; margin-left: auto; display: inline;" hx-target='#main-content'>
-            <button class='btn' hx-get='/prompt/data/{{ . }}'>Load</button>
-            <button class='btn' hx-delete='/prompt/data/{{ . }}' hx-confirm='Are you sure?'>Delete</button>
+            <button hx-get='/prompt/data/{{ . }}'>Load</button>
+            <button hx-delete='/prompt/data/{{ . }}' hx-confirm='Are you sure?'>Delete</button>
         </div>
     </div>
     {{ end }}

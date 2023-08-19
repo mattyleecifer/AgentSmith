@@ -78,7 +78,8 @@ func (agent *Agent) hpromptfiles(w http.ResponseWriter, r *http.Request) {
 
 		agent.savefile(newprompt, "Prompts", newprompt.Name)
 
-		r.Method = http.MethodGet
+		// this should actually pop up a new row in the saves list with the new save
+		// same with functions - like chats
 		agent.hprompt(w, r)
 	}
 

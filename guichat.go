@@ -248,7 +248,7 @@ func hsidebar(w http.ResponseWriter, r *http.Request) {
 		render(w, hsidebarpage, nil)
 	}
 	if r.Method == http.MethodDelete {
-		button := `<div class="sidebar" id="sidebar" style="width: 0; background-color: transparent;"><button class="btn" id="floating-button" hx-get="/sidebar/" hx-target="#sidebar" hx-swap="outerHTML">Show Menu</button></div>`
+		button := `<div class="sidebar" id="sidebar" style="width: 0; background-color: transparent;"><button id="floating-button" hx-get="/sidebar/" hx-target="#sidebar" hx-swap="outerHTML">Show Menu</button></div>`
 		render(w, button, nil)
 	}
 }
