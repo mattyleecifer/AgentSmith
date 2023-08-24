@@ -60,6 +60,7 @@ var maxtokens int = 2048
 
 var today = time.Now().Format("January 2, 2006")
 
+var authstring string
 var allowedIps []string
 var allowAllIps bool = false
 var port string = ":49327"
@@ -287,6 +288,8 @@ func (agent *Agent) getflags() {
 			} else {
 				allowedIps = append(allowedIps, arg)
 			}
+		case "-auth":
+			authstring = arg
 		case "-port":
 			// change port
 			port = ":" + arg

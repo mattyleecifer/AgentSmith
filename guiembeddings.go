@@ -37,5 +37,8 @@ var hfunctioneditpage string
 //go:embed templates/prompt.html
 var hpromptspage string
 
+//go:embed templates/auth.html
+var hauthpage string
+
 //go:embed static
 var hcss embed.FS

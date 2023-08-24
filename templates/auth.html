@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="HandheldFriendly" content="true" />
+        <meta name="MobileOptimized" content="320" />
+        <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, width=device-width, user-scalable=no" />
+        <script src="https://unpkg.com/htmx.org@1.9.2" integrity="sha384-L6OqL9pRWyyFU3+/bjdSri+iIphTN/bvYyM37tICVyOJkWZLpP2vGn6VUEXgzg6h" crossorigin="anonymous"></script>
+        <title>AgentSmith</title>
+        <link rel="stylesheet" href="/static/styles/style.css">
+        <link rel="stylesheet" href="/static/styles/mobile.css" media="screen and (max-width: 800px)">
+    </head>
+    <body>
+        <div class="container">
+            <div class="centertext" id="inputbox">
+                Input auth:<br>
+                <input id="auth" name="auth" type="password">
+                <button hx-post="/auth/" hx-target="html" hx-swap="none" hx-include="#auth" hx-trigger="click, keydown[keyCode==13&&shiftKey!=true] from:#inputbox">Submit</button>
+            </div>
+        </div>
+    </body>
+</html>

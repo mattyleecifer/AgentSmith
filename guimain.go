@@ -10,6 +10,7 @@ import (
 
 func (agent *Agent) gui() {
 	http.HandleFunc("/", RequireAuth(index))
+	http.HandleFunc("/auth/", hauth)
 	http.HandleFunc("/chat/", RequireAuth(agent.hchat))
 	http.HandleFunc("/chat/edit/", RequireAuth(agent.hchatedit))
 	http.HandleFunc("/chat/save/", RequireAuth(agent.hchatsave))
@@ -54,8 +55,9 @@ func render(w http.ResponseWriter, html string, data any) {
 
 func RequireAuth(handler http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		allowedIps = append(allowedIps, GetLocalIP())
-		allowedIps = append(allowedIps, "127.0.0.1")
+		// allowedIps = append(allowedIps, GetLocalIP(), "127.0.0.1")
+
+		// allowedIps = append(allowedIps, "127.0.0.1")
 		// fmt.Println("\nAllowed ips: ", allowedIps)
 		// Get the IP address of the client
 		ip, _, err := net.SplitHostPort(r.RemoteAddr)
@@ -78,9 +80,27 @@ func RequireAuth(handler http.HandlerFunc) http.HandlerFunc {
 			}
 		}
 
+		if authstring != "" {
+			hauth(w, r)
+		}
+
 		// If the client's IP is not in the list of allowed IPs, return a 403 Forbidden error
-		w.WriteHeader(http.StatusForbidden)
-		w.Write([]byte("Forbidden.\n"))
+		w.WriteHeader(http.StatusTemporaryRedirect)
+		w.Header().Set("HX-Redirect", `/auth/`)
+	}
+}
+
+func hauth(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodPost {
+		auth := r.FormValue("auth")
+		if auth == authstring {
+			ip, _, _ := net.SplitHostPort(r.RemoteAddr)
+			allowedIps = append(allowedIps, ip)
+		}
+		w.Header().Set("HX-Redirect", "/")
+		w.WriteHeader(http.StatusTemporaryRedirect)
+	} else {
+		render(w, hauthpage, nil)
 	}
 }
 
