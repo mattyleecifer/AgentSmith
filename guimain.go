@@ -30,7 +30,8 @@ func (agent *Agent) gui() {
 
 	http.Handle("/static/", http.FileServer(http.FS(hcss)))
 	fmt.Println("Running GUI on http://127.0.0.1"+port, "(ctrl-click link to open)")
-	log.Fatal(http.ListenAndServe(port, nil))
+	// log.Fatal(http.ListenAndServe(port, nil))
+	log.Fatal(http.ListenAndServeTLS(port, "certificate.crt", "private.key", nil))
 }
 
 func index(w http.ResponseWriter, r *http.Request) {
