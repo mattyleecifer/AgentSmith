@@ -8,17 +8,20 @@
         <div><textarea id="edittext" name="edittext" rows="10">{{ .Parameters }}</textarea></div>
         <div style="display: inline;" hx-include="#promptname, #promptdescription, #edittext">
             <button hx-post="/prompt/">Set</button>
-            <button hx-post="/prompt/data/">Save</button>
+            <button hx-post="/prompt/data/" hx-target="#savedprompts" hx-swap="afterbegin">Save</button>
             <button hx-get="/chat/" hx-swap=" scroll:#top-row:bottom">Back</button>
         </div>
+    </div>
     <p><h4>Saved Prompts</h4></p>
-    {{ range .Savedprompts }}
-    <div style="display: flex;">
+    <div id="savedprompts">
+    {{ range .Savedprompts }}    
+    <div id="prompt-{{ . }}" style="display: flex;">
         <div style="text-align: left; float: left;">{{ . }}</div>
-        <div style="float: right; margin-left: auto; display: inline;" hx-target='#main-content'>
-            <button hx-get='/prompt/data/{{ . }}'>Load</button>
-            <button hx-delete='/prompt/data/{{ . }}' hx-confirm='Are you sure?'>Delete</button>
+        <div style="float: right; margin-left: auto; display: inline;">
+            <button hx-target='#main-content' hx-get='/prompt/data/{{ . }}'>Load</button>
+            <button hx-target='#prompt-{{ . }}' hx-delete='/prompt/data/{{ . }}' hx-swap='delete' hx-confirm='Are you sure?'>Delete</button>
         </div>
     </div>
     {{ end }}
+    </div>
 </div>

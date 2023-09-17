@@ -104,7 +104,7 @@ func (agent *Agent) hfunction(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (agent *Agent) hfunctionfiles(w http.ResponseWriter, r *http.Request) {
+func (agent *Agent) hfunctiondata(w http.ResponseWriter, r *http.Request) {
 	query := strings.TrimPrefix(r.URL.Path, "/function/data/")
 
 	if r.Method == http.MethodGet {

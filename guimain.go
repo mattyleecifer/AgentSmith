@@ -14,7 +14,7 @@ func (agent *Agent) gui() {
 	http.HandleFunc("/chat/", RequireAuth(agent.hchat))
 	http.HandleFunc("/chat/edit/", RequireAuth(agent.hchatedit))
 	http.HandleFunc("/chat/save/", RequireAuth(agent.hchatsave))
-	http.HandleFunc("/chat/data/", RequireAuth(agent.hchatfile))
+	http.HandleFunc("/chat/data/", RequireAuth(agent.hchatdata))
 	http.HandleFunc("/chat/clear/", RequireAuth(agent.hchatclear))
 	http.HandleFunc("/chat/reset/", RequireAuth(agent.hreset))
 	http.HandleFunc("/settings/", RequireAuth(agent.hsettings))
@@ -23,15 +23,15 @@ func (agent *Agent) gui() {
 	http.HandleFunc("/autofunction/", RequireAuth(hautofunction))
 	http.HandleFunc("/autorequestfunction/", RequireAuth(agent.hautorequestfunction))
 	http.HandleFunc("/function/", RequireAuth(agent.hfunction))
-	http.HandleFunc("/function/data/", RequireAuth(agent.hfunctionfiles))
+	http.HandleFunc("/function/data/", RequireAuth(agent.hfunctiondata))
 	http.HandleFunc("/function/run/", RequireAuth(agent.hfunctionrun))
 	http.HandleFunc("/prompt/", RequireAuth(agent.hprompt))
-	http.HandleFunc("/prompt/data/", RequireAuth(agent.hpromptfiles))
+	http.HandleFunc("/prompt/data/", RequireAuth(agent.hpromptdata))
 
 	http.Handle("/static/", http.FileServer(http.FS(hcss)))
 	fmt.Println("Running GUI on http://127.0.0.1"+port, "(ctrl-click link to open)")
-	// log.Fatal(http.ListenAndServe(port, nil))
-	log.Fatal(http.ListenAndServeTLS(port, "certificate.crt", "private.key", nil))
+	log.Fatal(http.ListenAndServe(port, nil))
+	// log.Fatal(http.ListenAndServeTLS(port, "certificate.crt", "private.key", nil))
 }
 
 func index(w http.ResponseWriter, r *http.Request) {

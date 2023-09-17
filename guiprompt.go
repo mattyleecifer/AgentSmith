@@ -41,7 +41,7 @@ func (agent *Agent) hprompt(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (agent *Agent) hpromptfiles(w http.ResponseWriter, r *http.Request) {
+func (agent *Agent) hpromptdata(w http.ResponseWriter, r *http.Request) {
 	query := strings.TrimPrefix(r.URL.Path, "/prompt/data/")
 
 	if r.Method == http.MethodGet {
@@ -78,15 +78,21 @@ func (agent *Agent) hpromptfiles(w http.ResponseWriter, r *http.Request) {
 
 		agent.savefile(newprompt, "Prompts", newprompt.Name)
 
+		htmldata := `
+		<div id="prompt-` + newprompt.Name + `" hx-swap-oob="delete"></div>
+		<div id="prompt-` + newprompt.Name + `" style="display: flex;">
+			<div style="text-align: left; float: left;">` + newprompt.Name + `</div>
+			<div style="float: right; margin-left: auto; display: inline;">
+				<button hx-target='#main-content' hx-get='/prompt/data/` + newprompt.Name + `'>Load</button>
+				<button hx-target='#prompt-` + newprompt.Name + `' hx-delete='/prompt/data/` + newprompt.Name + `' hx-swap='delete' hx-confirm='Are you sure?'>Delete</button>
+			</div>
+		</div>`
 		// this should actually pop up a new row in the saves list with the new save
 		// same with functions - like chats
-		agent.hprompt(w, r)
+		render(w, htmldata, nil)
 	}
 
 	if r.Method == http.MethodDelete {
 		deletefile("Prompts", query)
-
-		r.Method = http.MethodGet
-		agent.hprompt(w, r)
 	}
 }

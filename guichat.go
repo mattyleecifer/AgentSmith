@@ -163,7 +163,7 @@ func (agent *Agent) hchatsave(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (agent *Agent) hchatfile(w http.ResponseWriter, r *http.Request) {
+func (agent *Agent) hchatdata(w http.ResponseWriter, r *http.Request) {
 	query := strings.TrimPrefix(r.URL.Path, "/chat/data/")
 	if r.Method == http.MethodGet {
 		if query == "" {
