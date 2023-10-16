@@ -702,7 +702,7 @@ func (agent *Agent) savefile(data interface{}, filetype string, input ...string)
 		return "", err
 	}
 
-	file, err := os.OpenFile(filedir, os.O_WRONLY|os.O_CREATE, 0644)
+	file, err := os.OpenFile(filedir, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
 	if err != nil {
 		return "", err
 	}
