@@ -681,7 +681,7 @@ func (agent *Agent) savefile(data interface{}, filetype string, input ...string)
 		currentTime := time.Now()
 		filename = currentTime.Format("20060102150405")
 	} else {
-		filename = input[0]
+		filename = strings.Replace(input[0], " ", "_", -1)
 	}
 
 	var filedir string
