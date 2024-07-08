@@ -1,14 +1,18 @@
 ## AgentSmith
 
-A forge for making agents - become an agentsmith!
+# July 2024 update
+
+While this likely still works as is, all development has been with [AgentSmithU](https://github.com/mattyleecifer/AgentSmithU) over the last few months. While it doesn't have function calling, it does have the ability to use Mistral and Ollama/local and other similar models - you can still use prompting to get almost the same results as function calling anyway. It also fixes a lot of smaller bugs etc.
+
+
+
+# A forge for making agents - become an agentsmith!
 
 AgentSmith is a command-line tool, chat assistant (command-line and GUI), Python module, and IDE for using and creating AI Agents. It features everything you need to craft AI Agents and the ability to call these agents to complete tasks. Add AI functionality to any program with less than four lines of code. 
 
 Users can freely edit/save/load prompts, chats, and functions to experiment with responses. Agents have the ability to automatically request functions and can interact with literally any other program*. 
 
 *You may have to build an interface but there's tools/examples to cover that
-
-#### [Demo](https://61437533237.com:49327/)
 
 ### Features
 
